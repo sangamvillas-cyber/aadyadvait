@@ -368,6 +368,30 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; 
 @media (max-width: 1024px) { .cap-grid { grid-template-columns: repeat(2, 1fr); } .sectors-scroll { grid-template-columns: repeat(2, 1fr); } .philosophy { grid-template-columns: 1fr; gap: 3rem; } .philosophy-visual { height: 380px; } .footer-top { grid-template-columns: 1fr 1fr; gap: 3rem; } }
 @media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .hero { padding: 7rem 1.5rem 3rem; } .hero h1 { font-size: 2.4rem; } .hero-circle-group, .kanji-deco, .hero-vertical-text, .hero-wave-pattern { display: none; } .cap-grid, .sectors-scroll { grid-template-columns: 1fr; } .metrics-inner { grid-template-columns: repeat(2, 1fr); gap: 2rem; } .steps { grid-template-columns: 1fr; gap: 3rem; } .steps::before { display: none; } .footer-top { grid-template-columns: 1fr; gap: 2rem; } .capabilities, .sectors, .how-it-works, .cta-section, .philosophy { padding: 5rem 1.5rem; } }
 
+/* ====== PORTFOLIO ====== */
+.portfolio { padding: 9rem 3rem; max-width: 1300px; margin: 0 auto; position: relative; }
+.portfolio-header { text-align: center; margin-bottom: 5rem; }
+.portfolio-header .section-label { justify-content: center; }
+.portfolio-header .section-label::before { display: none; }
+.portfolio-header h2 { font-family: 'Noto Serif JP', serif; font-size: 2.8rem; font-weight: 700; margin-bottom: 1rem; }
+.portfolio-header p { font-size: 1rem; color: var(--slate); font-weight: 300; max-width: 550px; margin: 0 auto; line-height: 1.7; }
+.portfolio-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.5rem; }
+.portfolio-card { position: relative; background: white; border: 1px solid rgba(13,148,136,0.08); padding: 3.5rem 3rem; overflow: hidden; transition: all 0.5s ease; }
+.portfolio-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--teal), var(--sky)); transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease; }
+.portfolio-card:hover { transform: translateY(-8px); box-shadow: 0 30px 70px rgba(13,148,136,0.08); }
+.portfolio-card:hover::before { transform: scaleX(1); }
+.portfolio-card .p-icon { font-size: 3rem; margin-bottom: 1.5rem; display: block; }
+.portfolio-card .p-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); background: var(--mint); padding: 4px 12px; border-radius: 2px; margin-bottom: 1.2rem; }
+.portfolio-card h3 { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.8rem; }
+.portfolio-card .p-tagline { font-size: 0.92rem; color: var(--teal-deep); font-weight: 400; margin-bottom: 1.2rem; font-style: italic; }
+.portfolio-card p.p-desc { font-size: 0.88rem; color: var(--slate); line-height: 1.75; font-weight: 300; margin-bottom: 1.5rem; }
+.portfolio-card .p-features { list-style: none; margin-bottom: 1.5rem; }
+.portfolio-card .p-features li { font-size: 0.82rem; color: var(--slate); padding: 0.35rem 0; padding-left: 1.4rem; position: relative; font-weight: 300; line-height: 1.5; }
+.portfolio-card .p-features li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+.portfolio-card .p-link { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); text-decoration: none; font-weight: 700; transition: gap 0.3s; }
+.portfolio-card .p-link:hover { gap: 0.8rem; }
+@media (max-width: 768px) { .portfolio-grid { grid-template-columns: 1fr; } .portfolio { padding: 5rem 1.5rem; } }
+
 .reveal { transition: opacity 0.9s ease, transform 0.9s ease; }
 .reveal.hidden { opacity: 0; transform: translateY(40px); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -388,6 +412,7 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; 
     <li><a href="#philosophy">Philosophy</a></li>
     <li><a href="#capabilities">Capabilities</a></li>
     <li><a href="#sectors">Sectors</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
     <li><a href="#process">Process</a></li>
     <li><a href="#contact" class="nav-cta">Get Started</a></li>
   </ul>
@@ -472,6 +497,46 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; 
   </div>
 </div>
 
+<div class="zen-divider"><span class="zen-symbol">作</span></div>
+
+<section class="portfolio" id="portfolio">
+  <div class="portfolio-header reveal">
+    <div class="section-label">Portfolio</div>
+    <h2>Products we've built</h2>
+    <p>Live agentic AI products powered by the AADYADVAIT engine — solving real problems at scale.</p>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-card reveal reveal-delay-1">
+      <span class="p-icon">🍽️</span>
+      <span class="p-badge">Live Product</span>
+      <h3>Marty</h3>
+      <p class="p-tagline">Agentic AI for Restaurants</p>
+      <p class="p-desc">Marty is an autonomous AI agent that manages the entire restaurant operation — from order taking and kitchen coordination to customer engagement and demand forecasting. Intelligence that runs your restaurant, not just answers questions about it.</p>
+      <ul class="p-features">
+        <li>Autonomous order management and kitchen routing</li>
+        <li>Smart customer engagement and feedback loops</li>
+        <li>Real-time demand forecasting and inventory alerts</li>
+        <li>Multi-channel deployment — WhatsApp, web, POS</li>
+      </ul>
+      <a href="#contact" class="p-link">Learn more <span>→</span></a>
+    </div>
+    <div class="portfolio-card reveal reveal-delay-2">
+      <span class="p-icon">📊</span>
+      <span class="p-badge">Live Product</span>
+      <h3>Hisaab</h3>
+      <p class="p-tagline">Agentic AI for Finance</p>
+      <p class="p-desc">Hisaab is an AI-powered financial intelligence agent that automates accounting, billing, and financial reporting. It pulls data from multiple sources, reconciles transactions, and delivers real-time financial insights — zero manual entry, zero errors.</p>
+      <ul class="p-features">
+        <li>Automated billing, invoicing, and reconciliation</li>
+        <li>Smart data pulling from banks, spreadsheets, and ERPs</li>
+        <li>Real-time financial dashboards and anomaly detection</li>
+        <li>Compliance-ready reports generated on demand</li>
+      </ul>
+      <a href="#contact" class="p-link">Learn more <span>→</span></a>
+    </div>
+  </div>
+</section>
+
 <div class="zen-divider"><span class="zen-symbol">風</span></div>
 
 <section class="how-it-works" id="process">
@@ -495,7 +560,7 @@ footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; 
 <footer>
   <div class="footer-top">
     <div class="footer-brand"><div class="footer-logo"><div class="logo-mark">एआई</div>AADYADVAIT</div><p>Agentic AI platform for smart communication, data automation, and analytically-driven outputs. Sector-agnostic. Channel-agnostic. Intelligence that acts.</p></div>
-    <div class="footer-col"><h4>Platform</h4><a href="#capabilities">Capabilities</a><a href="#sectors">Sectors</a><a href="#process">Process</a><a href="#">Documentation</a></div>
+    <div class="footer-col"><h4>Platform</h4><a href="#capabilities">Capabilities</a><a href="#sectors">Sectors</a><a href="#portfolio">Portfolio</a><a href="#process">Process</a></div>
     <div class="footer-col"><h4>Company</h4><a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Privacy Policy</a></div>
     <div class="footer-col"><h4>Connect</h4><a href="/cdn-cgi/l/email-protection#7d15181111123d1c1c19041c190b1c1409531e1210"><span class="__cf_email__" data-cfemail="ef878a838380af8e8e8b968e8b998e869bc18c8082">[email&#160;protected]</span></a><a href="#">LinkedIn</a><a href="#">Twitter / X</a><a href="#">GitHub</a></div>
   </div>
