@@ -522,4 +522,538 @@ for(let i=0;i<12;i++) setTimeout(createPetal,i*500);
 const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>{el.classList.add('hidden');observer.observe(el);});
 
-windo
+window.addEventListener('scroll',()=>{const n=document.querySelector('nav');if(window.scrollY>50)n.style.padding='0.8rem 3rem';else n.style.padding='1.2rem 3rem';});
+</script>
+
+<!-- ====== ADVAIT SUPER BOT ====== -->
+<style>
+/* Bot Trigger */
+.advait-trigger{position:fixed;bottom:28px;right:28px;z-index:10000;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--ocean));border:none;cursor:pointer;box-shadow:0 6px 30px rgba(13,148,136,0.4);display:flex;align-items:center;justify-content:center;transition:all .3s ease;animation:botPulse 3s ease-in-out infinite}
+.advait-trigger:hover{transform:scale(1.08);box-shadow:0 8px 40px rgba(13,148,136,0.5)}
+.advait-trigger svg{width:28px;height:28px;fill:white;transition:transform .3s}
+.advait-trigger.open svg{transform:rotate(90deg)}
+.advait-trigger .notif-dot{position:absolute;top:2px;right:2px;width:14px;height:14px;background:var(--coral);border-radius:50%;border:2px solid white;animation:dotPing 2s ease-in-out infinite}
+@keyframes botPulse{0%,100%{box-shadow:0 6px 30px rgba(13,148,136,0.4)}50%{box-shadow:0 6px 30px rgba(13,148,136,0.4),0 0 0 12px rgba(13,148,136,0.08)}}
+@keyframes dotPing{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+/* Chat Panel */
+.advait-panel{position:fixed;bottom:100px;right:28px;z-index:10000;width:400px;max-height:580px;background:rgba(240,247,247,0.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(13,148,136,0.12);border-radius:16px;box-shadow:0 25px 80px rgba(0,0,0,0.12),0 0 0 1px rgba(13,148,136,0.05);display:flex;flex-direction:column;transform:translateY(20px) scale(0.95);opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1)}
+.advait-panel.visible{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
+
+/* Header */
+.advait-header{padding:18px 20px;background:linear-gradient(135deg,var(--ink),#162024);border-radius:16px 16px 0 0;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden}
+.advait-header::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--teal),var(--sky),var(--teal));background-size:200% 100%;animation:gradientMove 3s linear infinite}
+.advait-avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--teal),var(--sky));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:900;color:white;font-family:'Noto Sans JP',sans-serif;flex-shrink:0;position:relative}
+.advait-avatar::after{content:'';position:absolute;bottom:-1px;right:-1px;width:10px;height:10px;background:#34d399;border-radius:50%;border:2px solid var(--ink)}
+.advait-header-info h4{color:var(--cream);font-size:0.92rem;font-weight:700;margin:0;font-family:'Noto Serif JP',serif}
+.advait-header-info p{color:rgba(240,247,247,0.4);font-size:0.68rem;margin:2px 0 0;letter-spacing:0.08em}
+.advait-close{position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(240,247,247,0.3);font-size:1.2rem;cursor:pointer;transition:color .2s;padding:4px}
+.advait-close:hover{color:var(--cream)}
+
+/* Messages */
+.advait-messages{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:10px;min-height:300px;max-height:360px;scroll-behavior:smooth}
+.advait-messages::-webkit-scrollbar{width:4px}
+.advait-messages::-webkit-scrollbar-thumb{background:rgba(13,148,136,0.15);border-radius:4px}
+
+.msg{max-width:85%;animation:msgIn .3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-bot{align-self:flex-start}
+.msg-user{align-self:flex-end}
+.msg-bubble{padding:12px 16px;font-size:0.86rem;line-height:1.6;font-weight:300}
+.msg-bot .msg-bubble{background:white;color:var(--ink);border-radius:2px 14px 14px 14px;border:1px solid rgba(13,148,136,0.08);box-shadow:0 2px 8px rgba(0,0,0,0.03)}
+.msg-user .msg-bubble{background:linear-gradient(135deg,var(--teal),var(--teal-deep));color:white;border-radius:14px 2px 14px 14px}
+.msg-bot .msg-name{font-size:0.62rem;color:var(--teal);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;font-weight:700}
+
+/* Typing indicator */
+.typing-indicator{display:flex;gap:4px;padding:12px 16px;align-self:flex-start}
+.typing-indicator span{width:7px;height:7px;background:var(--teal);border-radius:50%;opacity:0.3;animation:typeDot 1.4s ease-in-out infinite}
+.typing-indicator span:nth-child(2){animation-delay:.2s}
+.typing-indicator span:nth-child(3){animation-delay:.4s}
+@keyframes typeDot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+
+/* Quick Replies */
+.advait-chips{padding:4px 16px 12px;display:flex;flex-wrap:wrap;gap:6px}
+.advait-chip{background:white;border:1px solid rgba(13,148,136,0.15);color:var(--teal-deep);padding:7px 14px;border-radius:20px;font-size:0.74rem;cursor:pointer;transition:all .2s;font-family:'Noto Sans JP',sans-serif;white-space:nowrap}
+.advait-chip:hover{background:var(--teal);color:white;border-color:var(--teal);transform:translateY(-1px)}
+
+/* Input */
+.advait-input-area{padding:12px 16px;border-top:1px solid rgba(13,148,136,0.08);display:flex;gap:8px;align-items:center}
+.advait-input{flex:1;border:1px solid rgba(13,148,136,0.12);background:white;padding:10px 14px;border-radius:10px;font-size:0.84rem;font-family:'Noto Sans JP',sans-serif;outline:none;transition:border-color .2s;color:var(--ink)}
+.advait-input:focus{border-color:var(--teal)}
+.advait-input::placeholder{color:var(--mist)}
+.advait-send{width:38px;height:38px;background:var(--teal);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.advait-send:hover{background:var(--teal-deep);transform:scale(1.05)}
+.advait-send svg{width:16px;height:16px;fill:white}
+
+/* Context bar */
+.advait-context{padding:6px 16px;background:rgba(13,148,136,0.04);border-top:1px solid rgba(13,148,136,0.06);font-size:0.64rem;color:var(--teal);letter-spacing:0.08em;display:none;align-items:center;gap:6px}
+.advait-context.visible{display:flex}
+.advait-context .ctx-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 2s infinite}
+
+/* Mobile */
+@media(max-width:768px){
+.advait-panel{width:calc(100% - 20px);right:10px;bottom:90px;max-height:70vh}
+.advait-trigger{bottom:18px;right:18px;width:56px;height:56px}
+}
+</style>
+
+<!-- Bot HTML -->
+<button class="advait-trigger" id="advaitTrigger" aria-label="Chat with Advait AI">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
+  <span class="notif-dot" id="notifDot"></span>
+</button>
+
+<div class="advait-panel" id="advaitPanel">
+  <div class="advait-header">
+    <div class="advait-avatar">AI</div>
+    <div class="advait-header-info"><h4>Advait</h4><p>Agentic AI Assistant</p></div>
+    <button class="advait-close" id="advaitClose">&times;</button>
+  </div>
+  <div class="advait-context" id="advaitContext"><span class="ctx-dot"></span><span id="ctxText"></span></div>
+  <div class="advait-messages" id="advaitMessages"></div>
+  <div class="advait-chips" id="advaitChips"></div>
+  <div class="advait-input-area">
+    <input class="advait-input" id="advaitInput" placeholder="Ask me anything about AADYADVAIT..." autocomplete="off">
+    <button class="advait-send" id="advaitSend"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+</div>
+
+<script>
+(function(){
+// ====== KNOWLEDGE BASE — Full Company Brain ======
+const KB = {
+  company: {
+    name: 'AADYADVAIT',
+    tagline: 'Intelligence that acts. Not just answers.',
+    description: 'AADYADVAIT deploys agentic AI systems that communicate, automate, and deliver analytically-driven outputs — across any sector, any channel, any scale.',
+    philosophy: 'Most AI stops at answering questions. AADYADVAIT goes further — our agentic systems communicate on your behalf, pull and structure data autonomously, and deliver outputs that drive decisions. We build AI that understands the operational rhythm of your organization and becomes an active participant — not a passive tool.',
+    metrics: { responseTime: '<2 seconds', hallucination: '0% hallucination rate', availability: '24/7 always active', scale: 'Infinite concurrent users' },
+    process: [
+      { phase: 'Map & Configure', detail: 'We understand your operational workflows, communication patterns, and data sources. The platform is configured with skill modules specific to your context.' },
+      { phase: 'Deploy & Connect', detail: 'Agentic AI is deployed on your preferred channels. Data sources are connected. Stakeholders are onboarded. The system goes live within days, not months.' },
+      { phase: 'Learn & Optimize', detail: 'The platform continuously learns from usage patterns, surfacing insights and automating more workflows over time. Intelligence that compounds.' }
+    ],
+    deployment: 'Typically live within 1-2 weeks. No months-long implementation cycles.',
+    differentiators: ['Zero hallucination — deterministic skill-based routing', 'Agentic, not reactive — AI acts on your behalf', 'Sector-agnostic — one engine, infinite deployments', 'Channel-agnostic — web, WhatsApp, API, voice', 'Data-grounded — every output is verifiable']
+  },
+  capabilities: {
+    'agentic communication': { icon: '⚡', title: 'Agentic Communication', desc: 'AI agents that handle stakeholder communication end-to-end — answering queries, pushing updates, and routing information to the right people at the right time. Unlike chatbots that wait for instructions, our agents proactively reach out, follow up, and close loops.', useCases: ['Automated parent-teacher communication in schools', 'Patient appointment reminders and follow-ups', 'Vendor coordination and purchase order updates', 'Internal team status updates and escalations'] },
+    'smart data pulling': { icon: '◉', title: 'Smart Data Pulling', desc: 'Autonomous extraction, structuring, and synthesis of data from disparate sources — spreadsheets, databases, documents, APIs — into actionable intelligence. No more manual data compilation.', useCases: ['Auto-generate financial reports from accounting systems', 'Pull and structure student performance data', 'Aggregate inventory data from multiple vendors', 'Compile compliance data from various departments'] },
+    'analytics': { icon: '△', title: 'Analytics-Driven Outputs', desc: 'Reports, dashboards, and insights generated automatically from live operational data. No manual compilation. No guesswork. Pure signal. The system surfaces what matters and highlights anomalies.', useCases: ['Daily operational dashboards for management', 'Trend analysis and demand forecasting', 'Performance scorecards generated automatically', 'Anomaly detection and alerting'] },
+    'workflow automation': { icon: '⬡', title: 'Workflow Automation', desc: 'Multi-step operational workflows executed by AI agents — from intake to processing to delivery. What took hours now takes seconds. The AI handles approvals, routing, notifications, and record-keeping.', useCases: ['End-to-end order processing in restaurants', 'Employee onboarding workflow automation', 'Grievance management in governance', 'Maintenance request tracking in housing societies'] },
+    'zero hallucination': { icon: '◎', title: 'Zero Hallucination Engine', desc: 'Deterministic skill-based routing ensures every response is grounded in verified data. No fabrication. No guessing. Only what\'s real. Each query is routed to specific skill modules with access to verified data sources only.', useCases: ['Medical information that\'s always accurate', 'Financial data that matches source systems', 'Policy responses grounded in actual documents', 'Compliance answers backed by regulation text'] },
+    'channel agnostic': { icon: '⊞', title: 'Channel Agnostic Deploy', desc: 'Deploy across any communication channel your stakeholders use — WhatsApp, web chat, SMS, email, voice, APIs — from a single intelligence layer. One brain, every channel.', useCases: ['WhatsApp bot for parent communication', 'Web widget for customer support', 'API integration with existing CRM', 'Voice bot for phone-based services'] }
+  },
+  sectors: {
+    education: { icon: '🏫', title: 'Education', pain: 'Schools drown in parent queries, attendance tracking, fee reminders, and report card distribution. Teachers spend hours on communication instead of teaching.', solution: 'AADYADVAIT automates parent engagement — fee reminders, attendance alerts, exam schedules, performance reports — all through WhatsApp or any channel. Teachers focus on teaching while AI handles communication.', example: 'A school with 2000 students reduced parent complaint response time from 48 hours to under 2 minutes. Fee collection reminders increased on-time payments by 40%.' },
+    healthcare: { icon: '🏥', title: 'Healthcare', pain: 'Clinics struggle with appointment no-shows, patient follow-ups, report delivery, and OPD management. Staff spend more time on phone calls than patient care.', solution: 'Automated appointment scheduling, smart reminders, report delivery via WhatsApp, and patient feedback collection. The AI agent handles the entire patient communication lifecycle.', example: 'A multi-specialty clinic reduced no-shows by 60% and automated 80% of patient queries — lab report status, doctor availability, prescription refills.' },
+    restaurants: { icon: '🍽️', title: 'Restaurants', pain: 'Order confusion, reservation management, customer feedback gaps, and inconsistent delivery communication cost restaurants revenue and reputation.', solution: 'AI-powered order management, reservation handling, automated customer engagement, and demand forecasting. From table booking to feedback collection — fully autonomous.', example: 'A restaurant chain automated order confirmations, delivery tracking, and feedback collection — reducing customer complaints by 70% and increasing repeat orders by 25%.' },
+    enterprise: { icon: '🏢', title: 'Enterprise', pain: 'Internal communication silos, manual reporting, slow approval chains, and scattered data across teams create operational drag that compounds.', solution: 'Automated internal communication, smart data aggregation, workflow automation for approvals and reporting, and cross-team coordination — all through AI agents.', example: 'An enterprise with 500+ employees automated their weekly reporting cycle — what took 3 days of manual compilation now generates automatically every Monday at 8 AM.' },
+    retail: { icon: '🏪', title: 'Retail & Commerce', pain: 'Inventory mismatches, customer service overload, billing complexity, and vendor coordination eat into margins and customer satisfaction.', solution: 'Inventory intelligence, customer service automation, billing automation, and vendor communication — unified under one agentic platform.', example: 'A retail chain automated vendor purchase orders and customer query handling — reducing stock-outs by 35% and customer response time to under 30 seconds.' },
+    governance: { icon: '🏛️', title: 'Governance', pain: 'Citizen engagement is fragmented, grievance management is slow, scheme information is hard to access, and service delivery tracking is opaque.', solution: 'AI-powered citizen engagement, automated grievance routing and tracking, scheme navigation assistance, and transparent service delivery monitoring.', example: 'A municipal body automated grievance management — citizens get real-time status updates, and resolution time dropped from 15 days to 3 days on average.' },
+    realestate: { icon: '🏠', title: 'Real Estate / Housing Societies', pain: 'Society management is chaotic — maintenance complaints, fee collection, vendor coordination, security management — all handled through scattered WhatsApp groups.', solution: 'Centralized society management bot — maintenance requests, fee reminders, visitor management, and community announcements — all automated through a single AI agent.', example: 'A housing society with 400 flats replaced 12 WhatsApp groups with one AI agent — complaint resolution time dropped 80%, and fee collection went up 50%.' },
+    custom: { icon: '∞', title: 'Your Sector', pain: 'Any organization with communication gaps, manual processes, and data silos is leaving efficiency on the table.', solution: 'AADYADVAIT\'s agentic engine is sector-agnostic. We configure skill modules specific to your operational context and deploy within weeks.', example: 'We\'ve deployed across logistics, legal services, coaching institutes, and more. If you have workflows, we can automate them.' }
+  },
+  demos: {
+    school: [
+      { role: 'parent', text: 'My son Arjun in class 8B was absent today. Can you mark his leave?' },
+      { role: 'bot', text: 'I\'ve noted Arjun\'s absence for today (April 6, 2026) in class 8B. I\'ve also notified his class teacher Mrs. Sharma. Would you like me to share his attendance summary for this month? He has attended 18 out of 22 working days.' },
+      { role: 'parent', text: 'Yes, and also tell me about his last exam results.' },
+      { role: 'bot', text: 'Here\'s Arjun\'s Term 2 summary:\n📊 Math: 87/100 (↑5 from Term 1)\n📊 Science: 92/100 (↑3)\n📊 English: 78/100 (↓2)\n📊 Overall rank: 7th in class\n\nHis English score dipped slightly. Mrs. Kapoor (English teacher) has suggested extra practice worksheets. Shall I request those?' }
+    ],
+    clinic: [
+      { role: 'patient', text: 'I need to book an appointment with Dr. Mehra for tomorrow.' },
+      { role: 'bot', text: 'Dr. Mehra has 3 available slots tomorrow:\n🕐 10:30 AM\n🕐 2:00 PM\n🕐 4:30 PM\n\nWhich time works best for you? I\'ll also send you a reminder 2 hours before.' },
+      { role: 'patient', text: '2 PM works. Also, are my blood test reports ready?' },
+      { role: 'bot', text: 'Appointment confirmed with Dr. Mehra for tomorrow at 2:00 PM. ✅\n\nRegarding your blood reports (drawn on April 3): Yes, they\'re ready. Your CBC and thyroid panel are within normal ranges. Vitamin D is slightly low at 18 ng/mL (recommended: 30+). I can share the full PDF right now and flag this for Dr. Mehra\'s review during your visit. Shall I?' }
+    ]
+  },
+  faqs: {
+    pricing: 'Our pricing is customized based on your organization\'s scale, number of channels, and complexity of workflows. We offer flexible plans starting from pilot deployments. The best way to get accurate pricing is to schedule a consultation — we\'ll map your needs and provide a tailored quote.',
+    timeline: 'Most deployments go live within 1-2 weeks. Phase 1 (Map & Configure) takes 3-5 days, Phase 2 (Deploy & Connect) takes 2-3 days, and Phase 3 (Learn & Optimize) is ongoing.',
+    integration: 'We integrate with virtually any system — databases, spreadsheets, CRMs, ERPs, WhatsApp Business API, email, SMS gateways, custom APIs. If your system has an API or data export, we can connect to it.',
+    security: 'Data security is foundational. All data is encrypted in transit and at rest. We follow SOC 2 compliance practices. Your data never trains our models. Each deployment is isolated.',
+    difference: 'Unlike generic chatbots, AADYADVAIT builds agentic AI — systems that act autonomously on your behalf. We don\'t just answer questions; we execute workflows, pull data, send communications, and generate reports. Zero hallucination is guaranteed through deterministic skill-based routing.'
+  }
+};
+
+// ====== CONVERSATION ENGINE ======
+const panel = document.getElementById('advaitPanel');
+const trigger = document.getElementById('advaitTrigger');
+const closeBtn = document.getElementById('advaitClose');
+const messagesEl = document.getElementById('advaitMessages');
+const chipsEl = document.getElementById('advaitChips');
+const inputEl = document.getElementById('advaitInput');
+const sendBtn = document.getElementById('advaitSend');
+const contextEl = document.getElementById('advaitContext');
+const ctxText = document.getElementById('ctxText');
+const notifDot = document.getElementById('notifDot');
+
+let isOpen = false;
+let conversationStarted = false;
+let currentMode = 'explorer'; // explorer, consultant, demo, contact
+let currentSector = null;
+let currentCapability = null;
+let demoStep = 0;
+let currentDemo = null;
+let contactData = { step: 0 };
+
+function togglePanel() {
+  isOpen = !isOpen;
+  panel.classList.toggle('visible', isOpen);
+  trigger.classList.toggle('open', isOpen);
+  notifDot.style.display = 'none';
+  if (isOpen && !conversationStarted) { conversationStarted = true; startConversation(); }
+  if (isOpen) inputEl.focus();
+}
+
+trigger.addEventListener('click', togglePanel);
+closeBtn.addEventListener('click', togglePanel);
+
+function startConversation() {
+  const hour = new Date().getHours();
+  let greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  addBotMsg(`${greeting}! I'm **Advait**, AADYADVAIT's agentic AI assistant. I have complete knowledge of our platform, capabilities, and how we transform operations across sectors.\n\nHow can I help you today?`, [
+    'What does AADYADVAIT do?',
+    'Show me a live demo',
+    'Explore sectors',
+    'Talk to us'
+  ]);
+}
+
+function addBotMsg(text, chips = []) {
+  // Show typing first
+  const typingEl = document.createElement('div');
+  typingEl.className = 'typing-indicator';
+  typingEl.innerHTML = '<span></span><span></span><span></span>';
+  messagesEl.appendChild(typingEl);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  const delay = Math.min(400 + text.length * 3, 1200);
+  setTimeout(() => {
+    typingEl.remove();
+    const msg = document.createElement('div');
+    msg.className = 'msg msg-bot';
+    // Parse bold markdown
+    const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    msg.innerHTML = `<div class="msg-name">Advait</div><div class="msg-bubble">${formatted}</div>`;
+    messagesEl.appendChild(msg);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    if (chips.length) showChips(chips);
+  }, delay);
+}
+
+function addUserMsg(text) {
+  const msg = document.createElement('div');
+  msg.className = 'msg msg-user';
+  msg.innerHTML = `<div class="msg-bubble">${text}</div>`;
+  messagesEl.appendChild(msg);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  chipsEl.innerHTML = '';
+}
+
+function showChips(chips) {
+  chipsEl.innerHTML = '';
+  chips.forEach(c => {
+    const chip = document.createElement('button');
+    chip.className = 'advait-chip';
+    chip.textContent = c;
+    chip.addEventListener('click', () => handleInput(c));
+    chipsEl.appendChild(chip);
+  });
+}
+
+function setContext(text) {
+  ctxText.textContent = text;
+  contextEl.classList.toggle('visible', !!text);
+}
+
+// ====== INTENT DETECTION ======
+function detectIntent(input) {
+  const q = input.toLowerCase().trim();
+  // Greetings
+  if (/^(hi|hello|hey|namaste|good\s*(morning|evening|afternoon))/.test(q)) return 'greeting';
+  // Demo
+  if (/demo|show me|example|simulate|live\s*demo|see.*action/.test(q)) return 'demo';
+  // Sectors
+  if (/sector|industr|education|school|healthcare|hospital|clinic|restaurant|food|enterprise|corporate|retail|shop|governance|government|real\s*estate|society|housing/.test(q)) return 'sector';
+  // Capabilities
+  if (/capabilit|feature|what.*do|what.*offer|what.*build|agenti|communicat|data\s*pull|analytic|workflow|automat|hallucin|channel/.test(q)) return 'capability';
+  // Pricing
+  if (/pric|cost|how much|package|plan|quote|budget/.test(q)) return 'pricing';
+  // Process / Timeline
+  if (/how.*work|process|timeline|how long|deploy|implement|phase|step/.test(q)) return 'process';
+  // Integration
+  if (/integrat|connect|api|whatsapp|crm|erp|system/.test(q)) return 'integration';
+  // Security
+  if (/secur|privacy|data.*safe|encrypt|complian|soc/.test(q)) return 'security';
+  // Difference
+  if (/differ|unique|why.*you|special|vs|better|compar/.test(q)) return 'differentiator';
+  // Contact
+  if (/contact|talk|reach|email|call|meet|consult|get\s*started|schedule/.test(q)) return 'contact';
+  // Philosophy
+  if (/philosophy|approach|vision|mission|why|believe/.test(q)) return 'philosophy';
+  // Company info
+  if (/about|who.*are|company|aadyadvait|what.*is/.test(q)) return 'about';
+  return 'general';
+}
+
+function findSector(input) {
+  const q = input.toLowerCase();
+  if (/education|school|student|teacher|parent/.test(q)) return 'education';
+  if (/health|hospital|clinic|patient|doctor|medical/.test(q)) return 'healthcare';
+  if (/restaurant|food|order|menu|dine/.test(q)) return 'restaurants';
+  if (/enterprise|corporate|internal|employee|team/.test(q)) return 'enterprise';
+  if (/retail|shop|store|inventory|commerce/.test(q)) return 'retail';
+  if (/govern|citizen|municipal|scheme|public/.test(q)) return 'governance';
+  if (/real\s*estate|society|housing|flat|maintenance|resident/.test(q)) return 'realestate';
+  return null;
+}
+
+function findCapability(input) {
+  const q = input.toLowerCase();
+  if (/communicat|stakeholder|notify|message/.test(q)) return 'agentic communication';
+  if (/data.*pull|extract|structur|synthesis/.test(q)) return 'smart data pulling';
+  if (/analytic|report|dashboard|insight/.test(q)) return 'analytics';
+  if (/workflow|automat|process|multi.*step/.test(q)) return 'workflow automation';
+  if (/hallucin|deterministic|accuracy|fabricat/.test(q)) return 'zero hallucination';
+  if (/channel|whatsapp|deploy|omni/.test(q)) return 'channel agnostic';
+  return null;
+}
+
+// ====== RESPONSE GENERATION ======
+function handleInput(input) {
+  addUserMsg(input);
+
+  // Handle demo mode
+  if (currentMode === 'demo' && currentDemo) { handleDemoStep(input); return; }
+  // Handle contact mode
+  if (currentMode === 'contact') { handleContactStep(input); return; }
+
+  const intent = detectIntent(input);
+
+  switch(intent) {
+    case 'greeting': respondGreeting(); break;
+    case 'about': respondAbout(); break;
+    case 'philosophy': respondPhilosophy(); break;
+    case 'capability': respondCapability(input); break;
+    case 'sector': respondSector(input); break;
+    case 'demo': respondDemo(input); break;
+    case 'pricing': respondPricing(); break;
+    case 'process': respondProcess(); break;
+    case 'integration': respondIntegration(); break;
+    case 'security': respondSecurity(); break;
+    case 'differentiator': respondDifferentiator(); break;
+    case 'contact': respondContact(); break;
+    default: respondGeneral(input);
+  }
+}
+
+function respondGreeting() {
+  addBotMsg(`Hello! Great to have you here. I'm **Advait**, and I know everything about AADYADVAIT's agentic AI platform.\n\nI can help you explore our capabilities, see live demos, or find the right solution for your sector. What interests you?`, [
+    'What does AADYADVAIT do?',
+    'Explore capabilities',
+    'See a demo',
+    'Talk to the team'
+  ]);
+}
+
+function respondAbout() {
+  addBotMsg(`**AADYADVAIT** is an Agentic AI Platform.\n\n${KB.company.description}\n\nOur core promise: **${KB.company.tagline}**\n\nWe're not building chatbots — we're building autonomous AI agents that become active participants in your operations. Every output is data-backed, verifiable, and hallucination-free.`, [
+    'What are your capabilities?',
+    'Which sectors do you serve?',
+    'How is this different?',
+    'Show me a demo'
+  ]);
+}
+
+function respondPhilosophy() {
+  addBotMsg(`**Our Philosophy:** From answers to autonomous action.\n\n${KB.company.philosophy}\n\nThe result: faster execution, zero information gaps, and intelligence that compounds over time.`, [
+    'Show me capabilities',
+    'See it in action',
+    'Talk to the team'
+  ]);
+}
+
+function respondCapability(input) {
+  const cap = findCapability(input);
+  if (cap && KB.capabilities[cap]) {
+    const c = KB.capabilities[cap];
+    currentCapability = cap;
+    setContext(`Exploring: ${c.title}`);
+    addBotMsg(`${c.icon} **${c.title}**\n\n${c.desc}\n\n**Real use cases:**\n${c.useCases.map(u => '• ' + u).join('\n')}`, [
+      'See another capability',
+      'Which sectors use this?',
+      'Show me a demo',
+      'Talk to the team'
+    ]);
+  } else {
+    const caps = Object.values(KB.capabilities);
+    addBotMsg(`AADYADVAIT delivers **6 core capabilities** — each designed for autonomous action, not passive response:\n\n${caps.map(c => `${c.icon} **${c.title}**`).join('\n')}\n\nWhich one would you like to explore in depth?`, [
+      'Agentic Communication',
+      'Workflow Automation',
+      'Zero Hallucination',
+      'All capabilities'
+    ]);
+  }
+}
+
+function respondSector(input) {
+  const sector = findSector(input);
+  if (sector && KB.sectors[sector]) {
+    const s = KB.sectors[sector];
+    currentSector = sector;
+    setContext(`Sector: ${s.title}`);
+    addBotMsg(`${s.icon} **${s.title}**\n\n**The Problem:**\n${s.pain}\n\n**Our Solution:**\n${s.solution}\n\n**Real Impact:**\n${s.example}`, [
+      sector === 'education' || sector === 'healthcare' ? 'See live demo' : 'Explore another sector',
+      'What capabilities apply?',
+      'How long to deploy?',
+      'Talk to the team'
+    ]);
+  } else {
+    addBotMsg(`We serve **8 sectors** with the same powerful agentic engine, configured for each context:\n\n🏫 Education\n🏥 Healthcare\n🍽️ Restaurants\n🏢 Enterprise\n🏪 Retail & Commerce\n🏛️ Governance\n🏠 Real Estate\n∞ Your Sector\n\nWhich sector is relevant to you?`, [
+      'Education',
+      'Healthcare',
+      'Enterprise',
+      'Tell me about all'
+    ]);
+  }
+}
+
+function respondDemo(input) {
+  const sector = findSector(input) || currentSector;
+  if (sector === 'education' || (!sector && !currentSector)) {
+    currentMode = 'demo';
+    currentDemo = 'school';
+    demoStep = 0;
+    setContext('🎮 Demo Mode: School AI Agent');
+    addBotMsg(`**Live Demo: School Communication Agent**\n\nI'll simulate how AADYADVAIT's AI handles a real parent-school interaction. Watch how the agent acts autonomously — not just answers, but takes action.\n\n---\n\n👤 **Parent says:** "${KB.demos.school[0].text}"`, ['See the AI response']);
+  } else if (sector === 'healthcare') {
+    currentMode = 'demo';
+    currentDemo = 'clinic';
+    demoStep = 0;
+    setContext('🎮 Demo Mode: Clinic AI Agent');
+    addBotMsg(`**Live Demo: Healthcare Communication Agent**\n\nI'll simulate how AADYADVAIT's AI handles patient interactions at a clinic. Watch the autonomous action.\n\n---\n\n👤 **Patient says:** "${KB.demos.clinic[0].text}"`, ['See the AI response']);
+  } else {
+    addBotMsg(`I have **live demos** ready for two sectors:\n\n🏫 **School Demo** — See how AI handles parent-teacher communication\n🏥 **Clinic Demo** — See how AI manages patient interactions\n\nBoth demonstrate agentic behavior — the AI doesn't just respond, it **acts**: books appointments, pulls data, notifies teachers, generates reports.\n\nWhich would you like to see?`, ['School demo', 'Clinic demo']);
+  }
+}
+
+function handleDemoStep(input) {
+  const demo = KB.demos[currentDemo];
+  demoStep++;
+  if (demoStep === 1) {
+    // Show bot response to first message
+    addBotMsg(`🤖 **AADYADVAIT Agent responds:**\n\n"${demo[1].text}"\n\n---\n\n*Notice: The agent didn't just acknowledge — it marked attendance, notified the teacher, AND offered relevant data proactively.*`, ['Continue the conversation']);
+  } else if (demoStep === 2 && demo.length > 2) {
+    addBotMsg(`👤 **${currentDemo === 'school' ? 'Parent' : 'Patient'} says:** "${demo[2].text}"`, ['See the AI response']);
+  } else if (demoStep === 3 && demo.length > 3) {
+    addBotMsg(`🤖 **AADYADVAIT Agent responds:**\n\n"${demo[3].text}"\n\n---\n\n*This is agentic AI in action — it pulled real data, identified a concern, and offered a proactive next step. All in under 2 seconds.*`, ['That\'s impressive!', 'Try another demo', 'I want this for my org']);
+  } else {
+    currentMode = 'explorer';
+    currentDemo = null;
+    demoStep = 0;
+    setContext('');
+    addBotMsg(`That's a glimpse of what **AADYADVAIT** delivers — AI that acts autonomously, pulls real data, and drives outcomes.\n\nImagine this level of intelligence deployed across your entire organization.\n\nWhat would you like to explore next?`, ['Explore capabilities', 'See another demo', 'Talk to the team', 'How does pricing work?']);
+  }
+}
+
+function respondPricing() {
+  addBotMsg(`${KB.faqs.pricing}\n\nWe believe in value-first — most clients see ROI within the first month through time saved and efficiency gained.`, ['Schedule a consultation', 'How long to deploy?', 'What\'s included?']);
+}
+
+function respondProcess() {
+  const steps = KB.company.process;
+  addBotMsg(`**Deployment Process — Zero to Autonomous in 3 Phases:**\n\n**Phase 1: ${steps[0].phase}** (3-5 days)\n${steps[0].detail}\n\n**Phase 2: ${steps[1].phase}** (2-3 days)\n${steps[1].detail}\n\n**Phase 3: ${steps[2].phase}** (Ongoing)\n${steps[2].detail}\n\n⏱️ ${KB.company.deployment}`, ['What does it cost?', 'What integrations?', 'Talk to the team']);
+}
+
+function respondIntegration() {
+  addBotMsg(`**Integration Capabilities:**\n\n${KB.faqs.integration}\n\nCommon integrations:\n• WhatsApp Business API\n• Google Sheets & Excel\n• SQL/NoSQL databases\n• REST APIs & webhooks\n• Email & SMS gateways\n• ERP systems (SAP, Tally, etc.)\n• CRM systems (Salesforce, HubSpot, etc.)`, ['How secure is it?', 'How long to set up?', 'Talk to the team']);
+}
+
+function respondSecurity() {
+  addBotMsg(`**Security & Privacy:**\n\n${KB.faqs.security}\n\nKey security features:\n🔒 End-to-end encryption\n🔒 SOC 2 compliance practices\n🔒 Data isolation per deployment\n🔒 No model training on your data\n🔒 Audit logs for all actions`, ['What about pricing?', 'Explore capabilities', 'Talk to the team']);
+}
+
+function respondDifferentiator() {
+  addBotMsg(`**What makes AADYADVAIT different:**\n\n${KB.company.differentiators.map(d => '✦ ' + d).join('\n')}\n\n${KB.faqs.difference}`, ['See a demo', 'Explore sectors', 'Talk to the team']);
+}
+
+function respondContact() {
+  currentMode = 'contact';
+  contactData = { step: 0 };
+  setContext('📋 Contact Mode');
+  addBotMsg(`I'd love to connect you with the team! Let me gather a few details.\n\nWhat's your **name**?`);
+}
+
+function handleContactStep(input) {
+  switch(contactData.step) {
+    case 0:
+      contactData.name = input;
+      contactData.step = 1;
+      addBotMsg(`Great to meet you, **${input}**! What's your **email address**?`);
+      break;
+    case 1:
+      contactData.email = input;
+      contactData.step = 2;
+      addBotMsg(`Got it. What **organization** are you with?`);
+      break;
+    case 2:
+      contactData.org = input;
+      contactData.step = 3;
+      addBotMsg(`And which **sector** best describes ${input}?`, ['Education', 'Healthcare', 'Restaurant', 'Enterprise', 'Retail', 'Other']);
+      break;
+    case 3:
+      contactData.sector = input;
+      currentMode = 'explorer';
+      setContext('');
+      addBotMsg(`Thank you, **${contactData.name}**! Here's what I've captured:\n\n👤 ${contactData.name}\n📧 ${contactData.email}\n🏢 ${contactData.org}\n📌 ${contactData.sector}\n\nOur team will reach out within **24 hours** to schedule a consultation. In the meantime, feel free to explore more or ask me anything!`, ['Explore capabilities', 'See a demo', 'How does pricing work?']);
+      break;
+  }
+}
+
+function respondGeneral(input) {
+  addBotMsg(`That's a great question. While I have deep knowledge about AADYADVAIT's platform, let me point you in the right direction.\n\nI can help you with:\n• **Platform capabilities** — what we build\n• **Sector solutions** — how we solve for your industry\n• **Live demos** — see agentic AI in action\n• **Deployment process** — how we get you live\n• **Pricing & contact** — connect with the team\n\nWhat would you like to explore?`, ['Capabilities', 'Sectors', 'Live demo', 'Contact']);
+}
+
+// Input handling
+function submitInput() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  inputEl.value = '';
+  handleInput(text);
+}
+
+inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') submitInput(); });
+sendBtn.addEventListener('click', submitInput);
+
+// ====== AGENTIC FEATURES ======
+// Proactive section awareness
+let lastSection = null;
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && isOpen) {
+      const id = e.target.id;
+      if (id && id !== lastSection) {
+        lastSection = id;
+        if (id === 'capabilities') setContext('You\'re viewing: Core Capabilities');
+        else if (id === 'sectors') setContext('You\'re viewing: Sector Solutions');
+        else if (id === 'process') setContext('You\'re viewing: Deployment Process');
+        else if (id === 'contact') setContext('You\'re viewing: Get Started');
+        else setContext('');
+      }
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
+
+// Auto-show notification after 8 seconds
+setTimeout(() => {
+  if (!isOpen) notifDot.style.display = 'block';
+}, 8000);
+
+})();
+</script>
+</body>
+</html>
