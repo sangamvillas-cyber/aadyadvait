@@ -564,7 +564,13 @@
 
                 // Show selected tab
                 document.getElementById(tabName).classList.add('active');
-                event.target.classList.add('active');
+
+                // Find and activate the corresponding button
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    if (btn.getAttribute('onclick').includes(`'${tabName}'`)) {
+                        btn.classList.add('active');
+                    }
+                });
             },
 
             async register() {
@@ -625,7 +631,6 @@
                         // Switch to authenticate tab
                         setTimeout(() => {
                             this.switchTab('authenticate');
-                            document.querySelector('[onclick="window.webauthn.switchTab(\'authenticate\')"]').click();
                         }, 1500);
                     }
                 } catch (error) {
