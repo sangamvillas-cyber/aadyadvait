@@ -599,8 +599,8 @@
       </div>
 
       <div style="margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--neutral-600); line-height: 1.6;">
-        <strong>Select your profile and sign in</strong>
-        <div style="margin-top: 0.5rem;">Each member has their own secure dashboard to track their mutual fund investments.</div>
+        <strong>Select your profile to manage holdings</strong>
+        <div style="margin-top: 0.5rem;">Each member can track and manage their mutual fund investments.</div>
       </div>
 
       <div class="member-selector" id="memberSelector">
@@ -626,18 +626,7 @@
         </div>
       </div>
 
-      <form class="auth-form" id="authForm">
-        <div class="form-group">
-          <label for="authEmail">Email</label>
-          <input type="email" id="authEmail" placeholder="your-email@example.com" required>
-        </div>
-        <div class="form-group">
-          <label for="authPassword">Master Password</label>
-          <input type="password" id="authPassword" placeholder="Enter your password" required>
-        </div>
-        <div class="auth-error" id="authError"></div>
-        <button type="submit" class="auth-button">Sign In</button>
-      </form>
+      <button class="auth-button" onclick="enterApp()" style="margin-top: 1.5rem;">Continue</button>
     </div>
   </div>
 
@@ -890,14 +879,11 @@
           document.querySelectorAll('.member-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           APP_STATE.currentMember = btn.getAttribute('data-member');
-          const member = MEMBERS[APP_STATE.currentMember];
-          document.getElementById('authEmail').value = member.email;
         });
       });
     }
 
     function setupEventListeners() {
-      document.getElementById('authForm').addEventListener('submit', handleLogin);
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
       document.getElementById('addFundBtn').addEventListener('click', addFund);
       document.getElementById('exportPersonalBtn').addEventListener('click', exportPersonalCSV);
@@ -911,28 +897,9 @@
       });
     }
 
-    function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('authEmail').value;
-      const password = document.getElementById('authPassword').value;
-      const errorEl = document.getElementById('authError');
-
+    function enterApp() {
       if (!APP_STATE.currentMember) {
-        errorEl.classList.add('active');
-        errorEl.textContent = '❌ Please select your profile';
-        return;
-      }
-
-      const member = MEMBERS[APP_STATE.currentMember];
-      if (email !== member.email) {
-        errorEl.classList.add('active');
-        errorEl.textContent = `❌ Email must be ${member.email}`;
-        return;
-      }
-
-      if (password.length < 6) {
-        errorEl.classList.add('active');
-        errorEl.textContent = '❌ Password must be at least 6 characters';
+        alert('Please select your profile');
         return;
       }
 
