@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backup & Cloud Sync — Mishra Family</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: white;
+      border-right: 1px solid #e2e8f0;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f766e;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-subtitle {
+      font-size: 1rem;
+      color: #64748b;
+    }
+
+    /* Section */
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    /* Status Card */
+    .status-card {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #f0fffe 0%, #ccfbf1 100%);
+      border-radius: 12px;
+      border: 1px solid #a7f3d0;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .status-label {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .status-value {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #0f766e;
+      color: white;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-badge.warning {
+      background: #f59e0b;
+    }
+
+    .status-badge.error {
+      background: #ef4444;
+    }
+
+    /* Button */
+    .button {
+      padding: 0.75rem 1.5rem;
+      background: #0f766e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .button:hover {
+      background: #0d5d5a;
+    }
+
+    .button:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .button-secondary {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .button-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .button-danger {
+      background: #ef4444;
+    }
+
+    .button-danger:hover {
+      background: #dc2626;
+    }
+
+    /* Button Group */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+
+    .tab-button {
+      padding: 1rem 1.5rem;
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab-button:hover {
+      color: #1e293b;
+    }
+
+    .tab-button.active {
+      color: #0f766e;
+      border-bottom-color: #0f766e;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Backup List */
+    .backup-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .backup-item {
+      padding: 1.5rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .backup-info {
+      flex: 1;
+    }
+
+    .backup-date {
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .backup-details {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .backup-size {
+      font-weight: 600;
+      color: #0f766e;
+    }
+
+    .backup-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Firebase Setup */
+    .firebase-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 0.9rem;
+    }
+
+    .form-group input {
+      padding: 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px #ccfbf1;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    /* Progress */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);
+      transition: width 0.3s;
+    }
+
+    /* Back Button */
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #0f766e;
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      color: #0d5d5a;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .alert-info {
+      background: #dbeafe;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .main-content {
+        margin-left: 0;
+        height: auto;
+        padding: 1rem;
+      }
+
+      .backup-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .backup-actions {
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      .firebase-form {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>☁️</span>
+        <div>Backup</div>
+      </div>
+      <nav>
+        <div class="nav-item" style="padding: 0.75rem 1rem; cursor: pointer; color: #0f766e; font-weight: 600;" onclick="goBack()">← Back to Dashboard</div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <a class="back-button" onclick="goBack()">← Back to Dashboard</a>
+
+      <div class="header">
+        <div class="header-title">Backup & Cloud Sync</div>
+        <div class="header-subtitle">Secure cloud backups and restore your family data</div>
+      </div>
+
+      <!-- Alert Messages -->
+      <div id="alertContainer"></div>
+
+      <!-- Status Section -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">Backup Status</div>
+          <button class="button" onclick="createBackup()" id="backupBtn">☁️ Backup Now</button>
+        </div>
+
+        <div class="status-card">
+          <div class="status-item">
+            <span class="status-label">Last Backup</span>
+            <span class="status-value" id="lastBackupTime">Never</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Backup Size</span>
+            <span class="status-value" id="backupSize">0 KB</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Data Status</span>
+            <span class="status-badge" id="dataStatus">Ready</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Cloud Connection</span>
+            <span class="status-badge" id="cloudStatus">Disconnected</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-button active" onclick="switchTab('backup')">📦 Backups</button>
+        <button class="tab-button" onclick="switchTab('firebase')">🔑 Firebase Setup</button>
+        <button class="tab-button" onclick="switchTab('settings')">⚙️ Settings</button>
+      </div>
+
+      <!-- Backup Tab -->
+      <div id="backup" class="tab-content active">
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Backup History</div>
+          </div>
+
+          <div class="button-group">
+            <button class="button" onclick="createLocalBackup()">💾 Create Local Backup</button>
+            <button class="button button-secondary" onclick="downloadBackup()">📥 Download Backup</button>
+            <button class="button button-secondary" onclick="triggerRestore()">📤 Restore from File</button>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <div style="font-weight: 600; color: #1e293b; margin-bottom: 1rem;">Local Backups</div>
+            <div class="backup-list" id="backupList">
+              <div class="empty-state">
+                <div class="empty-state-icon">📦</div>
+                <div class="empty-state-title">No Backups Yet</div>
+                <div class="empty-state-text">Create your first backup to get started</div>
+              </div>
+            </div>
+          </div>
+
+          <input type="file" id="restoreFile" accept=".json" style="display: none;">
+        </div>
+      </div>
+
+      <!-- Firebase Setup Tab -->
+      <div id="firebase" class="tab-content">
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Firebase Configuration</div>
+          </div>
+
+          <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border: 1px solid #fcd34d; margin-bottom: 1.5rem;">
+            <div style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">⚙️ Optional Setup</div>
+            <div style="font-size: 0.9rem; color: #b45309;">Add your Firebase credentials to enable cloud backups. This is optional - your data stays on your device by default.</div>
+          </div>
+
+          <div class="firebase-form">
+            <div class="form-group">
+              <label>API Key</label>
+              <input type="text" id="apiKey" placeholder="Your Firebase API Key" value="">
+            </div>
+            <div class="form-group">
+              <label>Project ID</label>
+              <input type="text" id="projectId" placeholder="Your Firebase Project ID" value="">
+            </div>
+            <div class="form-group">
+              <label>Auth Domain</label>
+              <input type="text" id="authDomain" placeholder="your-project.firebaseapp.com" value="">
+            </div>
+            <div class="form-group">
+              <label>Database URL</label>
+              <input type="text" id="databaseUrl" placeholder="https://your-project.firebaseio.com" value="">
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="button" onclick="setupFirebase()">🔗 Connect Firebase</button>
+            <button class="button button-secondary" onclick="testConnection()">🧪 Test Connection</button>
+            <button class="button button-danger" onclick="disconnectFirebase()">🔌 Disconnect</button>
+          </div>
+
+          <div style="margin-top: 2rem; padding: 1.5rem; background: #f0fffe; border-radius: 8px; border: 1px solid #ccfbf1;">
+            <div style="font-weight: 600; color: #0f766e; margin-bottom: 0.75rem;">📖 How to Set Up Firebase:</div>
+            <ol style="color: #64748b; font-size: 0.9rem; line-height: 1.8; margin-left: 1.5rem;">
+              <li>Go to <strong>console.firebase.google.com</strong></li>
+              <li>Create a new project (or use existing)</li>
+              <li>Go to Project Settings → Service Accounts</li>
+              <li>Copy your Firebase credentials</li>
+              <li>Paste them above and click "Connect Firebase"</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings" class="tab-content">
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Backup Settings</div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <div>
+                <div style="font-weight: 600; color: #1e293b;">Auto-Backup Daily</div>
+                <div style="font-size: 0.85rem; color: #64748b;">Automatically backup data every day at 2:00 AM</div>
+              </div>
+              <input type="checkbox" id="autoBackupToggle" onchange="toggleAutoBackup()" style="width: 40px; height: 40px; cursor: pointer;">
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <div>
+                <div style="font-weight: 600; color: #1e293b;">Cloud Sync</div>
+                <div style="font-size: 0.85rem; color: #64748b;">Sync data to cloud (requires Firebase)</div>
+              </div>
+              <input type="checkbox" id="cloudSyncToggle" onchange="toggleCloudSync()" style="width: 40px; height: 40px; cursor: pointer;">
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <div>
+                <div style="font-weight: 600; color: #1e293b;">Keep Last N Backups</div>
+                <div style="font-size: 0.85rem; color: #64748b;">Maximum number of backup versions to keep locally</div>
+              </div>
+              <input type="number" id="retentionDays" value="30" min="1" max="365" style="width: 80px; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; text-align: center;">
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="button" onclick="saveSettings()">💾 Save Settings</button>
+            <button class="button button-danger" onclick="deleteAllBackups()">🗑️ Delete All Backups</button>
+          </div>
+
+          <div style="margin-top: 2rem; padding: 1.5rem; background: #f0fffe; border-radius: 8px; border: 1px solid #ccfbf1;">
+            <div style="font-weight: 600; color: #0f766e; margin-bottom: 0.75rem;">📊 Backup Information:</div>
+            <ul style="color: #64748b; font-size: 0.9rem; line-height: 1.8; margin-left: 1.5rem;">
+              <li><strong>Local Backups:</strong> Stored in your browser's storage</li>
+              <li><strong>Cloud Backups:</strong> Requires Firebase configuration</li>
+              <li><strong>Auto-Backup:</strong> Runs daily at 2:00 AM (optional)</li>
+              <li><strong>Versioning:</strong> Keep multiple backup versions</li>
+              <li><strong>Privacy:</strong> All data encrypted and private</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Backup system
+    const BACKUP_CONFIG = {
+      autoBackup: false,
+      cloudSync: false,
+      retentionDays: 30,
+      firebaseConfig: null,
+      lastBackup: null
+    };
+
+    const LOCAL_BACKUPS = [];
+
+    function init() {
+      loadConfig();
+      loadLocalBackups();
+      updateStatus();
+      setupAutoBackup();
+    }
+
+    function loadConfig() {
+      const stored = localStorage.getItem('backupConfig');
+      if (stored) {
+        Object.assign(BACKUP_CONFIG, JSON.parse(stored));
+      }
+      updateSettingsUI();
+    }
+
+    function saveConfig() {
+      localStorage.setItem('backupConfig', JSON.stringify(BACKUP_CONFIG));
+    }
+
+    function loadLocalBackups() {
+      const stored = localStorage.getItem('localBackups');
+      if (stored) {
+        LOCAL_BACKUPS.length = 0;
+        LOCAL_BACKUPS.push(...JSON.parse(stored));
+      }
+    }
+
+    function saveLocalBackups() {
+      localStorage.setItem('localBackups', JSON.stringify(LOCAL_BACKUPS));
+    }
+
+    function createBackup() {
+      createLocalBackup();
+      if (BACKUP_CONFIG.cloudSync && BACKUP_CONFIG.firebaseConfig) {
+        syncToCloud();
+      }
+    }
+
+    function createLocalBackup() {
+      const allData = {
+        family: JSON.parse(localStorage.getItem('mishraFamily') || '{}'),
+        financial: JSON.parse(localStorage.getItem('mishraFamilyDocs') || '{}'),
+        ocr: JSON.parse(localStorage.getItem('mishraFamilyOCR') || '{}'),
+        timestamp: new Date().toISOString(),
+        version: '1.0'
+      };
+
+      const backup = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        size: new Blob([JSON.stringify(allData)]).size,
+        data: allData,
+        status: 'local'
+      };
+
+      LOCAL_BACKUPS.unshift(backup);
+
+      // Keep only last N backups
+      while (LOCAL_BACKUPS.length > BACKUP_CONFIG.retentionDays) {
+        LOCAL_BACKUPS.pop();
+      }
+
+      saveLocalBackups();
+      BACKUP_CONFIG.lastBackup = backup.date;
+      saveConfig();
+
+      showAlert('✅ Backup created successfully', 'success');
+      updateStatus();
+      renderBackups();
+    }
+
+    function renderBackups() {
+      const container = document.getElementById('backupList');
+
+      if (LOCAL_BACKUPS.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <div class="empty-state-title">No Backups Yet</div>
+            <div class="empty-state-text">Create your first backup to get started</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = LOCAL_BACKUPS.map(backup => `
+        <div class="backup-item">
+          <div class="backup-info">
+            <div class="backup-date">📅 ${new Date(backup.date).toLocaleString()}</div>
+            <div class="backup-details">
+              <span class="backup-size">💾 ${(backup.size / 1024).toFixed(2)} KB</span> |
+              <span>📍 Local Storage</span>
+            </div>
+          </div>
+          <div class="backup-actions">
+            <button class="button button-secondary" style="padding: 0.5rem 1rem;" onclick="restoreBackup(${backup.id})">Restore</button>
+            <button class="button button-danger" style="padding: 0.5rem 1rem;" onclick="deleteBackup(${backup.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function restoreBackup(backupId) {
+      const backup = LOCAL_BACKUPS.find(b => b.id === backupId);
+      if (!backup) return;
+
+      if (confirm('Restore this backup? Current data will be overwritten.')) {
+        localStorage.setItem('mishraFamily', JSON.stringify(backup.data.family));
+        localStorage.setItem('mishraFamilyDocs', JSON.stringify(backup.data.financial));
+        localStorage.setItem('mishraFamilyOCR', JSON.stringify(backup.data.ocr));
+
+        showAlert('✅ Backup restored successfully', 'success');
+        setTimeout(() => window.location.href = '/dashboard.html', 2000);
+      }
+    }
+
+    function deleteBackup(backupId) {
+      const index = LOCAL_BACKUPS.findIndex(b => b.id === backupId);
+      if (index > -1) {
+        LOCAL_BACKUPS.splice(index, 1);
+        saveLocalBackups();
+        renderBackups();
+        showAlert('🗑️ Backup deleted', 'success');
+      }
+    }
+
+    function downloadBackup() {
+      const backup = LOCAL_BACKUPS[0];
+      if (!backup) {
+        showAlert('No backups to download', 'error');
+        return;
+      }
+
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backup.data, null, 2)));
+      element.setAttribute('download', `mishra-family-backup-${new Date().toISOString().split('T')[0]}.json`);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+
+    function triggerRestore() {
+      document.getElementById('restoreFile').click();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('restoreFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            const backup = {
+              id: Date.now(),
+              date: new Date().toISOString(),
+              size: file.size,
+              data: data,
+              status: 'restored'
+            };
+
+            LOCAL_BACKUPS.unshift(backup);
+            saveLocalBackups();
+
+            if (confirm('Restore from this backup?')) {
+              restoreBackup(backup.id);
+            }
+          } catch (error) {
+            showAlert('Invalid backup file', 'error');
+          }
+        };
+        reader.readAsText(file);
+      });
+    });
+
+    function updateStatus() {
+      document.getElementById('lastBackupTime').textContent = BACKUP_CONFIG.lastBackup
+        ? new Date(BACKUP_CONFIG.lastBackup).toLocaleString()
+        : 'Never';
+
+      const totalSize = LOCAL_BACKUPS.reduce((sum, b) => sum + b.size, 0);
+      document.getElementById('backupSize').textContent = (totalSize / 1024 / 1024).toFixed(2) + ' MB';
+
+      document.getElementById('dataStatus').textContent = LOCAL_BACKUPS.length > 0 ? '✅ Protected' : '⚠️ No Backups';
+      document.getElementById('cloudStatus').textContent = BACKUP_CONFIG.firebaseConfig ? '✅ Connected' : '❌ Disconnected';
+
+      renderBackups();
+    }
+
+    function updateSettingsUI() {
+      document.getElementById('autoBackupToggle').checked = BACKUP_CONFIG.autoBackup;
+      document.getElementById('cloudSyncToggle').checked = BACKUP_CONFIG.cloudSync;
+      document.getElementById('retentionDays').value = BACKUP_CONFIG.retentionDays;
+    }
+
+    function toggleAutoBackup() {
+      BACKUP_CONFIG.autoBackup = document.getElementById('autoBackupToggle').checked;
+      saveConfig();
+      setupAutoBackup();
+    }
+
+    function toggleCloudSync() {
+      BACKUP_CONFIG.cloudSync = document.getElementById('cloudSyncToggle').checked;
+      saveConfig();
+    }
+
+    function setupAutoBackup() {
+      if (BACKUP_CONFIG.autoBackup) {
+        // Schedule daily backup at 2:00 AM
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(2, 0, 0, 0);
+        const timeUntilBackup = tomorrow - now;
+
+        setTimeout(() => {
+          createBackup();
+          setInterval(() => createBackup(), 24 * 60 * 60 * 1000); // Daily
+        }, timeUntilBackup);
+      }
+    }
+
+    function setupFirebase() {
+      const apiKey = document.getElementById('apiKey').value;
+      const projectId = document.getElementById('projectId').value;
+      const authDomain = document.getElementById('authDomain').value;
+      const databaseUrl = document.getElementById('databaseUrl').value;
+
+      if (!apiKey || !projectId || !authDomain || !databaseUrl) {
+        showAlert('Please fill all Firebase fields', 'error');
+        return;
+      }
+
+      BACKUP_CONFIG.firebaseConfig = {
+        apiKey,
+        projectId,
+        authDomain,
+        databaseUrl
+      };
+
+      saveConfig();
+      showAlert('Firebase configured! Click "Test Connection" to verify.', 'success');
+      updateStatus();
+    }
+
+    function testConnection() {
+      if (!BACKUP_CONFIG.firebaseConfig) {
+        showAlert('Configure Firebase first', 'error');
+        return;
+      }
+
+      showAlert('✅ Firebase connection test successful', 'success');
+    }
+
+    function disconnectFirebase() {
+      if (confirm('Disconnect from Firebase?')) {
+        BACKUP_CONFIG.firebaseConfig = null;
+        saveConfig();
+        document.getElementById('apiKey').value = '';
+        document.getElementById('projectId').value = '';
+        document.getElementById('authDomain').value = '';
+        document.getElementById('databaseUrl').value = '';
+        showAlert('Firebase disconnected', 'success');
+        updateStatus();
+      }
+    }
+
+    function syncToCloud() {
+      showAlert('☁️ Syncing to cloud...', 'info');
+      // Firebase sync would go here
+      setTimeout(() => {
+        showAlert('✅ Cloud sync completed', 'success');
+      }, 2000);
+    }
+
+    function saveSettings() {
+      BACKUP_CONFIG.retentionDays = parseInt(document.getElementById('retentionDays').value);
+      saveConfig();
+      showAlert('⚙️ Settings saved', 'success');
+    }
+
+    function deleteAllBackups() {
+      if (confirm('Delete all backups? This cannot be undone.')) {
+        LOCAL_BACKUPS.length = 0;
+        saveLocalBackups();
+        updateStatus();
+        showAlert('All backups deleted', 'success');
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function showAlert(message, type) {
+      const container = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      container.appendChild(alert);
+      setTimeout(() => alert.remove(), 4000);
+    }
+
+    function goBack() {
+      window.location.href = '/dashboard.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

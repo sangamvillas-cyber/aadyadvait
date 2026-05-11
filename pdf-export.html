@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Export & Reports — Mishra Family</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin: 15px 0;
+        }
+
+        .sidebar-nav a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 250px;
+            padding: 40px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        .header-navigation {
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* Export Types Grid */
+        .export-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .export-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .export-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-color: #667eea;
+        }
+
+        .export-card h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .export-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .export-button {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .export-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .export-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Member Selector */
+        .member-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .selector-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .member-btn {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .member-btn:hover {
+            border-color: #667eea;
+            background: #f5f5ff;
+        }
+
+        .member-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .preview-header {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .preview-content {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            font-size: 13px;
+            color: #666;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Export Options */
+        .export-options {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #f5c6cb;
+        }
+
+        .alert.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        /* Print Styles */
+        @media print {
+            aside, main > .header-navigation, .export-grid, .member-selector {
+                display: none;
+            }
+            main {
+                margin-left: 0;
+                width: 100%;
+                background: white;
+            }
+            .pdf-export-content {
+                box-shadow: none;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside>
+        <div class="sidebar-header">📄 Reports</div>
+        <nav>
+            <ul class="sidebar-nav">
+                <li><a href="dashboard.html">← Back to Dashboard</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <div class="header-navigation">
+            <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        </div>
+
+        <h1>PDF Export & Reports</h1>
+        <p class="subtitle">Generate professional PDFs of member profiles and family financial reports</p>
+
+        <!-- Alert Messages -->
+        <div id="alertBox" class="alert"></div>
+
+        <!-- Member Selector -->
+        <div class="member-selector">
+            <label class="selector-label">📋 Select Member for Profile Export</label>
+            <div class="members-grid" id="membersList"></div>
+        </div>
+
+        <!-- Export Types Grid -->
+        <div class="export-grid">
+            <!-- Member Profile PDF -->
+            <div class="export-card">
+                <h3>👤 Member Profile PDF</h3>
+                <p>Export individual member profile with personal information, contact details, and key financial summary.</p>
+                <button class="export-button" onclick="window.pdfExporter.exportMemberProfile()">📥 Export Profile</button>
+            </div>
+
+            <!-- Financial Summary PDF -->
+            <div class="export-card">
+                <h3>💰 Financial Summary</h3>
+                <p>Export member's complete financial portfolio including mutual funds, bank accounts, and investments.</p>
+                <button class="export-button" onclick="window.pdfExporter.exportFinancialSummary()">📊 Export Financial</button>
+            </div>
+
+            <!-- Documents Inventory PDF -->
+            <div class="export-card">
+                <h3>📑 Documents Inventory</h3>
+                <p>Export list of all uploaded documents with categories, dates, and storage information.</p>
+                <button class="export-button" onclick="window.pdfExporter.exportDocumentsInventory()">📂 Export Inventory</button>
+            </div>
+
+            <!-- Family Comparison PDF -->
+            <div class="export-card">
+                <h3>👨‍👩‍👧‍👦 Family Comparison</h3>
+                <p>Export comprehensive family financial overview with comparative analysis across all members.</p>
+                <button class="export-button" onclick="window.pdfExporter.exportFamilyComparison()">👪 Export Comparison</button>
+            </div>
+
+            <!-- Custom Report Builder -->
+            <div class="export-card">
+                <h3>⚙️ Custom Report</h3>
+                <p>Select specific sections and data to include in your custom PDF report.</p>
+                <button class="export-button" onclick="window.pdfExporter.showCustomReportBuilder()">🛠️ Build Custom</button>
+            </div>
+
+            <!-- Batch Export -->
+            <div class="export-card">
+                <h3>📦 Batch Export</h3>
+                <p>Export PDFs for all family members in one operation. Select format and compression options.</p>
+                <button class="export-button" onclick="window.pdfExporter.showBatchExportOptions()">⬇️ Batch Export</button>
+            </div>
+        </div>
+
+        <!-- Export Options Section (Initially Hidden) -->
+        <div id="customReportSection" style="display: none;">
+            <h2 style="font-size: 24px; margin-bottom: 20px; color: #333;">📋 Custom Report Builder</h2>
+
+            <div class="export-options">
+                <div class="option-group">
+                    <label class="option-label">Include Sections</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="incPersonal" checked>
+                            <label for="incPersonal">Personal Information</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="incMutualFunds" checked>
+                            <label for="incMutualFunds">Mutual Funds</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="incBankAccounts" checked>
+                            <label for="incBankAccounts">Bank Accounts</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="incInvestments" checked>
+                            <label for="incInvestments">Investments</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="incDocuments">
+                            <label for="incDocuments">Documents List</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="incEducation">
+                            <label for="incEducation">Education Records</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label class="option-label">Report Settings</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeCover" checked>
+                            <label for="includeCover">Cover Page</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeHeader" checked>
+                            <label for="includeHeader">Page Headers</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeFooter" checked>
+                            <label for="includeFooter">Page Footers</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeTimestamp" checked>
+                            <label for="includeTimestamp">Generation Timestamp</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="export-button" onclick="window.pdfExporter.exportCustomReport()" style="margin-top: 20px;">📥 Generate Custom Report</button>
+                <button class="export-button" onclick="window.pdfExporter.hideCustomReportBuilder()" style="margin-top: 10px; background: #999;">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Batch Export Options (Initially Hidden) -->
+        <div id="batchExportSection" style="display: none;">
+            <h2 style="font-size: 24px; margin-bottom: 20px; color: #333;">📦 Batch Export All Members</h2>
+
+            <div class="export-options">
+                <div class="option-group">
+                    <label class="option-label">Select Export Type</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" name="batchType" value="profiles" checked>
+                            <label>Member Profiles</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" name="batchType" value="financial">
+                            <label>Financial Summaries</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" name="batchType" value="all">
+                            <label>Complete Package</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label class="option-label">Batch Settings</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="batchCompress" checked>
+                            <label for="batchCompress">Create ZIP Archive</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="batchIncludeFamilyReport" checked>
+                            <label for="batchIncludeFamilyReport">Include Family Report</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="export-button" onclick="window.pdfExporter.executeBatchExport()" style="margin-top: 20px;">⬇️ Start Batch Export</button>
+                <button class="export-button" onclick="window.pdfExporter.hideBatchExportOptions()" style="margin-top: 10px; background: #999;">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>Generating PDF... Please wait</p>
+        </div>
+    </main>
+
+    <script>
+        // Initialize family data from localStorage
+        const FAMILY = {
+            members: [
+                { id: 'siddharth', name: 'Siddharth', relation: 'Father', age: 45, image: '👨' },
+                { id: 'archana', name: 'Archana', relation: 'Mother', age: 43, image: '👩' },
+                { id: 'aadya', name: 'Aadya', relation: 'Daughter', age: 18, image: '👧' },
+                { id: 'advait', name: 'Advait', relation: 'Son', age: 16, image: '👦' },
+                { id: 'sarla', name: 'Sarla Mishra', relation: 'Grandmother', age: 68, image: '👵' },
+                { id: 'sheo', name: 'Sheo Shyam Mishra', relation: 'Grandfather', age: 70, image: '👴' }
+            ]
+        };
+
+        let selectedMemberId = 'siddharth';
+
+        // PDF Exporter Module
+        window.pdfExporter = {
+            showAlert(message, type = 'info') {
+                const alertBox = document.getElementById('alertBox');
+                alertBox.textContent = message;
+                alertBox.className = `alert ${type} show`;
+                setTimeout(() => alertBox.classList.remove('show'), 4000);
+            },
+
+            showLoading(show = true) {
+                const loading = document.getElementById('loadingState');
+                if (show) loading.classList.add('active');
+                else loading.classList.remove('active');
+            },
+
+            getMemberData(memberId) {
+                const storageKey = `memberProfile_${memberId}`;
+                const data = JSON.parse(localStorage.getItem(storageKey)) || {};
+                const member = FAMILY.members.find(m => m.id === memberId);
+                return { ...member, ...data };
+            },
+
+            getFinancialData(memberId) {
+                const key = `memberFinancial_${memberId}`;
+                return JSON.parse(localStorage.getItem(key)) || {
+                    mutualFunds: [],
+                    bankAccounts: [],
+                    investments: []
+                };
+            },
+
+            getDocumentsData(memberId) {
+                const key = `memberDocuments_${memberId}`;
+                return JSON.parse(localStorage.getItem(key)) || [];
+            },
+
+            generatePDF(htmlContent, filename) {
+                const element = document.createElement('div');
+                element.innerHTML = htmlContent;
+
+                const opt = {
+                    margin: 10,
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                this.showLoading(true);
+                html2pdf().set(opt).from(element).save().then(() => {
+                    this.showLoading(false);
+                    this.showAlert(`✅ ${filename} exported successfully`, 'success');
+                }).catch(err => {
+                    this.showLoading(false);
+                    this.showAlert('❌ Error generating PDF: ' + err.message, 'error');
+                });
+            },
+
+            exportMemberProfile() {
+                const member = this.getMemberData(selectedMemberId);
+                const financial = this.getFinancialData(selectedMemberId);
+
+                const html = `
+                    <div style="font-family: Arial, sans-serif; padding: 20px;">
+                        <h1>${member.name} - Profile Report</h1>
+                        <hr style="border: 1px solid #ddd; margin: 20px 0;">
+
+                        <h2 style="color: #333; font-size: 16px;">Personal Information</h2>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px; font-weight: bold;">Relation:</td>
+                                <td style="padding: 8px;">${member.relation}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px; font-weight: bold;">Email:</td>
+                                <td style="padding: 8px;">${member.email || 'N/A'}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px; font-weight: bold;">Phone:</td>
+                                <td style="padding: 8px;">${member.phone || 'N/A'}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px; font-weight: bold;">Date of Birth:</td>
+                                <td style="padding: 8px;">${member.dob || 'N/A'}</td>
+                            </tr>
+                        </table>
+
+                        <h2 style="color: #333; font-size: 16px; margin-top: 20px;">Financial Summary</h2>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid #eee; background: #f9f9f9;">
+                                <td style="padding: 8px; font-weight: bold;">Category</td>
+                                <td style="padding: 8px; font-weight: bold;">Count</td>
+                                <td style="padding: 8px; font-weight: bold;">Total Value</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px;">Mutual Funds</td>
+                                <td style="padding: 8px;">${financial.mutualFunds.length}</td>
+                                <td style="padding: 8px;">₹${financial.mutualFunds.reduce((sum, mf) => sum + (mf.currentValue || 0), 0).toLocaleString('en-IN')}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px;">Bank Accounts</td>
+                                <td style="padding: 8px;">${financial.bankAccounts.length}</td>
+                                <td style="padding: 8px;">₹${financial.bankAccounts.reduce((sum, ba) => sum + (ba.balance || 0), 0).toLocaleString('en-IN')}</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px;">Investments</td>
+                                <td style="padding: 8px;">${financial.investments.length}</td>
+                                <td style="padding: 8px;">₹${financial.investments.reduce((sum, inv) => sum + (inv.currentValue || 0), 0).toLocaleString('en-IN')}</td>
+                            </tr>
+                        </table>
+
+                        <div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 4px;">
+                            <p style="margin: 0; font-size: 12px; color: #666;">
+                                Generated on: ${new Date().toLocaleString('en-IN')}<br>
+                                Report Type: Member Profile
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                this.generatePDF(html, `${member.name}_Profile_${new Date().toISOString().split('T')[0]}.pdf`);
+            },
+
+            exportFinancialSummary() {
+                const member = this.getMemberData(selectedMemberId);
+                const financial = this.getFinancialData(selectedMemberId);
+
+                let mfTable = '<table style="width: 100%; border-collapse: collapse;">';
+                mfTable += '<tr style="background: #f9f9f9; border-bottom: 1px solid #eee;"><th style="padding: 8px; text-align: left; font-weight: bold;">Fund Name</th><th style="padding: 8px; text-align: left; font-weight: bold;">Units</th><th style="padding: 8px; text-align: right; font-weight: bold;">Current Value</th></tr>';
+
+                financial.mutualFunds.forEach(mf => {
+                    mfTable += `<tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px;">${mf.fundName || 'N/A'}</td>
+                        <td style="padding: 8px;">${mf.units || 0}</td>
+                        <td style="padding: 8px; text-align: right;">₹${(mf.currentValue || 0).toLocaleString('en-IN')}</td>
+                    </tr>`;
+                });
+                mfTable += '</table>';
+
+                const html = `
+                    <div style="font-family: Arial, sans-serif; padding: 20px;">
+                        <h1>${member.name} - Financial Summary</h1>
+                        <hr style="border: 1px solid #ddd; margin: 20px 0;">
+
+                        <h2 style="color: #333; font-size: 16px;">Mutual Funds</h2>
+                        ${financial.mutualFunds.length > 0 ? mfTable : '<p style="color: #999;">No mutual funds recorded</p>'}
+
+                        <h2 style="color: #333; font-size: 16px; margin-top: 20px;">Bank Accounts</h2>
+                        <p style="color: #666;">Total Bank Balance: <strong>₹${financial.bankAccounts.reduce((sum, ba) => sum + (ba.balance || 0), 0).toLocaleString('en-IN')}</strong></p>
+                        <p style="font-size: 12px; color: #999;">Number of Accounts: ${financial.bankAccounts.length}</p>
+
+                        <h2 style="color: #333; font-size: 16px; margin-top: 20px;">Investments</h2>
+                        <p style="color: #666;">Total Investment Value: <strong>₹${financial.investments.reduce((sum, inv) => sum + (inv.currentValue || 0), 0).toLocaleString('en-IN')}</strong></p>
+                        <p style="font-size: 12px; color: #999;">Number of Investments: ${financial.investments.length}</p>
+
+                        <div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 4px;">
+                            <p style="margin: 0; font-size: 12px; color: #666;">
+                                Generated on: ${new Date().toLocaleString('en-IN')}<br>
+                                Report Type: Financial Summary
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                this.generatePDF(html, `${member.name}_Financial_${new Date().toISOString().split('T')[0]}.pdf`);
+            },
+
+            exportDocumentsInventory() {
+                const member = this.getMemberData(selectedMemberId);
+                const documents = this.getDocumentsData(selectedMemberId);
+
+                let docTable = '<table style="width: 100%; border-collapse: collapse;">';
+                docTable += '<tr style="background: #f9f9f9; border-bottom: 1px solid #eee;"><th style="padding: 8px; text-align: left; font-weight: bold;">Document</th><th style="padding: 8px; text-align: left; font-weight: bold;">Category</th><th style="padding: 8px; text-align: left; font-weight: bold;">Date</th></tr>';
+
+                documents.forEach(doc => {
+                    docTable += `<tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px;">${doc.name || 'N/A'}</td>
+                        <td style="padding: 8px;">${doc.category || 'Other'}</td>
+                        <td style="padding: 8px;">${doc.uploadDate ? new Date(doc.uploadDate).toLocaleDateString('en-IN') : 'N/A'}</td>
+                    </tr>`;
+                });
+                docTable += '</table>';
+
+                const html = `
+                    <div style="font-family: Arial, sans-serif; padding: 20px;">
+                        <h1>${member.name} - Documents Inventory</h1>
+                        <hr style="border: 1px solid #ddd; margin: 20px 0;">
+
+                        <p style="color: #666;">Total Documents: <strong>${documents.length}</strong></p>
+
+                        <h2 style="color: #333; font-size: 16px; margin-top: 20px;">Document List</h2>
+                        ${documents.length > 0 ? docTable : '<p style="color: #999;">No documents recorded</p>'}
+
+                        <div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 4px;">
+                            <p style="margin: 0; font-size: 12px; color: #666;">
+                                Generated on: ${new Date().toLocaleString('en-IN')}<br>
+                                Report Type: Documents Inventory
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                this.generatePDF(html, `${member.name}_Documents_${new Date().toISOString().split('T')[0]}.pdf`);
+            },
+
+            exportFamilyComparison() {
+                let comparisonTable = '<table style="width: 100%; border-collapse: collapse;">';
+                comparisonTable += '<tr style="background: #f9f9f9; border-bottom: 1px solid #eee;"><th style="padding: 8px; text-align: left; font-weight: bold;">Member</th><th style="padding: 8px; text-align: right; font-weight: bold;">MF Value</th><th style="padding: 8px; text-align: right; font-weight: bold;">Bank Balance</th><th style="padding: 8px; text-align: right; font-weight: bold;">Total Assets</th></tr>';
+
+                let totalFamilyAssets = 0;
+                FAMILY.members.forEach(member => {
+                    const financial = this.getFinancialData(member.id);
+                    const mfValue = financial.mutualFunds.reduce((sum, mf) => sum + (mf.currentValue || 0), 0);
+                    const bankValue = financial.bankAccounts.reduce((sum, ba) => sum + (ba.balance || 0), 0);
+                    const investmentValue = financial.investments.reduce((sum, inv) => sum + (inv.currentValue || 0), 0);
+                    const total = mfValue + bankValue + investmentValue;
+                    totalFamilyAssets += total;
+
+                    comparisonTable += `<tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px;">${member.name}</td>
+                        <td style="padding: 8px; text-align: right;">₹${mfValue.toLocaleString('en-IN')}</td>
+                        <td style="padding: 8px; text-align: right;">₹${bankValue.toLocaleString('en-IN')}</td>
+                        <td style="padding: 8px; text-align: right; font-weight: bold;">₹${total.toLocaleString('en-IN')}</td>
+                    </tr>`;
+                });
+
+                comparisonTable += `<tr style="background: #e8e8e8; border-bottom: 1px solid #999;"><td style="padding: 8px; font-weight: bold;">TOTAL FAMILY ASSETS</td><td colspan="3" style="padding: 8px; text-align: right; font-weight: bold;">₹${totalFamilyAssets.toLocaleString('en-IN')}</td></tr>`;
+                comparisonTable += '</table>';
+
+                const html = `
+                    <div style="font-family: Arial, sans-serif; padding: 20px;">
+                        <h1>Mishra Family - Financial Comparison Report</h1>
+                        <hr style="border: 1px solid #ddd; margin: 20px 0;">
+
+                        <p style="color: #666; font-size: 14px;">Comprehensive financial overview of all family members</p>
+
+                        <h2 style="color: #333; font-size: 16px; margin-top: 20px;">Family Assets Summary</h2>
+                        ${comparisonTable}
+
+                        <div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 4px;">
+                            <p style="margin: 0; font-size: 12px; color: #666;">
+                                Generated on: ${new Date().toLocaleString('en-IN')}<br>
+                                Report Type: Family Comparison<br>
+                                Members Included: ${FAMILY.members.length}
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                this.generatePDF(html, `Mishra_Family_Comparison_${new Date().toISOString().split('T')[0]}.pdf`);
+            },
+
+            showCustomReportBuilder() {
+                document.getElementById('customReportSection').style.display = 'block';
+                document.getElementById('batchExportSection').style.display = 'none';
+            },
+
+            hideCustomReportBuilder() {
+                document.getElementById('customReportSection').style.display = 'none';
+            },
+
+            exportCustomReport() {
+                const sections = {
+                    personal: document.getElementById('incPersonal').checked,
+                    mutualFunds: document.getElementById('incMutualFunds').checked,
+                    bankAccounts: document.getElementById('incBankAccounts').checked,
+                    investments: document.getElementById('incInvestments').checked,
+                    documents: document.getElementById('incDocuments').checked,
+                    education: document.getElementById('incEducation').checked
+                };
+
+                const settings = {
+                    coverPage: document.getElementById('includeCover').checked,
+                    headers: document.getElementById('includeHeader').checked,
+                    footers: document.getElementById('includeFooter').checked,
+                    timestamp: document.getElementById('includeTimestamp').checked
+                };
+
+                const member = this.getMemberData(selectedMemberId);
+                let html = '';
+
+                if (settings.coverPage) {
+                    html += `<div style="page-break-after: always; text-align: center; padding: 80px 20px;">
+                        <h1 style="font-size: 32px; color: #667eea; margin-bottom: 10px;">${member.name}</h1>
+                        <h2 style="color: #666; font-size: 18px;">Custom Report</h2>
+                        <p style="color: #999; margin-top: 40px; font-size: 12px;">Mishra Family - Personal Finance System</p>
+                    </div>`;
+                }
+
+                html += '<div style="font-family: Arial, sans-serif; padding: 20px;">';
+
+                if (sections.personal) {
+                    html += `<h2 style="color: #333; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 15px;">Personal Information</h2>
+                        <table style="width: 100%; margin-bottom: 20px;">
+                            <tr><td style="padding: 8px; font-weight: bold;">Name:</td><td>${member.name}</td></tr>
+                            <tr><td style="padding: 8px; font-weight: bold;">Relation:</td><td>${member.relation}</td></tr>
+                            <tr><td style="padding: 8px; font-weight: bold;">Email:</td><td>${member.email || 'N/A'}</td></tr>
+                        </table>`;
+                }
+
+                if (sections.mutualFunds) {
+                    const financial = this.getFinancialData(selectedMemberId);
+                    html += `<h2 style="color: #333; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 15px; margin-top: 20px;">Mutual Funds</h2>
+                        <p>Total Funds: ${financial.mutualFunds.length}</p>`;
+                }
+
+                if (sections.bankAccounts) {
+                    const financial = this.getFinancialData(selectedMemberId);
+                    html += `<h2 style="color: #333; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 15px; margin-top: 20px;">Bank Accounts</h2>
+                        <p>Total Accounts: ${financial.bankAccounts.length}</p>`;
+                }
+
+                if (sections.documents) {
+                    const documents = this.getDocumentsData(selectedMemberId);
+                    html += `<h2 style="color: #333; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 15px; margin-top: 20px;">Documents</h2>
+                        <p>Total Documents: ${documents.length}</p>`;
+                }
+
+                html += '</div>';
+
+                if (settings.timestamp) {
+                    html += `<div style="margin-top: 30px; padding: 15px; background: #f0f0f0; border-radius: 4px; font-size: 12px; color: #666;">
+                        Generated on: ${new Date().toLocaleString('en-IN')}
+                    </div>`;
+                }
+
+                this.generatePDF(html, `${member.name}_CustomReport_${new Date().toISOString().split('T')[0]}.pdf`);
+                this.hideCustomReportBuilder();
+            },
+
+            showBatchExportOptions() {
+                document.getElementById('customReportSection').style.display = 'none';
+                document.getElementById('batchExportSection').style.display = 'block';
+            },
+
+            hideBatchExportOptions() {
+                document.getElementById('batchExportSection').style.display = 'none';
+            },
+
+            executeBatchExport() {
+                const batchType = document.querySelector('input[name="batchType"]:checked').value;
+                this.showAlert(`⏳ Starting batch export for ${batchType} type...`, 'info');
+
+                setTimeout(() => {
+                    FAMILY.members.forEach((member, index) => {
+                        selectedMemberId = member.id;
+                        if (batchType === 'profiles' || batchType === 'all') {
+                            this.exportMemberProfile();
+                        } else if (batchType === 'financial' || batchType === 'all') {
+                            this.exportFinancialSummary();
+                        }
+                    });
+
+                    if (document.getElementById('batchIncludeFamilyReport').checked) {
+                        setTimeout(() => this.exportFamilyComparison(), 1000);
+                    }
+
+                    this.hideBatchExportOptions();
+                }, 500);
+            }
+        };
+
+        // Initialize Member Selector
+        function initializeMemberSelector() {
+            const membersList = document.getElementById('membersList');
+            membersList.innerHTML = '';
+
+            FAMILY.members.forEach(member => {
+                const btn = document.createElement('button');
+                btn.className = `member-btn ${member.id === selectedMemberId ? 'active' : ''}`;
+                btn.textContent = member.name;
+                btn.onclick = () => {
+                    document.querySelectorAll('.member-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedMemberId = member.id;
+                };
+                membersList.appendChild(btn);
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initializeMemberSelector);
+    </script>
+</body>
+</html>

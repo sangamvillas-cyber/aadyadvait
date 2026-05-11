@@ -530,6 +530,9 @@
           <div class="nav-item" onclick="navigateTo('backup')">
             ☁️ Backup & Export
           </div>
+          <div class="nav-item" onclick="window.location.href='pdf-export.html'">
+            📄 PDF Reports
+          </div>
           <div class="nav-item" onclick="navigateTo('search')">
             🔍 Search
           </div>
@@ -538,6 +541,18 @@
           </div>
         </div>
       </nav>
+
+      <!-- User Profile Section -->
+      <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+        <div id="userProfile" style="background: #f1f5f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem;">Logged in as</div>
+          <div id="userEmail" style="font-size: 0.9rem; font-weight: 600; color: #1e293b; word-break: break-all; margin-bottom: 0.5rem;">User</div>
+          <div id="accessLevel" style="font-size: 0.75rem; color: #0f766e; font-weight: 500; background: #d1fae5; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block;">Master</div>
+        </div>
+        <button onclick="window.mishraAuth.logout()" style="width: 100%; padding: 0.75rem; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+          🚪 Sign Out
+        </button>
+      </div>
     </aside>
 
     <!-- Main Content -->
@@ -710,6 +725,31 @@
   </div>
 
   <script>
+    // Authentication check
+    (function() {
+      const SESSION_KEY = 'mishraFamilySession';
+      const session = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
+
+      if (!session) {
+        window.location.href = 'auth.html';
+        return;
+      }
+
+      const sessionData = JSON.parse(session);
+      const isExpired = new Date(sessionData.expiresAt) < new Date();
+
+      if (isExpired) {
+        localStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_KEY);
+        window.location.href = 'auth.html';
+        return;
+      }
+
+      // Store session globally
+      window.mishraSession = sessionData;
+      window.isReadOnly = sessionData.accessLevel === 'viewer';
+    })();
+
     // Family data structure
     const FAMILY = {
       members: [
@@ -997,6 +1037,30 @@
 
     // Initialize on load
     window.addEventListener('DOMContentLoaded', init);
+
+    // Update user profile display
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.mishraSession) {
+        document.getElementById('userEmail').textContent = window.mishraSession.email;
+        const accessLevel = window.mishraSession.accessLevel === 'admin' ? 'Master' : 'Viewer';
+        const accessColor = window.mishraSession.accessLevel === 'admin' ? '#d1fae5' : '#dbeafe';
+        const accessTextColor = window.mishraSession.accessLevel === 'admin' ? '#0f766e' : '#0c4a6e';
+        const accessLabel = document.getElementById('accessLevel');
+        accessLabel.textContent = accessLevel;
+        accessLabel.style.background = accessColor;
+        accessLabel.style.color = accessTextColor;
+      }
+    });
+
+    // Authentication module
+    window.mishraAuth = {
+      logout() {
+        const SESSION_KEY = 'mishraFamilySession';
+        localStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_KEY);
+        window.location.href = 'auth.html';
+      }
+    };
   </script>
 </body>
 </html>
