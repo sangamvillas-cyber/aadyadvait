@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Profile — Mishra Family</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .profile-header {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ccfbf1 0%, #a78bfa 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      flex-shrink: 0;
+    }
+
+    .profile-info h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-relation {
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+
+    .profile-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .detail-label {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+      font-size: 0.95rem;
+      color: #1e293b;
+      font-weight: 500;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+
+    .tab-button {
+      padding: 1rem 1.5rem;
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-button:hover {
+      color: #1e293b;
+    }
+
+    .tab-button.active {
+      color: #0f766e;
+      border-bottom-color: #0f766e;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Section */
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    /* Financial Summary */
+    .financial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .financial-card {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .financial-label {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .financial-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 0.5rem;
+    }
+
+    .financial-change {
+      font-size: 0.85rem;
+      color: #16a34a;
+    }
+
+    .financial-change.negative {
+      color: #dc2626;
+    }
+
+    /* Lists */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .list-item-left {
+      flex: 1;
+    }
+
+    .list-item-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.25rem;
+    }
+
+    .list-item-subtitle {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .list-item-amount {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0f766e;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #ccfbf1;
+      color: #0f766e;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    /* Documents */
+    .documents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .document-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .document-card:hover {
+      border-color: #0f766e;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.1);
+    }
+
+    .document-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .document-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .document-date {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0f766e;
+      border: 3px solid white;
+      box-shadow: 0 0 0 1px #e2e8f0;
+    }
+
+    .timeline-date {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .timeline-text {
+      font-size: 0.95rem;
+      color: #1e293b;
+      margin-top: 0.25rem;
+    }
+
+    /* Buttons */
+    .button {
+      padding: 0.75rem 1.5rem;
+      background: #0f766e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .button:hover {
+      background: #0d5d5a;
+    }
+
+    .button-secondary {
+      background: #f1f5f9;
+      color: #1e293b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .button-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    /* Back Button */
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #0f766e;
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      color: #0d5d5a;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-details {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .financial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        gap: 0.5rem;
+      }
+
+      .tab-button {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      .documents-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Back Button -->
+    <a class="back-button" onclick="goBack()">← Back to Dashboard</a>
+
+    <!-- Profile Header -->
+    <div class="profile-header" id="profileHeader">
+      <!-- Populated by JavaScript -->
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-button active" onclick="switchTab('overview')">📊 Overview</button>
+      <button class="tab-button" onclick="switchTab('financial')">💰 Financial</button>
+      <button class="tab-button" onclick="switchTab('documents')">📄 Documents</button>
+      <button class="tab-button" onclick="switchTab('education')">🎓 Education</button>
+      <button class="tab-button" onclick="switchTab('timeline')">📅 Timeline</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="tab-content active">
+      <div class="section">
+        <div class="section-title">Personal Information</div>
+        <div class="list" id="personalInfo">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Quick Summary</div>
+        <div class="financial-grid" id="quickSummary">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Tab -->
+    <div id="financial" class="tab-content">
+      <div class="section">
+        <div class="section-title">Financial Summary</div>
+        <div class="financial-grid" id="financialSummary">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Mutual Funds</div>
+        <div id="mutualFundsList">
+          <div class="empty-state">
+            <div class="empty-state-icon">📈</div>
+            <div class="empty-state-title">No Mutual Funds</div>
+            <div class="empty-state-text">No mutual fund records added yet</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Bank Accounts</div>
+        <div id="bankAccountsList">
+          <div class="empty-state">
+            <div class="empty-state-icon">🏦</div>
+            <div class="empty-state-title">No Bank Accounts</div>
+            <div class="empty-state-text">No bank account records added yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Tab -->
+    <div id="documents" class="tab-content">
+      <div class="section">
+        <div class="section-title">Documents & Records</div>
+        <div id="documentsContent">
+          <div class="empty-state">
+            <div class="empty-state-icon">📄</div>
+            <div class="empty-state-title">No Documents</div>
+            <div class="empty-state-text">No documents uploaded yet. Documents coming soon.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education Tab -->
+    <div id="education" class="tab-content">
+      <div class="section">
+        <div class="section-title">Education Information</div>
+        <div id="educationContent">
+          <div class="empty-state">
+            <div class="empty-state-icon">🎓</div>
+            <div class="empty-state-title">No Education Records</div>
+            <div class="empty-state-text">No education records added yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Tab -->
+    <div id="timeline" class="tab-content">
+      <div class="section">
+        <div class="section-title">Life Events & Timeline</div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">Today</div>
+            <div class="timeline-text">Profile created</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get member ID from URL
+    const memberId = new URLSearchParams(window.location.search).get('id') || 'siddharth';
+
+    // Family data structure
+    const FAMILY = {
+      members: [
+        {
+          id: 'siddharth',
+          name: 'Siddharth',
+          relation: 'Father',
+          email: 'seeksiddharth@gmail.com',
+          role: 'Admin',
+          icon: '👨',
+          dob: '1970-06-15',
+          phone: '+91-9876543210',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'archana',
+          name: 'Archana',
+          relation: 'Mother',
+          email: 'mf.archana@example.com',
+          role: 'Monitoring',
+          icon: '👩',
+          dob: '1972-03-22',
+          phone: '+91-9876543211',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'aadya',
+          name: 'Aadya',
+          relation: 'Daughter',
+          email: 'mf.aadya@example.com',
+          role: 'Monitoring',
+          icon: '👧',
+          dob: '2010-08-10',
+          phone: '+91-9876543212',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'advait',
+          name: 'Advait',
+          relation: 'Son',
+          email: 'mf.advait@example.com',
+          role: 'Monitoring',
+          icon: '👦',
+          dob: '2012-11-05',
+          phone: '+91-9876543213',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'sarla',
+          name: 'Sarla Mishra',
+          relation: 'Grandmother',
+          email: 'sarla.mishra@example.com',
+          role: 'Monitoring',
+          icon: '👵',
+          dob: '1945-02-14',
+          phone: '+91-9876543214',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'shyam',
+          name: 'Sheo Shyam Mishra',
+          relation: 'Grandfather',
+          email: 'shyam.mishra@example.com',
+          role: 'Monitoring',
+          icon: '👴',
+          dob: '1942-07-20',
+          phone: '+91-9876543215',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        }
+      ]
+    };
+
+    // Initialize
+    function init() {
+      loadFromStorage();
+      renderProfile();
+    }
+
+    // Load data from localStorage
+    function loadFromStorage() {
+      const stored = localStorage.getItem('mishraFamily');
+      if (stored) {
+        const data = JSON.parse(stored);
+        FAMILY.members = data.members;
+      }
+    }
+
+    // Get current member
+    function getCurrentMember() {
+      return FAMILY.members.find(m => m.id === memberId) || FAMILY.members[0];
+    }
+
+    // Render profile
+    function renderProfile() {
+      const member = getCurrentMember();
+
+      // Update title
+      document.title = `${member.name} — Member Profile`;
+
+      // Render header
+      renderHeader(member);
+
+      // Render tabs
+      renderPersonalInfo(member);
+      renderFinancialSummary(member);
+    }
+
+    // Render header
+    function renderHeader(member) {
+      const container = document.getElementById('profileHeader');
+      const age = calculateAge(member.dob);
+
+      container.innerHTML = `
+        <div class="profile-avatar" style="background: linear-gradient(135deg, ${getMemberGradient(member.id)} 0%, ${getMemberGradient(member.id)}dd 100%);">
+          ${member.icon}
+        </div>
+        <div class="profile-info">
+          <h1>${member.name}</h1>
+          <div class="profile-relation">${member.relation} • ${age} years old</div>
+          <div class="profile-details">
+            <div class="detail-item">
+              <div class="detail-label">Email</div>
+              <div class="detail-value">${member.email}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Phone</div>
+              <div class="detail-value">${member.phone}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Date of Birth</div>
+              <div class="detail-value">${formatDate(member.dob)}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Address</div>
+              <div class="detail-value">${member.address}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render personal info
+    function renderPersonalInfo(member) {
+      const container = document.getElementById('personalInfo');
+      const age = calculateAge(member.dob);
+
+      container.innerHTML = `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">Full Name</div>
+            <div class="list-item-subtitle">Family member identifier</div>
+          </div>
+          <div class="list-item-amount">${member.name}</div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">Relation</div>
+            <div class="list-item-subtitle">Family relation</div>
+          </div>
+          <div class="list-item-amount">${member.relation}</div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">Age</div>
+            <div class="list-item-subtitle">Current age</div>
+          </div>
+          <div class="list-item-amount">${age} years</div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">Date of Birth</div>
+            <div class="list-item-subtitle">Birthday date</div>
+          </div>
+          <div class="list-item-amount">${formatDate(member.dob)}</div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">Email</div>
+            <div class="list-item-subtitle">Contact email</div>
+          </div>
+          <div class="list-item-amount">${member.email}</div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">Phone</div>
+            <div class="list-item-subtitle">Contact number</div>
+          </div>
+          <div class="list-item-amount">${member.phone}</div>
+        </div>
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">Address</div>
+            <div class="list-item-subtitle">Current address</div>
+          </div>
+          <div class="list-item-amount">${member.address}</div>
+        </div>
+      `;
+    }
+
+    // Render financial summary
+    function renderFinancialSummary(member) {
+      const container = document.getElementById('quickSummary');
+      const gainLoss = member.financial.totalValue - member.financial.totalInvested;
+      const gainLossPercent = member.financial.totalInvested > 0 ? (gainLoss / member.financial.totalInvested * 100).toFixed(2) : 0;
+
+      container.innerHTML = `
+        <div class="financial-card">
+          <div class="financial-label">Total Invested</div>
+          <div class="financial-value">₹${member.financial.totalInvested.toLocaleString()}</div>
+          <div class="financial-change">${member.financial.mutualFunds.length} mutual funds</div>
+        </div>
+        <div class="financial-card">
+          <div class="financial-label">Current Value</div>
+          <div class="financial-value">₹${member.financial.totalValue.toLocaleString()}</div>
+          <div class="financial-change">${member.financial.bankAccounts.length} bank accounts</div>
+        </div>
+        <div class="financial-card">
+          <div class="financial-label">Gain / Loss</div>
+          <div class="financial-value">₹${Math.abs(gainLoss).toLocaleString()}</div>
+          <div class="financial-change ${gainLoss >= 0 ? '' : 'negative'}">${gainLoss >= 0 ? '+' : ''}${gainLossPercent}%</div>
+        </div>
+        <div class="financial-card">
+          <div class="financial-label">Documents</div>
+          <div class="financial-value">${member.documents.count}</div>
+          <div class="financial-change">${(member.documents.storageUsed / 1024 / 1024).toFixed(1)} MB used</div>
+        </div>
+      `;
+
+      // Render financial tab
+      renderFinancialTab(member);
+    }
+
+    // Render financial tab
+    function renderFinancialTab(member) {
+      const container = document.getElementById('financialSummary');
+      const gainLoss = member.financial.totalValue - member.financial.totalInvested;
+      const gainLossPercent = member.financial.totalInvested > 0 ? (gainLoss / member.financial.totalInvested * 100).toFixed(2) : 0;
+
+      container.innerHTML = `
+        <div class="financial-card">
+          <div class="financial-label">Total Invested</div>
+          <div class="financial-value">₹${member.financial.totalInvested.toLocaleString()}</div>
+        </div>
+        <div class="financial-card">
+          <div class="financial-label">Current Value</div>
+          <div class="financial-value">₹${member.financial.totalValue.toLocaleString()}</div>
+        </div>
+        <div class="financial-card">
+          <div class="financial-label">Gain / Loss</div>
+          <div class="financial-value">₹${Math.abs(gainLoss).toLocaleString()}</div>
+          <div class="financial-change ${gainLoss >= 0 ? '' : 'negative'}">${gainLoss >= 0 ? '+' : ''}${gainLossPercent}%</div>
+        </div>
+      `;
+    }
+
+    // Switch tabs
+    function switchTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Go back
+    function goBack() {
+      window.location.href = '/dashboard.html';
+    }
+
+    // Utility functions
+    function calculateAge(dob) {
+      const today = new Date();
+      const birthDate = new Date(dob);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
+    function formatDate(date) {
+      const d = new Date(date);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    function getMemberGradient(memberId) {
+      const colors = {
+        'siddharth': '#14b8a6',
+        'archana': '#a78bfa',
+        'aadya': '#fbbf24',
+        'advait': '#60a5fa',
+        'sarla': '#f87171',
+        'shyam': '#34d399'
+      };
+      return colors[memberId] || '#14b8a6';
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
