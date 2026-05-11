@@ -610,21 +610,11 @@
       </div>
 
       <div class="auth-notice">
-        🔒 This dashboard is locked to <strong>seeksiddharth@gmail.com</strong> only.
+        🔒 This dashboard is protected. You need to authenticate first.
       </div>
 
-      <form class="auth-form" id="authForm">
-        <div class="form-group">
-          <label for="authEmail">Email</label>
-          <input type="email" id="authEmail" placeholder="seeksiddharth@gmail.com" required>
-        </div>
-        <div class="form-group">
-          <label for="authPassword">Master Password</label>
-          <input type="password" id="authPassword" placeholder="Enter your password" required>
-        </div>
-        <div class="auth-error" id="authError"></div>
-        <button type="submit" class="auth-button">Sign In</button>
-      </form>
+      <div class="auth-error" id="authError" style="margin-bottom: 1rem;"></div>
+      <button class="auth-button" onclick="window.location.href='auth.html'">← Go to Login</button>
     </div>
   </div>
 
@@ -929,7 +919,6 @@
             <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Last Login</div>
             <div style="padding: 0.75rem 1rem; background: var(--neutral-100); border-radius: 8px; color: var(--neutral-900);" id="lastLogin">Today</div>
           </div>
-          <button class="btn-secondary" id="changePasswordBtn" style="width: 100%;">Change Master Password</button>
         </div>
 
         <div class="card">
@@ -969,14 +958,39 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       loadFromLocalStorage();
-      if (APP_STATE.isAuthenticated) showApp();
-      else showAuth();
+
+      // Check if already authenticated via auth.html session
+      const sessionFromAuth = window.mishraSession || getSessionFromStorage();
+      if (sessionFromAuth && isSessionValid(sessionFromAuth)) {
+        APP_STATE.email = sessionFromAuth.email;
+        APP_STATE.isAuthenticated = true;
+        showApp();
+      } else if (APP_STATE.isAuthenticated) {
+        showApp();
+      } else {
+        // Redirect to auth.html if not authenticated
+        window.location.href = 'auth.html';
+      }
+
       setupEventListeners();
       setDateInputsToToday();
     });
 
+    function getSessionFromStorage() {
+      try {
+        const session = localStorage.getItem('mishraFamilySession');
+        return session ? JSON.parse(session) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function isSessionValid(session) {
+      if (!session || !session.expiresAt) return false;
+      return new Date(session.expiresAt) > new Date();
+    }
+
     function setupEventListeners() {
-      document.getElementById('authForm').addEventListener('submit', handleLogin);
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
       document.getElementById('addStockBtn').addEventListener('click', addStock);
       document.getElementById('addMFBtn').addEventListener('click', addMF);
@@ -986,41 +1000,19 @@
       document.getElementById('exportDataBtn').addEventListener('click', exportData);
       document.getElementById('backupBtn').addEventListener('click', createBackup);
       document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
-      document.getElementById('changePasswordBtn').addEventListener('click', changePassword);
       document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', navigateTo);
       });
     }
 
-    function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('authEmail').value;
-      const password = document.getElementById('authPassword').value;
-      const errorEl = document.getElementById('authError');
-
-      if (email !== AUTHORIZED_EMAIL) {
-        errorEl.textContent = '❌ Only seeksiddharth@gmail.com is authorized.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      if (password.length < 6) {
-        errorEl.textContent = '❌ Password must be at least 6 characters.';
-        errorEl.style.display = 'block';
-        return;
-      }
-
-      APP_STATE.isAuthenticated = true;
-      saveToLocalStorage();
-      showApp();
-    }
 
     function handleLogout() {
       if (confirm('Sign out?')) {
         APP_STATE.isAuthenticated = false;
         saveToLocalStorage();
-        showAuth();
-        document.getElementById('authForm').reset();
+        // Clear auth session and redirect to auth.html
+        localStorage.removeItem('mishraFamilySession');
+        window.location.href = 'auth.html';
       }
     }
 
@@ -1660,17 +1652,6 @@
           location.reload();
         }
       }
-    }
-
-    function changePassword() {
-      const newPassword = prompt('Enter new master password (minimum 6 characters):');
-      if (!newPassword) return;
-      if (newPassword.length < 6) {
-        alert('Password must be at least 6 characters');
-        return;
-      }
-      alert('Password changed successfully. Please log in again.');
-      handleLogout();
     }
 
     // Update app state
