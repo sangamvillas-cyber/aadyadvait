@@ -619,11 +619,22 @@
                     });
 
                     if (credential) {
+                        // Try to extract public key
+                        let publicKeyBase64 = '';
+                        try {
+                            const publicKey = credential.response.getPublicKey();
+                            if (publicKey) {
+                                publicKeyBase64 = this.arrayBufferToBase64(publicKey);
+                            }
+                        } catch (e) {
+                            console.warn('Could not extract public key:', e);
+                        }
+
                         // Store credential
                         const storedCredential = {
                             id: this.arrayBufferToBase64(credential.id),
                             name: keyName,
-                            publicKey: this.arrayBufferToBase64(credential.response.getPublicKey()),
+                            publicKey: publicKeyBase64,
                             registeredAt: new Date().toISOString()
                         };
 
