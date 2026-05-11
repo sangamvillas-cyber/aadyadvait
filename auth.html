@@ -589,6 +589,9 @@
                     return;
                 }
 
+                // Ensure page has focus for WebAuthn
+                window.focus();
+
                 document.getElementById('registerBtn').disabled = true;
                 this.showLoading('regLoading', true);
 
@@ -674,6 +677,9 @@
                     this.showError('❌ No registered keys found. Register a key first.');
                     return;
                 }
+
+                // Ensure page has focus for WebAuthn
+                window.focus();
 
                 document.getElementById('authBtn').disabled = true;
                 this.showLoading('authLoading', true);
