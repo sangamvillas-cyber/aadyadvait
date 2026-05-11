@@ -314,10 +314,55 @@
 
       <!-- Analytics Section -->
       <div class="section" id="analytics">
-        <div class="section-placeholder">
-          <div class="section-icon">📉</div>
-          <div class="section-title">Analytics & Performance</div>
-          <div class="section-subtitle">Investment performance metrics</div>
+        <div style="padding: 2rem;">
+          <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--neutral-900);">Real-Time NAV & XIRR Tracker</h2>
+
+          <!-- Member Selector -->
+          <div style="margin-bottom: 2rem; display: flex; gap: 1rem;">
+            <button id="memberFilter_siddharth" class="member-filter-btn active" data-member="siddharth" style="padding: 0.75rem 1.5rem; background: var(--primary-lighter); color: var(--primary); border: 2px solid var(--primary-light); border-radius: 8px; cursor: pointer; font-weight: 600;">Siddharth</button>
+            <button id="memberFilter_advait" class="member-filter-btn" data-member="advait" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Advait</button>
+          </div>
+
+          <!-- Summary Cards -->
+          <div id="summarCards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Invested</div>
+              <div id="totalInvested" style="font-size: 1.75rem; font-weight: 700; color: var(--neutral-900);">₹0.00</div>
+            </div>
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Current Value</div>
+              <div id="currentValue" style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">₹0.00</div>
+            </div>
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Gain</div>
+              <div id="totalGain" style="font-size: 1.75rem; font-weight: 700; color: #10b981;">₹0.00</div>
+              <div id="gainPercent" style="font-size: 0.875rem; color: #10b981; margin-top: 0.5rem;">+0.00%</div>
+            </div>
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Overall XIRR</div>
+              <div id="overallXIRR" style="font-size: 1.75rem; font-weight: 700; color: var(--primary-light);">0.00%</div>
+            </div>
+          </div>
+
+          <!-- Tracking Table -->
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;" id="trackingTable">
+              <thead>
+                <tr style="background: var(--neutral-100); border-bottom: 2px solid var(--neutral-200);">
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Units</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Buy NAV</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Current NAV</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Purchase Value</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Current Value</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Gain/Loss</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Return %</th>
+                </tr>
+              </thead>
+              <tbody id="trackingTableBody">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -466,7 +511,84 @@
       if (mfTab) {
         mfTab.addEventListener('click', loadAndDisplayFunds);
       }
+
+      // Setup analytics tracking
+      const analyticsTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-tab') === 'analytics');
+      if (analyticsTab) {
+        analyticsTab.addEventListener('click', loadAndDisplayTracking);
+      }
+
+      // Member filter buttons
+      document.querySelectorAll('.member-filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.member-filter-btn').forEach(b => {
+            b.style.background = 'var(--neutral-100)';
+            b.style.color = 'var(--neutral-600)';
+            b.style.borderColor = 'transparent';
+          });
+          e.target.style.background = 'var(--primary-lighter)';
+          e.target.style.color = 'var(--primary)';
+          e.target.style.borderColor = 'var(--primary-light)';
+
+          const member = e.target.getAttribute('data-member');
+          displayTrackingData(member);
+        });
+      });
     });
+
+    function loadAndDisplayTracking() {
+      fetch('tracking-data.json')
+        .then(res => res.json())
+        .then(data => {
+          window.trackingData = data;
+          displayTrackingData('siddharth');
+        })
+        .catch(err => {
+          console.error('Error loading tracking data:', err);
+          document.getElementById('trackingTableBody').innerHTML = '<tr><td colspan="8" style="padding: 1rem; color: red; text-align: center;">Error loading tracking data</td></tr>';
+        });
+    }
+
+    function displayTrackingData(member) {
+      const data = window.trackingData;
+      const memberData = data[member];
+
+      // Update summary cards
+      document.getElementById('totalInvested').textContent = '₹' + memberData.totalInvested.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('currentValue').textContent = '₹' + memberData.totalCurrentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+      const gainColor = memberData.totalGain >= 0 ? '#10b981' : '#ef4444';
+      document.getElementById('totalGain').textContent = (memberData.totalGain >= 0 ? '₹' : '-₹') + Math.abs(memberData.totalGain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('totalGain').style.color = gainColor;
+
+      const percentText = (memberData.totalGainPercent >= 0 ? '+' : '') + memberData.totalGainPercent.toFixed(2) + '%';
+      document.getElementById('gainPercent').textContent = percentText;
+      document.getElementById('gainPercent').style.color = gainColor;
+
+      document.getElementById('overallXIRR').textContent = memberData.overallXIRR.toFixed(2) + '%';
+
+      // Build tracking table
+      let tableHtml = '';
+      memberData.transactions.forEach(txn => {
+        const purchaseValue = txn.units * txn.purchaseNav;
+        const currentValue = txn.units * txn.currentNav;
+        const gain = currentValue - purchaseValue;
+        const gainPercent = (gain / purchaseValue) * 100;
+
+        tableHtml += `<tr style="border-bottom: 1px solid var(--neutral-200);">
+          <td style="padding: 1rem; color: var(--primary); font-weight: 500;">${txn.fund}</td>
+          <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">${txn.units.toFixed(2)}</td>
+          <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">₹${txn.purchaseNav.toFixed(2)}</td>
+          <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">₹${txn.currentNav.toFixed(2)}</td>
+          <td style="padding: 1rem; text-align: right; color: var(--neutral-900);">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          <td style="padding: 1rem; text-align: right; font-weight: 600; color: var(--primary);">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${gain >= 0 ? '#10b981' : '#ef4444'};">₹${gain.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${gainPercent >= 0 ? '#10b981' : '#ef4444'};">${(gainPercent >= 0 ? '+' : '')}${gainPercent.toFixed(2)}%</td>
+        </tr>`;
+      });
+
+      document.getElementById('trackingTableBody').innerHTML = tableHtml;
+    }
   </script>
 </body>
 </html>
