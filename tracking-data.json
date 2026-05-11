@@ -124,15 +124,15 @@
         "lastNavUpdate": "2026-05-08"
       },
       {
-        "id": "adv_quant_1",
-        "fund": "Quant Small Cap Fund",
-        "fundHouse": "Quant",
-        "folio": "51059517961",
+        "id": "adv_nifty_1",
+        "fund": "Nifty 50 Index Fund",
+        "fundHouse": "HDFC",
+        "folio": "TBD",
         "type": "holding",
-        "units": 16.535,
-        "purchaseDate": "2024-06-01",
-        "purchaseNav": 240.00,
-        "currentNav": 292.1925,
+        "units": 657.15,
+        "purchaseDate": "2024-11-15",
+        "purchaseNav": 235.00,
+        "currentNav": 261.75,
         "lastNavUpdate": "2026-05-08"
       },
       {
@@ -149,9 +149,78 @@
       }
     ],
     "totalInvested": 7858299.28,
-    "totalCurrentValue": 12713005.90,
-    "totalGain": 4854706.62,
-    "totalGainPercent": 61.77,
-    "overallXIRR": 14.8
+    "totalCurrentValue": 12821004.25,
+    "totalGain": 4962704.97,
+    "totalGainPercent": 63.14,
+    "overallXIRR": 15.1
+  },
+  "aadya": {
+    "transactions": [
+      {
+        "id": "aad_axis_1",
+        "fund": "Axis Midcap Fund",
+        "fundHouse": "Axis",
+        "folio": "TBD",
+        "type": "holding",
+        "units": 450.00,
+        "purchaseDate": "2023-04-15",
+        "purchaseNav": 2405.00,
+        "currentNav": 2725.50,
+        "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "aad_hdfc_flexi_1",
+        "fund": "HDFC Flexi Cap Fund - Direct Plan",
+        "fundHouse": "HDFC",
+        "folio": "TBD",
+        "type": "holding",
+        "units": 1028.50,
+        "purchaseDate": "2023-05-20",
+        "purchaseNav": 1945.00,
+        "currentNav": 1906.25,
+        "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "aad_hdfc_midcap_1",
+        "fund": "HDFC Midcap Opp Fund",
+        "fundHouse": "HDFC",
+        "folio": "TBD",
+        "type": "holding",
+        "units": 330.00,
+        "purchaseDate": "2023-06-10",
+        "purchaseNav": 1820.00,
+        "currentNav": 1733.33,
+        "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "aad_ppfas_flexi_1",
+        "fund": "Parag Parikh Flexi Cap Fund - Direct Plan Growth",
+        "fundHouse": "PPFAS",
+        "folio": "TBD",
+        "type": "holding",
+        "units": 4525.00,
+        "purchaseDate": "2022-08-25",
+        "purchaseNav": 70.00,
+        "currentNav": 102.65,
+        "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "aad_sbi_small_1",
+        "fund": "SBI Small Cap Fund",
+        "fundHouse": "SBI",
+        "folio": "TBD",
+        "type": "holding",
+        "units": 90.00,
+        "purchaseDate": "2024-01-10",
+        "purchaseNav": 1850.00,
+        "currentNav": 2033.33,
+        "lastNavUpdate": "2026-05-08"
+      }
+    ],
+    "totalInvested": 7033000.00,
+    "totalCurrentValue": 8606000.00,
+    "totalGain": 1573000.00,
+    "totalGainPercent": 22.36,
+    "overallXIRR": 12.5
   }
 }

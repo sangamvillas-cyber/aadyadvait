@@ -294,11 +294,11 @@
               <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Archana</div>
               <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">Coming Soon</div>
             </div>
-            <div style="background: white; border: 2px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem; text-align: center; opacity: 0.6;">
+            <a href="aadya-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
               <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👧</div>
               <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Aadya</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">Coming Soon</div>
-            </div>
+              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">View Profile</div>
+            </a>
             <a href="advait-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
               <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👦</div>
               <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Advait</div>
@@ -327,6 +327,7 @@
           <div style="margin-bottom: 2rem; display: flex; gap: 1rem;">
             <button id="memberFilter_siddharth" class="member-filter-btn active" data-member="siddharth" style="padding: 0.75rem 1.5rem; background: var(--primary-lighter); color: var(--primary); border: 2px solid var(--primary-light); border-radius: 8px; cursor: pointer; font-weight: 600;">Siddharth</button>
             <button id="memberFilter_advait" class="member-filter-btn" data-member="advait" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Advait</button>
+            <button id="memberFilter_aadya" class="member-filter-btn" data-member="aadya" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Aadya</button>
           </div>
 
           <!-- Summary Cards -->
@@ -356,10 +357,12 @@
               <thead>
                 <tr style="background: var(--neutral-100); border-bottom: 2px solid var(--neutral-200);">
                   <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund</th>
+                  <th style="padding: 1rem; text-align: center; font-weight: 600; color: var(--neutral-900);">Folio</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Units</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Purchase Value</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Current Value</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Gain/Loss</th>
+                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">XIRR %</th>
                 </tr>
               </thead>
               <tbody id="trackingTableBody">
@@ -548,7 +551,7 @@
         })
         .catch(err => {
           console.error('Error loading tracking data:', err);
-          document.getElementById('trackingTableBody').innerHTML = '<tr><td colspan="5" style="padding: 1rem; color: red; text-align: center;">Error loading tracking data</td></tr>';
+          document.getElementById('trackingTableBody').innerHTML = '<tr><td colspan="7" style="padding: 1rem; color: red; text-align: center;">Error loading tracking data</td></tr>';
         });
     }
 
@@ -578,12 +581,20 @@
         const gain = currentValue - purchaseValue;
         const gainPercent = (gain / purchaseValue) * 100;
 
+        // Calculate XIRR for individual fund
+        const purchaseDate = new Date(txn.purchaseDate);
+        const today = new Date();
+        const yearsDiff = (today - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
+        const xirr = yearsDiff > 0 ? (Math.pow(currentValue / purchaseValue, 1 / yearsDiff) - 1) * 100 : 0;
+
         tableHtml += `<tr style="border-bottom: 1px solid var(--neutral-200);">
           <td style="padding: 1rem; color: var(--primary); font-weight: 500;">${txn.fund}</td>
+          <td style="padding: 1rem; text-align: center; color: var(--neutral-600); font-family: monospace;">${txn.folio}</td>
           <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">${txn.units.toFixed(2)}</td>
           <td style="padding: 1rem; text-align: right; color: var(--neutral-900);">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
           <td style="padding: 1rem; text-align: right; font-weight: 600; color: var(--primary);">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
           <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${gain >= 0 ? '#10b981' : '#ef4444'};">₹${gain.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+          <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${xirr >= 0 ? '#10b981' : '#ef4444'};">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</td>
         </tr>`;
       });
 

@@ -76,12 +76,12 @@
           "valuation": 1922313.26
         },
         {
-          "fundHouse": "Quant",
-          "fundName": "Quant Small Cap Fund - Direct Plan - Growth",
-          "folio": "51059517961",
-          "units": 16.535,
-          "nav": 292.1925,
-          "valuation": 4831.40
+          "fundHouse": "HDFC",
+          "fundName": "HDFC Nifty 50 Index Fund - Direct Plan",
+          "folio": "TBD",
+          "units": 657.15,
+          "nav": 261.75,
+          "valuation": 171916.15
         },
         {
           "fundHouse": "Mirae Asset",
@@ -92,7 +92,54 @@
           "valuation": 7642829.34
         }
       ],
-      "totalValuation": 13073005.90
+      "totalValuation": 13240090.65
+    },
+    "aadya": {
+      "name": "Aadya",
+      "pan": null,
+      "holdings": [
+        {
+          "fundHouse": "Axis",
+          "fundName": "Axis Midcap Fund",
+          "folio": "TBD",
+          "units": 450.00,
+          "nav": 2725.50,
+          "valuation": 1226475.00
+        },
+        {
+          "fundHouse": "HDFC",
+          "fundName": "HDFC Flexi Cap Fund - Direct Plan",
+          "folio": "TBD",
+          "units": 1028.50,
+          "nav": 1906.25,
+          "valuation": 1959878.13
+        },
+        {
+          "fundHouse": "HDFC",
+          "fundName": "HDFC Midcap Opp Fund",
+          "folio": "TBD",
+          "units": 330.00,
+          "nav": 1733.33,
+          "valuation": 571999.89
+        },
+        {
+          "fundHouse": "PPFAS",
+          "fundName": "Parag Parikh Flexi Cap Fund - Direct Plan Growth",
+          "folio": "TBD",
+          "units": 4525.00,
+          "nav": 102.65,
+          "valuation": 464589.13
+        },
+        {
+          "fundHouse": "SBI",
+          "fundName": "SBI Small Cap Fund",
+          "folio": "TBD",
+          "units": 90.00,
+          "nav": 2033.33,
+          "valuation": 182999.70
+        }
+      ],
+      "totalValuation": 5406941.85
     }
   },
   "lastUpdated": "2026-05-11",
