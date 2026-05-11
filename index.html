@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dhana — Personal Finance & Document Keeper</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-light: #14b8a6;
+      --primary-lighter: #ccfbf1;
+      --neutral-50: #fafafa;
+      --neutral-100: #f5f5f5;
+      --neutral-200: #e5e5e5;
+      --neutral-300: #d4d4d4;
+      --neutral-400: #a3a3a3;
+      --neutral-600: #525252;
+      --neutral-800: #262626;
+      --neutral-900: #171717;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--neutral-50);
+      color: var(--neutral-900);
+      line-height: 1.6;
+    }
+
+    /* Auth Screen */
+    .auth-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 1rem;
+    }
+
+    .auth-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      padding: 3rem;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .app-logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .app-tagline {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      font-weight: 500;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--neutral-800);
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--neutral-300);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-lighter);
+    }
+
+    .auth-button {
+      padding: 0.875rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .auth-button:hover:not(:disabled) {
+      background: var(--primary-light);
+      box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2);
+    }
+
+    .auth-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .auth-notice {
+      background: var(--primary-lighter);
+      border: 1px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: var(--primary);
+      line-height: 1.5;
+    }
+
+    .auth-error {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 0.875rem;
+      font-size: 0.875rem;
+      color: var(--danger);
+      display: none;
+    }
+
+    /* App Layout */
+    .app-layout {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .app-layout.active {
+      display: flex;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: white;
+      border-right: 1px solid var(--neutral-200);
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    .nav-section {
+      margin-bottom: 2rem;
+    }
+
+    .nav-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--neutral-400);
+      margin-bottom: 0.75rem;
+    }
+
+    .nav-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--neutral-600);
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background: var(--neutral-100);
+      color: var(--neutral-900);
+    }
+
+    .nav-item.active {
+      background: var(--primary-lighter);
+      color: var(--primary);
+      border-color: var(--primary-light);
+    }
+
+    .user-info {
+      margin-top: auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--neutral-200);
+      text-align: center;
+    }
+
+    .user-email {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      margin-bottom: 1rem;
+      word-break: break-all;
+    }
+
+    .logout-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--neutral-100);
+      color: var(--neutral-900);
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-button:hover {
+      background: var(--danger);
+      color: white;
+      border-color: var(--danger);
+    }
+
+    /* Content Sections */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-description {
+      font-size: 1rem;
+      color: var(--neutral-600);
+    }
+
+    /* Dashboard */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--neutral-200);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-change {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      margin-top: 0.5rem;
+    }
+
+    /* Forms & Lists */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--neutral-200);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+    }
+
+    .btn-secondary {
+      background: var(--neutral-100);
+      color: var(--neutral-900);
+      border: 1px solid var(--neutral-200);
+    }
+
+    .btn-secondary:hover {
+      background: var(--neutral-200);
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .list-item {
+      background: white;
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .list-item-left {
+      flex: 1;
+    }
+
+    .list-item-title {
+      font-weight: 600;
+      color: var(--neutral-900);
+      margin-bottom: 0.25rem;
+    }
+
+    .list-item-subtitle {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+    }
+
+    .list-item-amount {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: right;
+    }
+
+    .list-item-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--neutral-600);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--neutral-900);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--neutral-600);
+    }
+
+    .success-message {
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--success);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .success-message.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--neutral-200);
+        position: static;
+        padding: 1rem;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 1.5rem;
+        height: auto;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-card {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Auth Screen -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="app-logo">Dhana</div>
+        <div class="app-tagline">Personal Finance & Documents</div>
+      </div>
+
+      <div class="auth-notice">
+        🔒 This app is locked to <strong>seeksiddharth@gmail.com</strong> only. Access restricted for privacy.
+      </div>
+
+      <form class="auth-form" id="authForm">
+        <div class="form-group">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" placeholder="seeksiddharth@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Master Password</label>
+          <input type="password" id="authPassword" placeholder="Enter your password" required>
+        </div>
+        <div class="auth-error" id="authError"></div>
+        <button type="submit" class="auth-button">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div class="app-layout" id="appLayout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="app-title">Dhana</div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Menu</div>
+        <div class="nav-items">
+          <div class="nav-item active" data-page="dashboard">📊 Dashboard</div>
+          <div class="nav-item" data-page="expenses">💸 Expenses</div>
+          <div class="nav-item" data-page="income">💰 Income</div>
+          <div class="nav-item" data-page="wallets">👛 Wallets</div>
+          <div class="nav-item" data-page="documents">📄 Documents</div>
+          <div class="nav-item" data-page="analytics">📈 Analytics</div>
+        </div>
+      </div>
+
+      <div class="user-info">
+        <div class="user-email" id="sidebarEmail"></div>
+        <button class="logout-button" id="logoutBtn">Sign Out</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Dashboard -->
+      <div class="section active" id="dashboard">
+        <div class="section-header">
+          <div class="section-title">Dashboard</div>
+          <div class="section-description">Overview of your finances</div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Balance</div>
+            <div class="stat-value" id="totalBalance">₹0</div>
+            <div class="stat-change">Across all wallets</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">This Month Expenses</div>
+            <div class="stat-value" id="monthExpenses">₹0</div>
+            <div class="stat-change">All categories</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">This Month Income</div>
+            <div class="stat-value" id="monthIncome">₹0</div>
+            <div class="stat-change">All sources</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Recent Transactions</h3>
+          <div class="list" id="recentTransactions">
+            <div class="empty-state">
+              <div class="empty-state-icon">📭</div>
+              <div class="empty-state-title">No transactions yet</div>
+              <div>Start by adding an expense or income</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expenses -->
+      <div class="section" id="expenses">
+        <div class="section-header">
+          <div class="section-title">Expenses</div>
+          <div class="section-description">Track your spending</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Expense</h3>
+          <div class="form-grid">
+            <input type="number" id="expenseAmount" placeholder="Amount" min="0" step="0.01">
+            <input type="text" id="expenseCategory" placeholder="Category (e.g., Food, Transport)">
+            <input type="date" id="expenseDate">
+            <input type="text" id="expenseDescription" placeholder="Description (optional)">
+          </div>
+          <div class="form-grid">
+            <select id="expenseWallet" style="padding: 0.75rem 1rem; border: 1px solid var(--neutral-300); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif;">
+              <option value="">Select Wallet</option>
+            </select>
+          </div>
+          <div class="success-message" id="expenseSuccess">✓ Expense added successfully</div>
+          <button class="btn-primary" id="addExpenseBtn">Add Expense</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Recent Expenses</h3>
+          <div class="list" id="expensesList">
+            <div class="empty-state">
+              <div class="empty-state-icon">💸</div>
+              <div class="empty-state-title">No expenses yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Income -->
+      <div class="section" id="income">
+        <div class="section-header">
+          <div class="section-title">Income</div>
+          <div class="section-description">Track your earnings</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Income</h3>
+          <div class="form-grid">
+            <input type="number" id="incomeAmount" placeholder="Amount" min="0" step="0.01">
+            <input type="text" id="incomeSource" placeholder="Source (e.g., Salary, Freelance)">
+            <input type="date" id="incomeDate">
+            <input type="text" id="incomeDescription" placeholder="Description (optional)">
+          </div>
+          <div class="form-grid">
+            <select id="incomeWallet" style="padding: 0.75rem 1rem; border: 1px solid var(--neutral-300); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif;">
+              <option value="">Select Wallet</option>
+            </select>
+          </div>
+          <div class="success-message" id="incomeSuccess">✓ Income added successfully</div>
+          <button class="btn-primary" id="addIncomeBtn">Add Income</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Recent Income</h3>
+          <div class="list" id="incomeList">
+            <div class="empty-state">
+              <div class="empty-state-icon">💰</div>
+              <div class="empty-state-title">No income yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wallets -->
+      <div class="section" id="wallets">
+        <div class="section-header">
+          <div class="section-title">Wallets</div>
+          <div class="section-description">Manage your accounts and wallets</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Create Wallet</h3>
+          <div class="form-grid">
+            <input type="text" id="walletName" placeholder="Wallet Name (e.g., Checking, Savings)">
+            <input type="number" id="walletBalance" placeholder="Initial Balance" min="0" step="0.01">
+            <input type="text" id="walletType" placeholder="Type (e.g., Bank, Cash, Credit Card)">
+          </div>
+          <div class="success-message" id="walletSuccess">✓ Wallet created successfully</div>
+          <button class="btn-primary" id="addWalletBtn">Create Wallet</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Wallets</h3>
+          <div class="list" id="walletsList">
+            <div class="empty-state">
+              <div class="empty-state-icon">👛</div>
+              <div class="empty-state-title">No wallets yet</div>
+              <div>Create a wallet to get started</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="section" id="documents">
+        <div class="section-header">
+          <div class="section-title">Documents</div>
+          <div class="section-description">Store important financial documents</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Upload Document</h3>
+          <div class="form-grid">
+            <input type="text" id="docTitle" placeholder="Document Title (e.g., Tax Return 2024)">
+            <input type="text" id="docCategory" placeholder="Category (e.g., Tax, Insurance, Bank)">
+            <input type="date" id="docDate">
+          </div>
+          <div class="form-grid">
+            <textarea id="docDescription" placeholder="Description or notes..." style="padding: 0.75rem 1rem; border: 1px solid var(--neutral-300); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; min-height: 100px;"></textarea>
+          </div>
+          <div class="success-message" id="docSuccess">✓ Document added successfully</div>
+          <button class="btn-primary" id="addDocBtn">Add Document</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Documents</h3>
+          <div class="list" id="documentsList">
+            <div class="empty-state">
+              <div class="empty-state-icon">📄</div>
+              <div class="empty-state-title">No documents yet</div>
+              <div>Store important documents for safekeeping</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics -->
+      <div class="section" id="analytics">
+        <div class="section-header">
+          <div class="section-title">Analytics</div>
+          <div class="section-description">Insights into your spending patterns</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Expense Breakdown by Category</h3>
+          <div id="categoryBreakdown" style="padding: 2rem; text-align: center; color: var(--neutral-600);">
+            Load data to view analytics
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Monthly Summary</h3>
+          <div id="monthlySummary" style="padding: 2rem; text-align: center; color: var(--neutral-600);">
+            Load data to view summary
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // App State
+    const APP_STATE = {
+      email: 'seeksiddharth@gmail.com',
+      password: null,
+      isAuthenticated: false,
+      wallets: [],
+      expenses: [],
+      income: [],
+      documents: []
+    };
+
+    const AUTHORIZED_EMAIL = 'seeksiddharth@gmail.com';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFromLocalStorage();
+
+      if (APP_STATE.isAuthenticated) {
+        showApp();
+      } else {
+        showAuth();
+      }
+
+      setupEventListeners();
+      setDateInputsToToday();
+    });
+
+    // Auth
+    function setupEventListeners() {
+      document.getElementById('authForm').addEventListener('submit', handleLogin);
+      document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+      document.getElementById('addExpenseBtn').addEventListener('click', addExpense);
+      document.getElementById('addIncomeBtn').addEventListener('click', addIncome);
+      document.getElementById('addWalletBtn').addEventListener('click', addWallet);
+      document.getElementById('addDocBtn').addEventListener('click', addDocument);
+
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', navigateTo);
+      });
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value;
+      const password = document.getElementById('authPassword').value;
+      const errorEl = document.getElementById('authError');
+
+      if (email !== AUTHORIZED_EMAIL) {
+        errorEl.textContent = '❌ Only seeksiddharth@gmail.com is authorized.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorEl.textContent = '❌ Password must be at least 6 characters.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      APP_STATE.password = btoa(password); // Simple encoding (not secure for production)
+      APP_STATE.isAuthenticated = true;
+      saveToLocalStorage();
+      showApp();
+    }
+
+    function handleLogout() {
+      if (confirm('Are you sure you want to sign out?')) {
+        APP_STATE.isAuthenticated = false;
+        APP_STATE.password = null;
+        saveToLocalStorage();
+        showAuth();
+        document.getElementById('authForm').reset();
+      }
+    }
+
+    function showAuth() {
+      document.getElementById('authScreen').style.display = 'flex';
+      document.getElementById('appLayout').classList.remove('active');
+    }
+
+    function showApp() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('appLayout').classList.add('active');
+      document.getElementById('sidebarEmail').textContent = APP_STATE.email;
+      updateDashboard();
+      updateExpensesList();
+      updateIncomeList();
+      updateWalletsList();
+      updateDocumentsList();
+      populateWalletSelects();
+    }
+
+    // Navigation
+    function navigateTo(e) {
+      const page = e.target.getAttribute('data-page');
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      e.target.classList.add('active');
+
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(page).classList.add('active');
+    }
+
+    // Expenses
+    function addExpense() {
+      const amount = parseFloat(document.getElementById('expenseAmount').value);
+      const category = document.getElementById('expenseCategory').value;
+      const date = document.getElementById('expenseDate').value;
+      const description = document.getElementById('expenseDescription').value;
+      const wallet = document.getElementById('expenseWallet').value;
+
+      if (!amount || !category || !date || !wallet) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      const expense = {
+        id: Date.now(),
+        amount,
+        category,
+        date,
+        description,
+        wallet,
+        type: 'expense'
+      };
+
+      APP_STATE.expenses.push(expense);
+      updateWalletBalance(wallet, -amount);
+      saveToLocalStorage();
+
+      document.getElementById('expenseAmount').value = '';
+      document.getElementById('expenseCategory').value = '';
+      document.getElementById('expenseDate').value = '';
+      document.getElementById('expenseDescription').value = '';
+      document.getElementById('expenseWallet').value = '';
+
+      showSuccessMessage('expenseSuccess');
+      updateDashboard();
+      updateExpensesList();
+      setDateInputsToToday();
+    }
+
+    function updateExpensesList() {
+      const list = document.getElementById('expensesList');
+      const expenses = APP_STATE.expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (expenses.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💸</div><div class="empty-state-title">No expenses yet</div></div>';
+        return;
+      }
+
+      list.innerHTML = expenses.map(exp => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">${exp.category}</div>
+            <div class="list-item-subtitle">${exp.date} • ${APP_STATE.wallets.find(w => w.id == exp.wallet)?.name || 'Unknown'}</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="list-item-amount">-₹${exp.amount.toFixed(2)}</div>
+            <div style="font-size: 0.75rem; color: var(--neutral-600);">${exp.description || ''}</div>
+          </div>
+          <div class="list-item-actions">
+            <button class="btn-danger btn-small" onclick="deleteExpense(${exp.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteExpense(id) {
+      const expense = APP_STATE.expenses.find(e => e.id === id);
+      if (expense && confirm('Delete this expense?')) {
+        updateWalletBalance(expense.wallet, expense.amount);
+        APP_STATE.expenses = APP_STATE.expenses.filter(e => e.id !== id);
+        saveToLocalStorage();
+        updateExpensesList();
+        updateDashboard();
+      }
+    }
+
+    // Income
+    function addIncome() {
+      const amount = parseFloat(document.getElementById('incomeAmount').value);
+      const source = document.getElementById('incomeSource').value;
+      const date = document.getElementById('incomeDate').value;
+      const description = document.getElementById('incomeDescription').value;
+      const wallet = document.getElementById('incomeWallet').value;
+
+      if (!amount || !source || !date || !wallet) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      const incomeItem = {
+        id: Date.now(),
+        amount,
+        source,
+        date,
+        description,
+        wallet,
+        type: 'income'
+      };
+
+      APP_STATE.income.push(incomeItem);
+      updateWalletBalance(wallet, amount);
+      saveToLocalStorage();
+
+      document.getElementById('incomeAmount').value = '';
+      document.getElementById('incomeSource').value = '';
+      document.getElementById('incomeDate').value = '';
+      document.getElementById('incomeDescription').value = '';
+      document.getElementById('incomeWallet').value = '';
+
+      showSuccessMessage('incomeSuccess');
+      updateDashboard();
+      updateIncomeList();
+      setDateInputsToToday();
+    }
+
+    function updateIncomeList() {
+      const list = document.getElementById('incomeList');
+      const incomes = APP_STATE.income.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (incomes.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💰</div><div class="empty-state-title">No income yet</div></div>';
+        return;
+      }
+
+      list.innerHTML = incomes.map(inc => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">${inc.source}</div>
+            <div class="list-item-subtitle">${inc.date} • ${APP_STATE.wallets.find(w => w.id == inc.wallet)?.name || 'Unknown'}</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="list-item-amount" style="color: var(--success);">+₹${inc.amount.toFixed(2)}</div>
+            <div style="font-size: 0.75rem; color: var(--neutral-600);">${inc.description || ''}</div>
+          </div>
+          <div class="list-item-actions">
+            <button class="btn-danger btn-small" onclick="deleteIncome(${inc.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteIncome(id) {
+      const incomeItem = APP_STATE.income.find(i => i.id === id);
+      if (incomeItem && confirm('Delete this income?')) {
+        updateWalletBalance(incomeItem.wallet, -incomeItem.amount);
+        APP_STATE.income = APP_STATE.income.filter(i => i.id !== id);
+        saveToLocalStorage();
+        updateIncomeList();
+        updateDashboard();
+      }
+    }
+
+    // Wallets
+    function addWallet() {
+      const name = document.getElementById('walletName').value;
+      const balance = parseFloat(document.getElementById('walletBalance').value) || 0;
+      const type = document.getElementById('walletType').value;
+
+      if (!name || !type) {
+        alert('Please fill in wallet name and type');
+        return;
+      }
+
+      const wallet = {
+        id: Date.now(),
+        name,
+        balance,
+        type,
+        createdAt: new Date().toISOString()
+      };
+
+      APP_STATE.wallets.push(wallet);
+      saveToLocalStorage();
+
+      document.getElementById('walletName').value = '';
+      document.getElementById('walletBalance').value = '';
+      document.getElementById('walletType').value = '';
+
+      showSuccessMessage('walletSuccess');
+      updateWalletsList();
+      populateWalletSelects();
+      updateDashboard();
+    }
+
+    function updateWalletBalance(walletId, amount) {
+      const wallet = APP_STATE.wallets.find(w => w.id == walletId);
+      if (wallet) {
+        wallet.balance += amount;
+        saveToLocalStorage();
+      }
+    }
+
+    function updateWalletsList() {
+      const list = document.getElementById('walletsList');
+
+      if (APP_STATE.wallets.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👛</div><div class="empty-state-title">No wallets yet</div><div>Create a wallet to get started</div></div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.wallets.map(wallet => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">${wallet.name}</div>
+            <div class="list-item-subtitle">${wallet.type}</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="list-item-amount">₹${wallet.balance.toFixed(2)}</div>
+          </div>
+          <div class="list-item-actions">
+            <button class="btn-danger btn-small" onclick="deleteWallet(${wallet.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteWallet(id) {
+      if (APP_STATE.expenses.some(e => e.wallet == id) || APP_STATE.income.some(i => i.wallet == id)) {
+        alert('Cannot delete wallet with transactions');
+        return;
+      }
+      if (confirm('Delete this wallet?')) {
+        APP_STATE.wallets = APP_STATE.wallets.filter(w => w.id !== id);
+        saveToLocalStorage();
+        updateWalletsList();
+        populateWalletSelects();
+      }
+    }
+
+    function populateWalletSelects() {
+      const selects = ['expenseWallet', 'incomeWallet'];
+      selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        const currentValue = select.value;
+        select.innerHTML = '<option value="">Select Wallet</option>' +
+          APP_STATE.wallets.map(w => `<option value="${w.id}">${w.name}</option>`).join('');
+        select.value = currentValue;
+      });
+    }
+
+    // Documents
+    function addDocument() {
+      const title = document.getElementById('docTitle').value;
+      const category = document.getElementById('docCategory').value;
+      const date = document.getElementById('docDate').value;
+      const description = document.getElementById('docDescription').value;
+
+      if (!title || !category) {
+        alert('Please fill in title and category');
+        return;
+      }
+
+      const doc = {
+        id: Date.now(),
+        title,
+        category,
+        date: date || new Date().toISOString().split('T')[0],
+        description,
+        addedAt: new Date().toISOString()
+      };
+
+      APP_STATE.documents.push(doc);
+      saveToLocalStorage();
+
+      document.getElementById('docTitle').value = '';
+      document.getElementById('docCategory').value = '';
+      document.getElementById('docDate').value = '';
+      document.getElementById('docDescription').value = '';
+
+      showSuccessMessage('docSuccess');
+      updateDocumentsList();
+    }
+
+    function updateDocumentsList() {
+      const list = document.getElementById('documentsList');
+      const docs = APP_STATE.documents.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
+
+      if (docs.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-title">No documents yet</div><div>Store important documents for safekeeping</div></div>';
+        return;
+      }
+
+      list.innerHTML = docs.map(doc => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">${doc.title}</div>
+            <div class="list-item-subtitle">${doc.category} • ${doc.date}</div>
+            ${doc.description ? `<div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">${doc.description}</div>` : ''}
+          </div>
+          <div class="list-item-actions">
+            <button class="btn-danger btn-small" onclick="deleteDocument(${doc.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteDocument(id) {
+      if (confirm('Delete this document?')) {
+        APP_STATE.documents = APP_STATE.documents.filter(d => d.id !== id);
+        saveToLocalStorage();
+        updateDocumentsList();
+      }
+    }
+
+    // Dashboard
+    function updateDashboard() {
+      const totalBalance = APP_STATE.wallets.reduce((sum, w) => sum + w.balance, 0);
+      const thisMonth = new Date().toISOString().slice(0, 7);
+      const monthExpenses = APP_STATE.expenses
+        .filter(e => e.date.startsWith(thisMonth))
+        .reduce((sum, e) => sum + e.amount, 0);
+      const monthIncome = APP_STATE.income
+        .filter(i => i.date.startsWith(thisMonth))
+        .reduce((sum, i) => sum + i.amount, 0);
+
+      document.getElementById('totalBalance').textContent = '₹' + totalBalance.toFixed(2);
+      document.getElementById('monthExpenses').textContent = '₹' + monthExpenses.toFixed(2);
+      document.getElementById('monthIncome').textContent = '₹' + monthIncome.toFixed(2);
+
+      updateRecentTransactions();
+    }
+
+    function updateRecentTransactions() {
+      const container = document.getElementById('recentTransactions');
+      const allTransactions = [
+        ...APP_STATE.expenses.map(e => ({ ...e, type: 'expense' })),
+        ...APP_STATE.income.map(i => ({ ...i, type: 'income' }))
+      ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
+      if (allTransactions.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">No transactions yet</div><div>Start by adding an expense or income</div></div>';
+        return;
+      }
+
+      container.innerHTML = allTransactions.map(tx => {
+        const isExpense = tx.type === 'expense';
+        return `
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-title">${isExpense ? tx.category : tx.source}</div>
+              <div class="list-item-subtitle">${tx.date}</div>
+            </div>
+            <div class="list-item-amount" style="color: ${isExpense ? 'var(--danger)' : 'var(--success)'};">
+              ${isExpense ? '-' : '+'}₹${tx.amount.toFixed(2)}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Utilities
+    function saveToLocalStorage() {
+      localStorage.setItem('dhana_app_state', JSON.stringify(APP_STATE));
+    }
+
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem('dhana_app_state');
+      if (saved) {
+        Object.assign(APP_STATE, JSON.parse(saved));
+      }
+    }
+
+    function showSuccessMessage(elementId) {
+      const el = document.getElementById(elementId);
+      el.classList.add('active');
+      setTimeout(() => {
+        el.classList.remove('active');
+      }, 3000);
+    }
+
+    function setDateInputsToToday() {
+      const today = new Date().toISOString().split('T')[0];
+      const dateInputs = ['expenseDate', 'incomeDate', 'docDate'];
+      dateInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.value) {
+          el.value = today;
+        }
+      });
+    }
+  </script>
+</body>
+</html>
