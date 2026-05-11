@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mishra Family — Personal Records & Holdings</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Advait — Personal Dashboard & Holdings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #0f766e;
+      --primary-light: #14b8a6;
+      --primary-lighter: #ccfbf1;
+      --neutral-50: #fafafa;
+      --neutral-100: #f5f5f5;
+      --neutral-200: #e5e5e5;
+      --neutral-300: #d4d4d4;
+      --neutral-400: #a3a3a3;
+      --neutral-600: #525252;
+      --neutral-800: #262626;
+      --neutral-900: #171717;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -18,22 +35,140 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #f8fafc;
-      color: #1e293b;
+      background: var(--neutral-50);
+      color: var(--neutral-900);
       line-height: 1.6;
     }
 
-    /* Layout */
-    .app-container {
+    /* Auth Screen */
+    .auth-screen {
       display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 1rem;
+    }
+
+    .auth-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      padding: 3rem;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .app-logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .app-tagline {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      font-weight: 500;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--neutral-800);
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--neutral-300);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-lighter);
+    }
+
+    .auth-button {
+      padding: 0.875rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .auth-button:hover:not(:disabled) {
+      background: var(--primary-light);
+      box-shadow: 0 10px 25px rgba(15, 118, 110, 0.2);
+    }
+
+    .auth-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .auth-notice {
+      background: var(--primary-lighter);
+      border: 1px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: var(--primary);
+      line-height: 1.5;
+    }
+
+    .auth-error {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 0.875rem;
+      font-size: 0.875rem;
+      color: var(--danger);
+      display: none;
+    }
+
+    /* App Layout */
+    .app-layout {
+      display: none;
       min-height: 100vh;
     }
 
-    /* Sidebar */
+    .app-layout.active {
+      display: flex;
+    }
+
     .sidebar {
       width: 280px;
       background: white;
-      border-right: 1px solid #e2e8f0;
+      border-right: 1px solid var(--neutral-200);
       padding: 2rem 1.5rem;
       overflow-y: auto;
       height: 100vh;
@@ -42,27 +177,19 @@
       top: 0;
     }
 
-    .sidebar-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .app-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #0f766e;
-    }
-
-    .sidebar-brand span {
-      font-size: 2rem;
-    }
-
-    .sidebar-subtitle {
-      font-size: 0.75rem;
-      color: #64748b;
-      font-weight: 500;
+      color: var(--primary);
       margin-bottom: 2rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .nav-section {
@@ -70,12 +197,11 @@
     }
 
     .nav-section-title {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      color: #94a3b8;
       text-transform: uppercase;
+      color: var(--neutral-400);
       margin-bottom: 0.75rem;
-      letter-spacing: 0.5px;
     }
 
     .nav-items {
@@ -90,66 +216,90 @@
       cursor: pointer;
       font-size: 0.95rem;
       font-weight: 500;
-      color: #64748b;
+      color: var(--neutral-600);
       transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      border: 1px solid transparent;
     }
 
     .nav-item:hover {
-      background: #f1f5f9;
-      color: #1e293b;
+      background: var(--neutral-100);
+      color: var(--neutral-900);
     }
 
     .nav-item.active {
-      background: #ccfbf1;
-      color: #0f766e;
+      background: var(--primary-lighter);
+      color: var(--primary);
+      border-color: var(--primary-light);
+    }
+
+    .user-info {
+      margin-top: auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--neutral-200);
+      text-align: center;
+    }
+
+    .user-email {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      margin-bottom: 1rem;
+      word-break: break-all;
+    }
+
+    .logout-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--neutral-100);
+      color: var(--neutral-900);
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      font-size: 0.95rem;
       font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .nav-item::before {
-      content: '';
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: currentColor;
-      opacity: 0;
+    .logout-button:hover {
+      background: var(--danger);
+      color: white;
+      border-color: var(--danger);
     }
 
-    .nav-item.active::before {
-      opacity: 1;
+    /* Content Sections */
+    .section {
+      display: none;
     }
 
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      margin-left: 280px;
-      padding: 2rem;
-      overflow-y: auto;
-      height: 100vh;
+    .section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
     }
 
-    .header {
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .section-header {
       margin-bottom: 2rem;
     }
 
-    .header-title {
+    .section-title {
       font-size: 2rem;
       font-weight: 700;
-      color: #0f766e;
+      color: var(--neutral-900);
       margin-bottom: 0.5rem;
     }
 
-    .header-subtitle {
+    .section-description {
       font-size: 1rem;
-      color: #64748b;
+      color: var(--neutral-600);
     }
 
-    /* Stats Grid */
-    .stats-grid {
+    /* Dashboard */
+    .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin-bottom: 3rem;
     }
@@ -158,909 +308,1403 @@
       background: white;
       border-radius: 12px;
       padding: 1.5rem;
-      border: 1px solid #e2e8f0;
-      transition: all 0.3s;
-    }
-
-    .stat-card:hover {
-      border-color: #0f766e;
-      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.1);
+      border: 1px solid var(--neutral-200);
     }
 
     .stat-label {
-      font-size: 0.85rem;
-      color: #64748b;
+      font-size: 0.875rem;
+      color: var(--neutral-600);
       font-weight: 600;
       margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .stat-value {
       font-size: 2rem;
       font-weight: 700;
-      color: #0f766e;
-      margin-bottom: 0.5rem;
+      color: var(--primary);
     }
 
     .stat-change {
-      font-size: 0.85rem;
-      color: #16a34a;
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      margin-top: 0.5rem;
     }
 
-    .stat-change.negative {
-      color: #dc2626;
-    }
-
-    /* Section */
-    .section {
-      margin-bottom: 3rem;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--neutral-200);
       margin-bottom: 1.5rem;
     }
 
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #1e293b;
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    .section-action {
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    button {
       padding: 0.75rem 1.5rem;
-      background: #0f766e;
-      color: white;
-      border: none;
       border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
+      border: none;
       font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
       transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
     }
 
-    .section-action:hover {
-      background: #0d5d5a;
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
       box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
     }
 
-    /* Family Members Grid */
-    .members-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1.5rem;
+    .btn-secondary {
+      background: var(--neutral-100);
+      color: var(--neutral-900);
+      border: 1px solid var(--neutral-200);
     }
 
-    .member-card {
-      background: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid #e2e8f0;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-align: center;
+    .btn-secondary:hover {
+      background: var(--neutral-200);
     }
 
-    .member-card:hover {
-      border-color: #0f766e;
-      box-shadow: 0 8px 16px rgba(15, 118, 110, 0.15);
-      transform: translateY(-4px);
+    .btn-danger {
+      background: #fee2e2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
     }
 
-    .member-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ccfbf1 0%, #a78bfa 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-      margin: 0 auto 1rem;
-      flex-shrink: 0;
-    }
-
-    .member-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 0.25rem;
-    }
-
-    .member-relation {
-      font-size: 0.85rem;
-      color: #64748b;
-      margin-bottom: 1rem;
-    }
-
-    .member-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      text-align: left;
-      background: #f8fafc;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .member-stat-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-    }
-
-    .member-stat-label {
-      color: #64748b;
-    }
-
-    .member-stat-value {
-      font-weight: 600;
-      color: #1e293b;
-    }
-
-    .member-action {
-      width: 100%;
-      padding: 0.75rem;
-      background: #0f766e;
+    .btn-danger:hover {
+      background: var(--danger);
       color: white;
-      border: none;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--neutral-300);
       border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.2s;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
     }
 
-    .member-action:hover {
-      background: #0d5d5a;
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-lighter);
     }
 
-    /* Activity Timeline */
-    .timeline {
-      position: relative;
-      padding-left: 2rem;
-    }
-
-    .timeline-item {
-      position: relative;
-      padding-bottom: 1.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .timeline-item:last-child {
-      border-bottom: none;
-    }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -2.5rem;
-      top: 0;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #0f766e;
-      border: 3px solid white;
-      box-shadow: 0 0 0 1px #e2e8f0;
-    }
-
-    .timeline-date {
-      font-size: 0.85rem;
-      color: #64748b;
-      font-weight: 600;
-    }
-
-    .timeline-text {
-      font-size: 0.95rem;
-      color: #1e293b;
-      margin-top: 0.25rem;
-    }
-
-    /* Storage */
-    .storage-section {
-      background: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid #e2e8f0;
-    }
-
-    .storage-header {
-      margin-bottom: 1.5rem;
-    }
-
-    .storage-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-    }
-
-    .storage-total {
-      font-size: 0.9rem;
-      color: #64748b;
-    }
-
-    .storage-bars {
+    .list {
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
 
-    .storage-bar {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .storage-member {
+    .list-item {
+      background: white;
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .storage-member-name {
-      font-size: 0.9rem;
+    .list-item-left {
+      flex: 1;
+    }
+
+    .list-item-title {
       font-weight: 600;
-      color: #1e293b;
+      color: var(--neutral-900);
+      margin-bottom: 0.25rem;
     }
 
-    .storage-member-usage {
-      font-size: 0.85rem;
-      color: #64748b;
+    .list-item-subtitle {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
     }
 
-    .storage-progress {
-      width: 100%;
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 4px;
-      overflow: hidden;
+    .list-item-amount {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: right;
     }
 
-    .storage-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);
-      border-radius: 4px;
-      transition: width 0.3s;
+    .list-item-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .app-container {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid #e2e8f0;
-        padding: 1rem;
-      }
-
-      .main-content {
-        margin-left: 0;
-        height: auto;
-        padding: 1rem;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .members-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-
-      .header-title {
-        font-size: 1.5rem;
-      }
-    }
-
-    /* Empty State */
     .empty-state {
       text-align: center;
-      padding: 3rem 1rem;
+      padding: 3rem 1.5rem;
+      color: var(--neutral-600);
     }
 
     .empty-state-icon {
       font-size: 3rem;
       margin-bottom: 1rem;
+      opacity: 0.5;
     }
 
     .empty-state-title {
-      font-size: 1.1rem;
+      font-size: 1.125rem;
       font-weight: 600;
-      color: #1e293b;
       margin-bottom: 0.5rem;
     }
 
-    .empty-state-text {
-      font-size: 0.9rem;
-      color: #64748b;
+    .success-message {
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--success);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .success-message.active {
+      display: block;
+    }
+
+    .holding-badge {
+      display: inline-block;
+      background: var(--primary-lighter);
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .gain-loss {
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .gain-loss.positive {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    .gain-loss.negative {
+      background: #fee2e2;
+      color: var(--danger);
+    }
+
+    .portfolio-section {
+      background: var(--primary-lighter);
+      border: 1px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .portfolio-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+    }
+
+    .portfolio-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .portfolio-name {
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    .portfolio-value {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .portfolio-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      margin-top: 0.5rem;
+    }
+
+    .portfolio-detail {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--neutral-200);
+        position: static;
+        padding: 1rem;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 1.5rem;
+        height: auto;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-card {
+        padding: 2rem 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
+  <!-- Auth Screen -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="app-logo">Advait</div>
+        <div class="app-tagline">Personal Dashboard & Holdings</div>
+      </div>
+
+      <div class="auth-notice">
+        🔒 This dashboard is locked to <strong>seeksiddharth@gmail.com</strong> only.
+      </div>
+
+      <form class="auth-form" id="authForm">
+        <div class="form-group">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" placeholder="seeksiddharth@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Master Password</label>
+          <input type="password" id="authPassword" placeholder="Enter your password" required>
+        </div>
+        <div class="auth-error" id="authError"></div>
+        <button type="submit" class="auth-button">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div class="app-layout" id="appLayout">
     <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-brand">
-        <span>👨‍👩‍👧‍👦</span>
-        <div>Mishra Family</div>
+    <div class="sidebar">
+      <div class="app-title">Advait</div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Menu</div>
+        <div class="nav-items">
+          <div class="nav-item active" data-page="dashboard">📊 Dashboard</div>
+          <div class="nav-item" data-page="equity">📈 Equity Holdings</div>
+          <div class="nav-item" data-page="mf">💼 Mutual Funds</div>
+          <div class="nav-item" data-page="wallets">👛 Wallets</div>
+          <div class="nav-item" data-page="documents">📄 Documents</div>
+          <div class="nav-item" data-page="portfolio">🎯 Portfolio</div>
+          <div class="nav-item" data-page="analytics">📉 Analytics</div>
+          <div class="nav-item" data-page="goals">🎯 Investment Goals</div>
+          <div class="nav-item" data-page="settings">⚙️ Settings</div>
+        </div>
       </div>
-      <div class="sidebar-subtitle">Personal Records</div>
 
-      <nav class="nav-section">
-        <div class="nav-section-title">Dashboard</div>
-        <div class="nav-items">
-          <div class="nav-item active" onclick="navigateTo('dashboard')">
-            📊 Dashboard
-          </div>
-          <div class="nav-item" onclick="navigateTo('members')">
-            👥 Family Members
-          </div>
-        </div>
-      </nav>
-
-      <nav class="nav-section">
-        <div class="nav-section-title">Data Management</div>
-        <div class="nav-items">
-          <div class="nav-item" onclick="navigateTo('financial')">
-            💰 Financial
-          </div>
-          <div class="nav-item" onclick="navigateTo('documents')">
-            📄 Documents
-          </div>
-          <div class="nav-item" onclick="navigateTo('education')">
-            🎓 Education
-          </div>
-        </div>
-      </nav>
-
-      <nav class="nav-section">
-        <div class="nav-section-title">Tools</div>
-        <div class="nav-items">
-          <div class="nav-item" onclick="navigateTo('backup')">
-            ☁️ Backup & Export
-          </div>
-          <div class="nav-item" onclick="window.location.href='pdf-export.html'">
-            📄 PDF Reports
-          </div>
-          <div class="nav-item" onclick="navigateTo('search')">
-            🔍 Search
-          </div>
-          <div class="nav-item" onclick="navigateTo('settings')">
-            ⚙️ Settings
-          </div>
-        </div>
-      </nav>
-
-      <!-- User Profile Section -->
-      <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
-        <div id="userProfile" style="background: #f1f5f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-          <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem;">Logged in as</div>
-          <div id="userEmail" style="font-size: 0.9rem; font-weight: 600; color: #1e293b; word-break: break-all; margin-bottom: 0.5rem;">User</div>
-          <div id="accessLevel" style="font-size: 0.75rem; color: #0f766e; font-weight: 500; background: #d1fae5; padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block;">Master</div>
-        </div>
-        <button onclick="window.mishraAuth.logout()" style="width: 100%; padding: 0.75rem; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-          🚪 Sign Out
-        </button>
+      <div class="user-info">
+        <div class="user-email" id="sidebarEmail"></div>
+        <button class="logout-button" id="logoutBtn">Sign Out</button>
       </div>
-    </aside>
+    </div>
 
     <!-- Main Content -->
-    <main class="main-content">
-      <!-- Dashboard Section -->
-      <section id="dashboard-section" style="display: block;">
-        <div class="header">
-          <div class="header-title">Dashboard</div>
-          <div class="header-subtitle">Overview of Mishra Family records & holdings</div>
+    <div class="main-content">
+      <!-- Dashboard -->
+      <div class="section active" id="dashboard">
+        <div class="section-header">
+          <div class="section-title">Dashboard</div>
+          <div class="section-description">Overview of your holdings and net worth</div>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
+        <div class="dashboard-grid">
           <div class="stat-card">
-            <div class="stat-label">Total Family Members</div>
-            <div class="stat-value" id="totalMembers">6</div>
-            <div class="stat-change">All profiles active</div>
+            <div class="stat-label">Total Portfolio Value</div>
+            <div class="stat-value" id="totalPortfolioValue">₹0</div>
+            <div class="stat-change">All holdings</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Total Net Worth</div>
-            <div class="stat-value" id="totalNetWorth">₹0</div>
-            <div class="stat-change" id="netWorthChange">Calculating...</div>
+            <div class="stat-label">Total Cash</div>
+            <div class="stat-value" id="totalCash">₹0</div>
+            <div class="stat-change">Across wallets</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Total Mutual Funds</div>
-            <div class="stat-value" id="totalMFCount">0</div>
-            <div class="stat-change" id="mfValue">₹0 invested</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Storage Used</div>
-            <div class="stat-value" id="storageUsedPercent">0%</div>
-            <div class="stat-change" id="storageUsedAmount">0 MB / 3 GB</div>
+            <div class="stat-label">Net Worth</div>
+            <div class="stat-value" id="netWorth">₹0</div>
+            <div class="stat-change">Portfolio + Cash</div>
           </div>
         </div>
 
-        <!-- Family Members Section -->
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">Family Members</div>
-            <button class="section-action" onclick="navigateTo('members')">View All</button>
-          </div>
-          <div class="members-grid" id="membersGrid">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Storage Overview -->
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">Storage Status</div>
-          </div>
-          <div class="storage-section">
-            <div class="storage-header">
-              <div class="storage-title">Storage Usage by Member</div>
-              <div class="storage-total">3 GB total capacity (500 MB × 6 members)</div>
-            </div>
-            <div class="storage-bars" id="storageChart">
-              <!-- Populated by JavaScript -->
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Holdings Summary</h3>
+          <div id="holdingsSummary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; color: var(--neutral-600); padding: 2rem;">
+              No holdings yet. Start by adding stocks or mutual funds.
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Recent Activity -->
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">Recent Activity</div>
+      <!-- Equity Holdings -->
+      <div class="section" id="equity">
+        <div class="section-header">
+          <div class="section-title">Equity Holdings</div>
+          <div class="section-description">Track your stock investments</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Stock</h3>
+          <div class="form-grid">
+            <input type="text" id="stockSymbol" placeholder="Symbol (e.g., TCS, INFY)">
+            <input type="number" id="stockQuantity" placeholder="Quantity" min="0.01" step="0.01">
+            <input type="number" id="stockBuyPrice" placeholder="Buy Price" min="0" step="0.01">
+            <input type="date" id="stockBuyDate">
+            <input type="number" id="stockCurrentPrice" placeholder="Current Price" min="0" step="0.01">
           </div>
-          <div class="timeline" id="activityTimeline">
-            <div class="timeline-item">
-              <div class="timeline-date">Today</div>
-              <div class="timeline-text">Backup created automatically</div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-date">Yesterday</div>
-              <div class="timeline-text">System initialized - Family records created</div>
+          <div class="success-message" id="stockSuccess">✓ Stock added successfully</div>
+          <button class="btn-primary" id="addStockBtn">Add Stock</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Stocks</h3>
+          <div class="list" id="stocksList">
+            <div class="empty-state">
+              <div class="empty-state-icon">📈</div>
+              <div class="empty-state-title">No stocks yet</div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- Members Section (hidden by default) -->
-      <section id="members-section" style="display: none;">
-        <div class="header">
-          <div class="header-title">Family Members</div>
-          <div class="header-subtitle">Manage and view family member profiles</div>
+      <!-- Mutual Funds -->
+      <div class="section" id="mf">
+        <div class="section-header">
+          <div class="section-title">Mutual Funds</div>
+          <div class="section-description">Manage your MF investments</div>
         </div>
-        <div class="members-grid" id="allMembersGrid" style="margin-top: 2rem;">
-          <!-- Populated by JavaScript -->
-        </div>
-      </section>
 
-      <!-- Financial Section -->
-      <section id="financial-section" style="display: none;">
-        <div class="header">
-          <div class="header-title">Financial Management</div>
-          <div class="header-subtitle">Mutual funds, bank accounts, and investments</div>
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Mutual Fund</h3>
+          <div class="form-grid">
+            <input type="text" id="mfName" placeholder="Fund Name (e.g., HDFC Growth)">
+            <input type="text" id="mfCategory" placeholder="Category (e.g., Equity, Debt, Hybrid)">
+            <input type="number" id="mfUnits" placeholder="Units Held" min="0.01" step="0.01">
+            <input type="number" id="mfBuyValue" placeholder="Total Investment" min="0" step="0.01">
+            <input type="date" id="mfInvestDate">
+            <input type="number" id="mfCurrentNAV" placeholder="Current NAV per unit" min="0" step="0.01">
+          </div>
+          <div class="success-message" id="mfSuccess">✓ Mutual Fund added successfully</div>
+          <button class="btn-primary" id="addMFBtn">Add Mutual Fund</button>
         </div>
-        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
-          <div class="empty-state-icon">💰</div>
-          <div class="empty-state-title">Financial Module</div>
-          <div class="empty-state-text">Coming soon - View and manage all financial records</div>
-        </div>
-      </section>
 
-      <!-- Documents Section -->
-      <section id="documents-section" style="display: none;">
-        <div class="header">
-          <div class="header-title">Documents & Records</div>
-          <div class="header-subtitle">Upload, organize, and search documents with OCR</div>
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Mutual Funds</h3>
+          <div class="list" id="mfList">
+            <div class="empty-state">
+              <div class="empty-state-icon">💼</div>
+              <div class="empty-state-title">No mutual funds yet</div>
+            </div>
+          </div>
         </div>
-        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
-          <div class="empty-state-icon">📄</div>
-          <div class="empty-state-title">Document Manager</div>
-          <div class="empty-state-text">Coming soon - Upload and manage family documents</div>
-        </div>
-      </section>
+      </div>
 
-      <!-- Education Section -->
-      <section id="education-section" style="display: none;">
-        <div class="header">
-          <div class="header-title">Education Records</div>
-          <div class="header-subtitle">School marksheets, certificates, and academic records</div>
+      <!-- Wallets -->
+      <div class="section" id="wallets">
+        <div class="section-header">
+          <div class="section-title">Wallets</div>
+          <div class="section-description">Manage cash and accounts</div>
         </div>
-        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
-          <div class="empty-state-icon">🎓</div>
-          <div class="empty-state-title">Education Module</div>
-          <div class="empty-state-text">Coming soon - Track academic progress and records</div>
-        </div>
-      </section>
 
-      <!-- Backup Section -->
-      <section id="backup-section" style="display: none;">
-        <div class="header">
-          <div class="header-title">Backup & Export</div>
-          <div class="header-subtitle">Manage cloud backups and export family data</div>
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Create Wallet</h3>
+          <div class="form-grid">
+            <input type="text" id="walletName" placeholder="Wallet Name (e.g., Savings Account)">
+            <input type="number" id="walletBalance" placeholder="Balance" min="0" step="0.01">
+            <input type="text" id="walletType" placeholder="Type (e.g., Bank, Cash)">
+          </div>
+          <div class="success-message" id="walletSuccess">✓ Wallet created successfully</div>
+          <button class="btn-primary" id="addWalletBtn">Create Wallet</button>
         </div>
-        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
-          <div class="empty-state-icon">☁️</div>
-          <div class="empty-state-title">Backup Manager</div>
-          <div class="empty-state-text">Coming soon - Backup and export family records</div>
-        </div>
-      </section>
 
-      <!-- Search Section -->
-      <section id="search-section" style="display: none;">
-        <div class="header">
-          <div class="header-title">Search</div>
-          <div class="header-subtitle">Search across all family records and documents</div>
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Wallets</h3>
+          <div class="list" id="walletsList">
+            <div class="empty-state">
+              <div class="empty-state-icon">👛</div>
+              <div class="empty-state-title">No wallets yet</div>
+            </div>
+          </div>
         </div>
-        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
-          <div class="empty-state-icon">🔍</div>
-          <div class="empty-state-title">Global Search</div>
-          <div class="empty-state-text">Coming soon - Search all family records and documents</div>
-        </div>
-      </section>
+      </div>
 
-      <!-- Settings Section -->
-      <section id="settings-section" style="display: none;">
-        <div class="header">
-          <div class="header-title">Settings</div>
-          <div class="header-subtitle">Configure app preferences and security</div>
+      <!-- Documents -->
+      <div class="section" id="documents">
+        <div class="section-header">
+          <div class="section-title">Documents</div>
+          <div class="section-description">Store investment documents and records</div>
         </div>
-        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
-          <div class="empty-state-icon">⚙️</div>
-          <div class="empty-state-title">Settings</div>
-          <div class="empty-state-text">Coming soon - Manage app settings and preferences</div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Document</h3>
+          <div class="form-grid">
+            <input type="text" id="docTitle" placeholder="Document Title">
+            <input type="text" id="docCategory" placeholder="Category (e.g., Statements, Tax, Certificates)">
+            <input type="date" id="docDate">
+          </div>
+          <div class="form-grid">
+            <textarea id="docNotes" placeholder="Notes or description..." style="grid-column: 1 / -1; min-height: 100px;"></textarea>
+          </div>
+          <div class="success-message" id="docSuccess">✓ Document added successfully</div>
+          <button class="btn-primary" id="addDocBtn">Add Document</button>
         </div>
-      </section>
-    </main>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Documents</h3>
+          <div class="list" id="documentsList">
+            <div class="empty-state">
+              <div class="empty-state-icon">📄</div>
+              <div class="empty-state-title">No documents yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio -->
+      <div class="section" id="portfolio">
+        <div class="section-header">
+          <div class="section-title">Portfolio Analysis</div>
+          <div class="section-description">Complete view of all holdings</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">All Holdings</h3>
+          <div id="allHoldings" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="empty-state">
+              <div class="empty-state-icon">🎯</div>
+              <div class="empty-state-title">No holdings yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics -->
+      <div class="section" id="analytics">
+        <div class="section-header">
+          <div class="section-title">Analytics & Performance</div>
+          <div class="section-description">Investment performance metrics</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Asset Allocation</h3>
+          <div id="assetAllocation" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; color: var(--neutral-600); padding: 2rem;">
+              No holdings to display
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Overall Performance</h3>
+          <div id="overallPerformance" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Invested</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--neutral-900);">₹0</div>
+            </div>
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Current Value</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">₹0</div>
+            </div>
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Return</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--success);">+0%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Top Performers</h3>
+          <div id="topPerformers" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="text-align: center; color: var(--neutral-600); padding: 2rem;">
+              Add holdings to see performance
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investment Goals -->
+      <div class="section" id="goals">
+        <div class="section-header">
+          <div class="section-title">Investment Goals</div>
+          <div class="section-description">Set and track investment targets</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Create Goal</h3>
+          <div class="form-grid">
+            <input type="text" id="goalName" placeholder="Goal Name (e.g., Retirement, House)">
+            <input type="number" id="goalTarget" placeholder="Target Amount" min="0" step="1000">
+            <input type="number" id="goalCurrent" placeholder="Current Savings" min="0" step="1000">
+            <input type="date" id="goalDate">
+          </div>
+          <div class="form-grid">
+            <textarea id="goalNotes" placeholder="Notes or description..." style="grid-column: 1 / -1; min-height: 80px;"></textarea>
+          </div>
+          <div class="success-message" id="goalSuccess">✓ Goal created successfully</div>
+          <button class="btn-primary" id="addGoalBtn">Create Goal</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Goals</h3>
+          <div id="goalsList" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="empty-state">
+              <div class="empty-state-icon">🎯</div>
+              <div class="empty-state-title">No goals yet</div>
+              <div>Create a goal to start tracking progress</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="section" id="settings">
+        <div class="section-header">
+          <div class="section-title">Settings</div>
+          <div class="section-description">Manage your account and data</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Account</h3>
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Email</div>
+            <div style="padding: 0.75rem 1rem; background: var(--neutral-100); border-radius: 8px; color: var(--neutral-900);" id="settingsEmail">seeksiddharth@gmail.com</div>
+          </div>
+          <div style="margin-bottom: 1.5rem;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Last Login</div>
+            <div style="padding: 0.75rem 1rem; background: var(--neutral-100); border-radius: 8px; color: var(--neutral-900);" id="lastLogin">Today</div>
+          </div>
+          <button class="btn-secondary" id="changePasswordBtn" style="width: 100%;">Change Master Password</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Data Management</h3>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn-secondary" id="exportDataBtn">📥 Export All Data (JSON)</button>
+            <button class="btn-secondary" id="backupBtn">💾 Create Backup</button>
+            <button class="btn-danger" id="clearDataBtn">🗑️ Clear All Data</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">About</h3>
+          <div style="color: var(--neutral-600); line-height: 1.8;">
+            <p><strong>Advait</strong> — Personal Holdings Dashboard v1.0</p>
+            <p style="margin-top: 0.5rem;">A private, email-locked dashboard for tracking equity holdings, mutual funds, wallets, and investment documents.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--neutral-400);">All data is stored locally in your browser. Never shared or transmitted.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Authentication check
-    (function() {
-      const SESSION_KEY = 'mishraFamilySession';
-      const session = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
-
-      if (!session) {
-        window.location.href = 'auth.html';
-        return;
-      }
-
-      const sessionData = JSON.parse(session);
-      const isExpired = new Date(sessionData.expiresAt) < new Date();
-
-      if (isExpired) {
-        localStorage.removeItem(SESSION_KEY);
-        sessionStorage.removeItem(SESSION_KEY);
-        window.location.href = 'auth.html';
-        return;
-      }
-
-      // Store session globally
-      window.mishraSession = sessionData;
-      window.isReadOnly = sessionData.accessLevel === 'viewer';
-    })();
-
-    // Family data structure
-    const FAMILY = {
-      members: [
-        {
-          id: 'siddharth',
-          name: 'Siddharth',
-          relation: 'Father',
-          email: 'seeksiddharth@gmail.com',
-          role: 'Admin',
-          icon: '👨',
-          dob: '1970-06-15',
-          phone: '+91-9876543210',
-          address: 'Delhi, India',
-          financial: {
-            mutualFunds: [],
-            bankAccounts: [],
-            totalInvested: 0,
-            totalValue: 0
-          },
-          documents: {
-            count: 0,
-            storageUsed: 0
-          }
-        },
-        {
-          id: 'archana',
-          name: 'Archana',
-          relation: 'Mother',
-          email: 'mf.archana@example.com',
-          role: 'Monitoring',
-          icon: '👩',
-          dob: '1972-03-22',
-          phone: '+91-9876543211',
-          address: 'Delhi, India',
-          financial: {
-            mutualFunds: [],
-            bankAccounts: [],
-            totalInvested: 0,
-            totalValue: 0
-          },
-          documents: {
-            count: 0,
-            storageUsed: 0
-          }
-        },
-        {
-          id: 'aadya',
-          name: 'Aadya',
-          relation: 'Daughter',
-          email: 'mf.aadya@example.com',
-          role: 'Monitoring',
-          icon: '👧',
-          dob: '2010-08-10',
-          phone: '+91-9876543212',
-          address: 'Delhi, India',
-          financial: {
-            mutualFunds: [],
-            bankAccounts: [],
-            totalInvested: 0,
-            totalValue: 0
-          },
-          documents: {
-            count: 0,
-            storageUsed: 0
-          }
-        },
-        {
-          id: 'advait',
-          name: 'Advait',
-          relation: 'Son',
-          email: 'mf.advait@example.com',
-          role: 'Monitoring',
-          icon: '👦',
-          dob: '2012-11-05',
-          phone: '+91-9876543213',
-          address: 'Delhi, India',
-          financial: {
-            mutualFunds: [],
-            bankAccounts: [],
-            totalInvested: 0,
-            totalValue: 0
-          },
-          documents: {
-            count: 0,
-            storageUsed: 0
-          }
-        },
-        {
-          id: 'sarla',
-          name: 'Sarla Mishra',
-          relation: 'Grandmother',
-          email: 'sarla.mishra@example.com',
-          role: 'Monitoring',
-          icon: '👵',
-          dob: '1945-02-14',
-          phone: '+91-9876543214',
-          address: 'Delhi, India',
-          financial: {
-            mutualFunds: [],
-            bankAccounts: [],
-            totalInvested: 0,
-            totalValue: 0
-          },
-          documents: {
-            count: 0,
-            storageUsed: 0
-          }
-        },
-        {
-          id: 'shyam',
-          name: 'Sheo Shyam Mishra',
-          relation: 'Grandfather',
-          email: 'shyam.mishra@example.com',
-          role: 'Monitoring',
-          icon: '👴',
-          dob: '1942-07-20',
-          phone: '+91-9876543215',
-          address: 'Delhi, India',
-          financial: {
-            mutualFunds: [],
-            bankAccounts: [],
-            totalInvested: 0,
-            totalValue: 0
-          },
-          documents: {
-            count: 0,
-            storageUsed: 0
-          }
-        }
-      ],
-      storagePerMember: 524288000, // 500MB in bytes
-      maxStoragePerMember: 524288000 // 500MB
+    const APP_STATE = {
+      email: 'seeksiddharth@gmail.com',
+      isAuthenticated: false,
+      stocks: [],
+      mfs: [],
+      wallets: [],
+      documents: [],
+      goals: [],
+      lastLogin: new Date().toLocaleString()
     };
 
-    // Initialize app
-    function init() {
-      loadFromStorage();
-      renderDashboard();
-      renderMembers();
-      updateStats();
+    const AUTHORIZED_EMAIL = 'seeksiddharth@gmail.com';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFromLocalStorage();
+      if (APP_STATE.isAuthenticated) showApp();
+      else showAuth();
+      setupEventListeners();
+      setDateInputsToToday();
+    });
+
+    function setupEventListeners() {
+      document.getElementById('authForm').addEventListener('submit', handleLogin);
+      document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+      document.getElementById('addStockBtn').addEventListener('click', addStock);
+      document.getElementById('addMFBtn').addEventListener('click', addMF);
+      document.getElementById('addWalletBtn').addEventListener('click', addWallet);
+      document.getElementById('addDocBtn').addEventListener('click', addDocument);
+      document.getElementById('addGoalBtn').addEventListener('click', addGoal);
+      document.getElementById('exportDataBtn').addEventListener('click', exportData);
+      document.getElementById('backupBtn').addEventListener('click', createBackup);
+      document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
+      document.getElementById('changePasswordBtn').addEventListener('click', changePassword);
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', navigateTo);
+      });
     }
 
-    // Load data from localStorage
-    function loadFromStorage() {
-      const stored = localStorage.getItem('mishraFamily');
-      if (stored) {
-        const data = JSON.parse(stored);
-        FAMILY.members = data.members;
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value;
+      const password = document.getElementById('authPassword').value;
+      const errorEl = document.getElementById('authError');
+
+      if (email !== AUTHORIZED_EMAIL) {
+        errorEl.textContent = '❌ Only seeksiddharth@gmail.com is authorized.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorEl.textContent = '❌ Password must be at least 6 characters.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      APP_STATE.isAuthenticated = true;
+      saveToLocalStorage();
+      showApp();
+    }
+
+    function handleLogout() {
+      if (confirm('Sign out?')) {
+        APP_STATE.isAuthenticated = false;
+        saveToLocalStorage();
+        showAuth();
+        document.getElementById('authForm').reset();
       }
     }
 
-    // Save data to localStorage
-    function saveToStorage() {
-      localStorage.setItem('mishraFamily', JSON.stringify(FAMILY));
+    function showAuth() {
+      document.getElementById('authScreen').style.display = 'flex';
+      document.getElementById('appLayout').classList.remove('active');
     }
 
-    // Render dashboard
-    function renderDashboard() {
-      renderMembersGrid('membersGrid');
-      renderStorageChart();
+    function showApp() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('appLayout').classList.add('active');
+      document.getElementById('sidebarEmail').textContent = APP_STATE.email;
+      updateDashboard();
+      updateStocksList();
+      updateMFList();
+      updateWalletsList();
+      updateDocumentsList();
+      updatePortfolioView();
     }
 
-    // Render members grid
-    function renderMembersGrid(containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = FAMILY.members.map(member => `
-        <div class="member-card" onclick="viewMember('${member.id}')">
-          <div class="member-avatar" style="background: linear-gradient(135deg, ${getMemberGradient(member.id)} 0%, ${getMemberGradient(member.id)}dd 100%);">
-            ${member.icon}
-          </div>
-          <div class="member-name">${member.name}</div>
-          <div class="member-relation">${member.relation}</div>
-          <div class="member-stats">
-            <div class="member-stat-row">
-              <span class="member-stat-label">Invested</span>
-              <span class="member-stat-value">₹${member.financial.totalInvested.toLocaleString()}</span>
-            </div>
-            <div class="member-stat-row">
-              <span class="member-stat-label">Current</span>
-              <span class="member-stat-value">₹${member.financial.totalValue.toLocaleString()}</span>
-            </div>
-            <div class="member-stat-row">
-              <span class="member-stat-label">Funds</span>
-              <span class="member-stat-value">${member.financial.mutualFunds.length}</span>
-            </div>
-            <div class="member-stat-row">
-              <span class="member-stat-label">Docs</span>
-              <span class="member-stat-value">${member.documents.count}</span>
-            </div>
-          </div>
-          <button class="member-action">View Profile →</button>
-        </div>
-      `).join('');
+    function navigateTo(e) {
+      const page = e.target.getAttribute('data-page');
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      e.target.classList.add('active');
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(page).classList.add('active');
     }
 
-    // Render storage chart
-    function renderStorageChart() {
-      const container = document.getElementById('storageChart');
-      container.innerHTML = FAMILY.members.map(member => {
-        const percentage = (member.documents.storageUsed / FAMILY.storagePerMember) * 100;
+    // Stocks
+    function addStock() {
+      const symbol = document.getElementById('stockSymbol').value;
+      const quantity = parseFloat(document.getElementById('stockQuantity').value);
+      const buyPrice = parseFloat(document.getElementById('stockBuyPrice').value);
+      const buyDate = document.getElementById('stockBuyDate').value;
+      const currentPrice = parseFloat(document.getElementById('stockCurrentPrice').value);
+
+      if (!symbol || !quantity || !buyPrice || !buyDate || !currentPrice) {
+        alert('Please fill all fields');
+        return;
+      }
+
+      const stock = {
+        id: Date.now(),
+        symbol,
+        quantity,
+        buyPrice,
+        buyDate,
+        currentPrice,
+        investedAmount: quantity * buyPrice,
+        currentValue: quantity * currentPrice
+      };
+
+      APP_STATE.stocks.push(stock);
+      saveToLocalStorage();
+
+      document.getElementById('stockSymbol').value = '';
+      document.getElementById('stockQuantity').value = '';
+      document.getElementById('stockBuyPrice').value = '';
+      document.getElementById('stockBuyDate').value = '';
+      document.getElementById('stockCurrentPrice').value = '';
+
+      showSuccessMessage('stockSuccess');
+      updateStocksList();
+      updateDashboard();
+      updatePortfolioView();
+    }
+
+    function updateStocksList() {
+      const list = document.getElementById('stocksList');
+      if (APP_STATE.stocks.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📈</div><div class="empty-state-title">No stocks yet</div></div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.stocks.map(stock => {
+        const gainLoss = stock.currentValue - stock.investedAmount;
+        const gainLossPercent = ((gainLoss / stock.investedAmount) * 100).toFixed(2);
         return `
-          <div class="storage-bar">
-            <div class="storage-member">
-              <span class="storage-member-name">${member.icon} ${member.name}</span>
-              <span class="storage-member-usage">${(member.documents.storageUsed / 1024 / 1024).toFixed(1)} MB / 500 MB</span>
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-title">${stock.symbol} <span class="holding-badge">Equity</span></div>
+              <div class="list-item-subtitle">${stock.quantity} units @ ₹${stock.currentPrice.toFixed(2)}</div>
             </div>
-            <div class="storage-progress">
-              <div class="storage-progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+            <div style="text-align: right;">
+              <div class="list-item-amount">₹${stock.currentValue.toFixed(2)}</div>
+              <div class="gain-loss ${gainLoss >= 0 ? 'positive' : 'negative'}">
+                ${gainLoss >= 0 ? '+' : ''}₹${gainLoss.toFixed(2)} (${gainLossPercent}%)
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-danger btn-small" onclick="deleteStock(${stock.id})">Delete</button>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    // Get member gradient color
-    function getMemberGradient(memberId) {
-      const colors = {
-        'siddharth': '#14b8a6',
-        'archana': '#a78bfa',
-        'aadya': '#fbbf24',
-        'advait': '#60a5fa',
-        'sarla': '#f87171',
-        'shyam': '#34d399'
+    function deleteStock(id) {
+      if (confirm('Delete this stock?')) {
+        APP_STATE.stocks = APP_STATE.stocks.filter(s => s.id !== id);
+        saveToLocalStorage();
+        updateStocksList();
+        updateDashboard();
+        updatePortfolioView();
+      }
+    }
+
+    // Mutual Funds
+    function addMF() {
+      const name = document.getElementById('mfName').value;
+      const category = document.getElementById('mfCategory').value;
+      const units = parseFloat(document.getElementById('mfUnits').value);
+      const buyValue = parseFloat(document.getElementById('mfBuyValue').value);
+      const investDate = document.getElementById('mfInvestDate').value;
+      const currentNAV = parseFloat(document.getElementById('mfCurrentNAV').value);
+
+      if (!name || !category || !units || !buyValue || !investDate || !currentNAV) {
+        alert('Please fill all fields');
+        return;
+      }
+
+      const mf = {
+        id: Date.now(),
+        name,
+        category,
+        units,
+        buyValue,
+        investDate,
+        currentNAV,
+        currentValue: units * currentNAV
       };
-      return colors[memberId] || '#14b8a6';
+
+      APP_STATE.mfs.push(mf);
+      saveToLocalStorage();
+
+      document.getElementById('mfName').value = '';
+      document.getElementById('mfCategory').value = '';
+      document.getElementById('mfUnits').value = '';
+      document.getElementById('mfBuyValue').value = '';
+      document.getElementById('mfInvestDate').value = '';
+      document.getElementById('mfCurrentNAV').value = '';
+
+      showSuccessMessage('mfSuccess');
+      updateMFList();
+      updateDashboard();
+      updatePortfolioView();
     }
 
-    // Render all members section
-    function renderMembers() {
-      const container = document.getElementById('allMembersGrid');
-      renderMembersGrid('allMembersGrid');
+    function updateMFList() {
+      const list = document.getElementById('mfList');
+      if (APP_STATE.mfs.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💼</div><div class="empty-state-title">No mutual funds yet</div></div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.mfs.map(mf => {
+        const gainLoss = mf.currentValue - mf.buyValue;
+        const gainLossPercent = ((gainLoss / mf.buyValue) * 100).toFixed(2);
+        return `
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-title">${mf.name} <span class="holding-badge">${mf.category}</span></div>
+              <div class="list-item-subtitle">${mf.units} units @ ₹${mf.currentNAV.toFixed(2)} NAV</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="list-item-amount">₹${mf.currentValue.toFixed(2)}</div>
+              <div class="gain-loss ${gainLoss >= 0 ? 'positive' : 'negative'}">
+                ${gainLoss >= 0 ? '+' : ''}₹${gainLoss.toFixed(2)} (${gainLossPercent}%)
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-danger btn-small" onclick="deleteMF(${mf.id})">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
-    // Update statistics
-    function updateStats() {
-      let totalNetWorth = 0;
-      let totalMFCount = 0;
-      let totalStorageUsed = 0;
+    function deleteMF(id) {
+      if (confirm('Delete this mutual fund?')) {
+        APP_STATE.mfs = APP_STATE.mfs.filter(m => m.id !== id);
+        saveToLocalStorage();
+        updateMFList();
+        updateDashboard();
+        updatePortfolioView();
+      }
+    }
 
-      FAMILY.members.forEach(member => {
-        totalNetWorth += member.financial.totalValue;
-        totalMFCount += member.financial.mutualFunds.length;
-        totalStorageUsed += member.documents.storageUsed;
+    // Wallets
+    function addWallet() {
+      const name = document.getElementById('walletName').value;
+      const balance = parseFloat(document.getElementById('walletBalance').value);
+      const type = document.getElementById('walletType').value;
+
+      if (!name || !type || balance === '') {
+        alert('Please fill all fields');
+        return;
+      }
+
+      const wallet = {
+        id: Date.now(),
+        name,
+        balance,
+        type
+      };
+
+      APP_STATE.wallets.push(wallet);
+      saveToLocalStorage();
+
+      document.getElementById('walletName').value = '';
+      document.getElementById('walletBalance').value = '';
+      document.getElementById('walletType').value = '';
+
+      showSuccessMessage('walletSuccess');
+      updateWalletsList();
+      updateDashboard();
+    }
+
+    function updateWalletsList() {
+      const list = document.getElementById('walletsList');
+      if (APP_STATE.wallets.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👛</div><div class="empty-state-title">No wallets yet</div></div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.wallets.map(wallet => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">${wallet.name}</div>
+            <div class="list-item-subtitle">${wallet.type}</div>
+          </div>
+          <div class="list-item-amount">₹${wallet.balance.toFixed(2)}</div>
+          <div class="list-item-actions">
+            <button class="btn-danger btn-small" onclick="deleteWallet(${wallet.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteWallet(id) {
+      if (confirm('Delete this wallet?')) {
+        APP_STATE.wallets = APP_STATE.wallets.filter(w => w.id !== id);
+        saveToLocalStorage();
+        updateWalletsList();
+        updateDashboard();
+      }
+    }
+
+    // Documents
+    function addDocument() {
+      const title = document.getElementById('docTitle').value;
+      const category = document.getElementById('docCategory').value;
+      const date = document.getElementById('docDate').value;
+      const notes = document.getElementById('docNotes').value;
+
+      if (!title || !category) {
+        alert('Please fill title and category');
+        return;
+      }
+
+      const doc = {
+        id: Date.now(),
+        title,
+        category,
+        date: date || new Date().toISOString().split('T')[0],
+        notes
+      };
+
+      APP_STATE.documents.push(doc);
+      saveToLocalStorage();
+
+      document.getElementById('docTitle').value = '';
+      document.getElementById('docCategory').value = '';
+      document.getElementById('docDate').value = '';
+      document.getElementById('docNotes').value = '';
+
+      showSuccessMessage('docSuccess');
+      updateDocumentsList();
+    }
+
+    function updateDocumentsList() {
+      const list = document.getElementById('documentsList');
+      if (APP_STATE.documents.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-title">No documents yet</div></div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.documents.map(doc => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-title">${doc.title}</div>
+            <div class="list-item-subtitle">${doc.category} • ${doc.date}</div>
+            ${doc.notes ? `<div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">${doc.notes}</div>` : ''}
+          </div>
+          <div class="list-item-actions">
+            <button class="btn-danger btn-small" onclick="deleteDocument(${doc.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteDocument(id) {
+      if (confirm('Delete this document?')) {
+        APP_STATE.documents = APP_STATE.documents.filter(d => d.id !== id);
+        saveToLocalStorage();
+        updateDocumentsList();
+      }
+    }
+
+    // Dashboard
+    function updateDashboard() {
+      const stocksValue = APP_STATE.stocks.reduce((sum, s) => sum + s.currentValue, 0);
+      const mfsValue = APP_STATE.mfs.reduce((sum, m) => sum + m.currentValue, 0);
+      const cashValue = APP_STATE.wallets.reduce((sum, w) => sum + w.balance, 0);
+      const totalPortfolioValue = stocksValue + mfsValue;
+      const netWorth = totalPortfolioValue + cashValue;
+
+      document.getElementById('totalPortfolioValue').textContent = '₹' + totalPortfolioValue.toFixed(2);
+      document.getElementById('totalCash').textContent = '₹' + cashValue.toFixed(2);
+      document.getElementById('netWorth').textContent = '₹' + netWorth.toFixed(2);
+
+      updateHoldingsSummary(stocksValue, mfsValue, cashValue);
+    }
+
+    function updateHoldingsSummary(stocksValue, mfsValue, cashValue) {
+      const container = document.getElementById('holdingsSummary');
+      const total = stocksValue + mfsValue + cashValue;
+
+      if (total === 0) {
+        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--neutral-600); padding: 2rem;">No holdings yet. Start by adding stocks, mutual funds or wallets.</div>';
+        return;
+      }
+
+      const items = [];
+      if (stocksValue > 0) items.push({ label: 'Equity', value: stocksValue, color: '#14b8a6' });
+      if (mfsValue > 0) items.push({ label: 'Mutual Funds', value: mfsValue, color: '#0f766e' });
+      if (cashValue > 0) items.push({ label: 'Cash', value: cashValue, color: '#a3a3a3' });
+
+      container.innerHTML = items.map(item => {
+        const percent = ((item.value / total) * 100).toFixed(1);
+        return `
+          <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">${item.label}</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: ${item.color}; margin-bottom: 0.5rem;">₹${item.value.toFixed(0)}</div>
+            <div style="font-size: 0.875rem; color: var(--neutral-600);">${percent}%</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updatePortfolioView() {
+      const container = document.getElementById('allHoldings');
+      const allHoldings = [];
+
+      APP_STATE.stocks.forEach(stock => {
+        allHoldings.push({
+          type: 'stock',
+          name: stock.symbol,
+          category: 'Equity',
+          value: stock.currentValue,
+          gain: stock.currentValue - stock.investedAmount,
+          invested: stock.investedAmount,
+          details: `${stock.quantity} @ ₹${stock.currentPrice.toFixed(2)}`,
+          id: stock.id
+        });
       });
 
-      document.getElementById('totalMembers').textContent = FAMILY.members.length;
-      document.getElementById('totalNetWorth').textContent = '₹' + totalNetWorth.toLocaleString();
-      document.getElementById('totalMFCount').textContent = totalMFCount;
+      APP_STATE.mfs.forEach(mf => {
+        allHoldings.push({
+          type: 'mf',
+          name: mf.name,
+          category: mf.category,
+          value: mf.currentValue,
+          gain: mf.currentValue - mf.buyValue,
+          invested: mf.buyValue,
+          details: `${mf.units} units @ ₹${mf.currentNAV.toFixed(2)} NAV`,
+          id: mf.id
+        });
+      });
 
-      const totalStorageGB = totalStorageUsed / 1024 / 1024 / 1024;
-      const storagePercent = (totalStorageUsed / (FAMILY.storagePerMember * FAMILY.members.length)) * 100;
-      document.getElementById('storageUsedPercent').textContent = Math.round(storagePercent) + '%';
-      document.getElementById('storageUsedAmount').textContent = totalStorageGB.toFixed(2) + ' GB / 3 GB';
+      if (allHoldings.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><div class="empty-state-title">No holdings yet</div></div>';
+        return;
+      }
+
+      container.innerHTML = allHoldings.map(holding => {
+        const gainLossPercent = ((holding.gain / holding.invested) * 100).toFixed(2);
+        return `
+          <div class="portfolio-item">
+            <div class="portfolio-header">
+              <div class="portfolio-name">${holding.name} <span class="holding-badge">${holding.category}</span></div>
+              <div class="portfolio-value">₹${holding.value.toFixed(2)}</div>
+            </div>
+            <div class="portfolio-details">
+              <div class="portfolio-detail">
+                <span>Invested:</span>
+                <strong>₹${holding.invested.toFixed(2)}</strong>
+              </div>
+              <div class="portfolio-detail">
+                <span>Gain/Loss:</span>
+                <strong class="gain-loss ${holding.gain >= 0 ? 'positive' : 'negative'}" style="border-radius: 4px; padding: 0.25rem 0.5rem;">
+                  ${holding.gain >= 0 ? '+' : ''}₹${holding.gain.toFixed(2)} (${gainLossPercent}%)
+                </strong>
+              </div>
+              <div class="portfolio-detail" style="grid-column: 1 / -1;">
+                <span>Details:</span>
+                <strong>${holding.details}</strong>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
-    // Navigate to sections
-    function navigateTo(section) {
-      // Hide all sections
-      document.querySelectorAll('main > section').forEach(sec => sec.style.display = 'none');
-
-      // Show selected section
-      const sectionId = section + '-section';
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.style.display = 'block';
-      }
-
-      // Update nav items
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-      event.target.closest('.nav-item').classList.add('active');
-
-      // Scroll to top
-      document.querySelector('.main-content').scrollTop = 0;
+    // Utilities
+    function saveToLocalStorage() {
+      localStorage.setItem('advait_app_state', JSON.stringify(APP_STATE));
     }
 
-    // View member profile
-    function viewMember(memberId) {
-      const member = FAMILY.members.find(m => m.id === memberId);
-      if (member) {
-        console.log('Viewing profile for:', member.name);
-        // TODO: Navigate to member profile page
-        alert('Member profile page coming soon for ' + member.name);
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem('advait_app_state');
+      if (saved) {
+        Object.assign(APP_STATE, JSON.parse(saved));
       }
     }
 
-    // Initialize on load
-    window.addEventListener('DOMContentLoaded', init);
+    function showSuccessMessage(elementId) {
+      const el = document.getElementById(elementId);
+      el.classList.add('active');
+      setTimeout(() => el.classList.remove('active'), 3000);
+    }
 
-    // Update user profile display
-    window.addEventListener('DOMContentLoaded', () => {
-      if (window.mishraSession) {
-        document.getElementById('userEmail').textContent = window.mishraSession.email;
-        const accessLevel = window.mishraSession.accessLevel === 'admin' ? 'Master' : 'Viewer';
-        const accessColor = window.mishraSession.accessLevel === 'admin' ? '#d1fae5' : '#dbeafe';
-        const accessTextColor = window.mishraSession.accessLevel === 'admin' ? '#0f766e' : '#0c4a6e';
-        const accessLabel = document.getElementById('accessLevel');
-        accessLabel.textContent = accessLevel;
-        accessLabel.style.background = accessColor;
-        accessLabel.style.color = accessTextColor;
-      }
-    });
+    function setDateInputsToToday() {
+      const today = new Date().toISOString().split('T')[0];
+      ['stockBuyDate', 'mfInvestDate', 'docDate', 'goalDate'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && !el.value) el.value = today;
+      });
+    }
 
-    // Authentication module
-    window.mishraAuth = {
-      logout() {
-        const SESSION_KEY = 'mishraFamilySession';
-        localStorage.removeItem(SESSION_KEY);
-        sessionStorage.removeItem(SESSION_KEY);
-        window.location.href = 'auth.html';
+    // Investment Goals
+    function addGoal() {
+      const name = document.getElementById('goalName').value;
+      const target = parseFloat(document.getElementById('goalTarget').value);
+      const current = parseFloat(document.getElementById('goalCurrent').value) || 0;
+      const date = document.getElementById('goalDate').value;
+      const notes = document.getElementById('goalNotes').value;
+
+      if (!name || !target || !date) {
+        alert('Please fill in all required fields');
+        return;
       }
-    };
+
+      const goal = {
+        id: Date.now(),
+        name,
+        target,
+        current,
+        date,
+        notes,
+        createdAt: new Date().toISOString()
+      };
+
+      APP_STATE.goals.push(goal);
+      saveToLocalStorage();
+
+      document.getElementById('goalName').value = '';
+      document.getElementById('goalTarget').value = '';
+      document.getElementById('goalCurrent').value = '';
+      document.getElementById('goalDate').value = '';
+      document.getElementById('goalNotes').value = '';
+
+      showSuccessMessage('goalSuccess');
+      updateGoalsList();
+    }
+
+    function updateGoalsList() {
+      const container = document.getElementById('goalsList');
+      if (APP_STATE.goals.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><div class="empty-state-title">No goals yet</div><div>Create a goal to start tracking progress</div></div>';
+        return;
+      }
+
+      container.innerHTML = APP_STATE.goals.map(goal => {
+        const progress = (goal.current / goal.target) * 100;
+        const remaining = goal.target - goal.current;
+        return `
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-title">${goal.name}</div>
+              <div class="list-item-subtitle">Target: ₹${goal.target.toFixed(0)} | Due: ${goal.date}</div>
+              <div style="margin-top: 0.5rem; background: var(--neutral-200); border-radius: 4px; height: 6px; width: 100%; overflow: hidden;">
+                <div style="background: var(--primary); height: 100%; width: ${Math.min(progress, 100)}%;"></div>
+              </div>
+              <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--neutral-600);">
+                ₹${goal.current.toFixed(0)} / ₹${goal.target.toFixed(0)} (${progress.toFixed(1)}%) | Remaining: ₹${remaining.toFixed(0)}
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-danger btn-small" onclick="deleteGoal(${goal.id})">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteGoal(id) {
+      if (confirm('Delete this goal?')) {
+        APP_STATE.goals = APP_STATE.goals.filter(g => g.id !== id);
+        saveToLocalStorage();
+        updateGoalsList();
+      }
+    }
+
+    // Analytics
+    function updateAnalytics() {
+      updateAssetAllocation();
+      updatePerformanceMetrics();
+      updateTopPerformers();
+    }
+
+    function updateAssetAllocation() {
+      const container = document.getElementById('assetAllocation');
+      const equityValue = APP_STATE.stocks.reduce((sum, s) => sum + s.currentValue, 0);
+      const mfValue = APP_STATE.mfs.reduce((sum, m) => sum + m.currentValue, 0);
+      const total = equityValue + mfValue;
+
+      if (total === 0) {
+        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--neutral-600); padding: 2rem;">No holdings to display</div>';
+        return;
+      }
+
+      const items = [
+        { label: 'Equity', value: equityValue, count: APP_STATE.stocks.length },
+        { label: 'Mutual Funds', value: mfValue, count: APP_STATE.mfs.length }
+      ].filter(item => item.value > 0);
+
+      container.innerHTML = items.map(item => {
+        const percent = ((item.value / total) * 100).toFixed(1);
+        return `
+          <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">${item.label} (${item.count} holdings)</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">₹${item.value.toFixed(0)}</div>
+            <div style="font-size: 0.875rem; color: var(--neutral-600);">${percent}% of portfolio</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updatePerformanceMetrics() {
+      const allHoldings = [
+        ...APP_STATE.stocks.map(s => ({ invested: s.investedAmount, current: s.currentValue })),
+        ...APP_STATE.mfs.map(m => ({ invested: m.buyValue, current: m.currentValue }))
+      ];
+
+      const totalInvested = allHoldings.reduce((sum, h) => sum + h.invested, 0);
+      const totalCurrent = allHoldings.reduce((sum, h) => sum + h.current, 0);
+      const totalReturn = totalCurrent - totalInvested;
+      const returnPercent = totalInvested > 0 ? ((totalReturn / totalInvested) * 100).toFixed(2) : 0;
+
+      const container = document.getElementById('overallPerformance');
+      if (allHoldings.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--neutral-600); padding: 2rem;">Add holdings to see performance</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+          <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Invested</div>
+          <div style="font-size: 1.75rem; font-weight: 700; color: var(--neutral-900);">₹${totalInvested.toFixed(0)}</div>
+        </div>
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+          <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Current Value</div>
+          <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">₹${totalCurrent.toFixed(0)}</div>
+        </div>
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+          <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Return</div>
+          <div style="font-size: 1.75rem; font-weight: 700; color: ${totalReturn >= 0 ? 'var(--success)' : 'var(--danger)'};">
+            ${totalReturn >= 0 ? '+' : ''}₹${totalReturn.toFixed(0)} (${returnPercent}%)
+          </div>
+        </div>
+      `;
+    }
+
+    function updateTopPerformers() {
+      const allHoldings = [
+        ...APP_STATE.stocks.map(s => ({ name: s.symbol, type: 'Equity', gain: s.currentValue - s.investedAmount, gainPercent: ((s.currentValue - s.investedAmount) / s.investedAmount * 100).toFixed(2) })),
+        ...APP_STATE.mfs.map(m => ({ name: m.name, type: 'MF', gain: m.currentValue - m.buyValue, gainPercent: ((m.currentValue - m.buyValue) / m.buyValue * 100).toFixed(2) }))
+      ].sort((a, b) => b.gain - a.gain);
+
+      const container = document.getElementById('topPerformers');
+      if (allHoldings.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: var(--neutral-600); padding: 2rem;">Add holdings to see performance</div>';
+        return;
+      }
+
+      container.innerHTML = allHoldings.slice(0, 5).map(holding => `
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600; color: var(--neutral-900);">${holding.name}</div>
+            <div style="font-size: 0.875rem; color: var(--neutral-600);">${holding.type}</div>
+          </div>
+          <div class="gain-loss ${holding.gain >= 0 ? 'positive' : 'negative'}" style="text-align: right;">
+            ${holding.gain >= 0 ? '+' : ''}₹${holding.gain.toFixed(0)}<br><small>${holding.gainPercent}%</small>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Settings
+    function exportData() {
+      const dataStr = JSON.stringify(APP_STATE, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `advait-backup-${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function createBackup() {
+      exportData();
+      alert('Backup created and downloaded!');
+    }
+
+    function clearAllData() {
+      if (confirm('⚠️ This will delete ALL data. This cannot be undone. Are you absolutely sure?')) {
+        if (confirm('Type "DELETE" to confirm permanent data deletion')) {
+          APP_STATE.stocks = [];
+          APP_STATE.mfs = [];
+          APP_STATE.wallets = [];
+          APP_STATE.documents = [];
+          APP_STATE.goals = [];
+          saveToLocalStorage();
+          alert('All data has been cleared.');
+          location.reload();
+        }
+      }
+    }
+
+    function changePassword() {
+      const newPassword = prompt('Enter new master password (minimum 6 characters):');
+      if (!newPassword) return;
+      if (newPassword.length < 6) {
+        alert('Password must be at least 6 characters');
+        return;
+      }
+      alert('Password changed successfully. Please log in again.');
+      handleLogout();
+    }
+
+    // Update app state
+    function showApp() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('appLayout').classList.add('active');
+      document.getElementById('sidebarEmail').textContent = APP_STATE.email;
+      document.getElementById('settingsEmail').textContent = APP_STATE.email;
+      document.getElementById('lastLogin').textContent = APP_STATE.lastLogin;
+      updateDashboard();
+      updateStocksList();
+      updateMFList();
+      updateWalletsList();
+      updateDocumentsList();
+      updateGoalsList();
+      updatePortfolioView();
+      updateAnalytics();
+      setDateInputsToToday();
+    }
+
+    function updateDashboard() {
+      const stocksValue = APP_STATE.stocks.reduce((sum, s) => sum + s.currentValue, 0);
+      const mfsValue = APP_STATE.mfs.reduce((sum, m) => sum + m.currentValue, 0);
+      const cashValue = APP_STATE.wallets.reduce((sum, w) => sum + w.balance, 0);
+      const totalPortfolioValue = stocksValue + mfsValue;
+      const netWorth = totalPortfolioValue + cashValue;
+
+      document.getElementById('totalPortfolioValue').textContent = '₹' + totalPortfolioValue.toFixed(2);
+      document.getElementById('totalCash').textContent = '₹' + cashValue.toFixed(2);
+      document.getElementById('netWorth').textContent = '₹' + netWorth.toFixed(2);
+
+      updateHoldingsSummary(stocksValue, mfsValue, cashValue);
+      updateAnalytics();
+    }
   </script>
 </body>
 </html>
