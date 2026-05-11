@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dhana — Personal Finance & Document Keeper</title>
+  <title>Advait — Personal Dashboard & Holdings</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -330,7 +330,7 @@
       margin-top: 0.5rem;
     }
 
-    /* Forms & Lists */
+    /* Cards */
     .card {
       background: white;
       border-radius: 12px;
@@ -399,6 +399,26 @@
       font-size: 0.875rem;
     }
 
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--neutral-300);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-lighter);
+    }
+
     .list {
       display: flex;
       flex-direction: column;
@@ -461,52 +481,6 @@
       margin-bottom: 0.5rem;
     }
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-header {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: var(--neutral-900);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--neutral-600);
-    }
-
     .success-message {
       background: #dcfce7;
       border: 1px solid #86efac;
@@ -519,6 +493,81 @@
 
     .success-message.active {
       display: block;
+    }
+
+    .holding-badge {
+      display: inline-block;
+      background: var(--primary-lighter);
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .gain-loss {
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .gain-loss.positive {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    .gain-loss.negative {
+      background: #fee2e2;
+      color: var(--danger);
+    }
+
+    .portfolio-section {
+      background: var(--primary-lighter);
+      border: 1px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .portfolio-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+    }
+
+    .portfolio-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .portfolio-name {
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    .portfolio-value {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .portfolio-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      margin-top: 0.5rem;
+    }
+
+    .portfolio-detail {
+      display: flex;
+      justify-content: space-between;
     }
 
     @media (max-width: 768px) {
@@ -556,12 +605,12 @@
   <div class="auth-screen" id="authScreen">
     <div class="auth-card">
       <div class="auth-header">
-        <div class="app-logo">Dhana</div>
-        <div class="app-tagline">Personal Finance & Documents</div>
+        <div class="app-logo">Advait</div>
+        <div class="app-tagline">Personal Dashboard & Holdings</div>
       </div>
 
       <div class="auth-notice">
-        🔒 This app is locked to <strong>seeksiddharth@gmail.com</strong> only. Access restricted for privacy.
+        🔒 This dashboard is locked to <strong>seeksiddharth@gmail.com</strong> only.
       </div>
 
       <form class="auth-form" id="authForm">
@@ -583,17 +632,17 @@
   <div class="app-layout" id="appLayout">
     <!-- Sidebar -->
     <div class="sidebar">
-      <div class="app-title">Dhana</div>
+      <div class="app-title">Advait</div>
 
       <div class="nav-section">
         <div class="nav-section-title">Menu</div>
         <div class="nav-items">
           <div class="nav-item active" data-page="dashboard">📊 Dashboard</div>
-          <div class="nav-item" data-page="expenses">💸 Expenses</div>
-          <div class="nav-item" data-page="income">💰 Income</div>
+          <div class="nav-item" data-page="equity">📈 Equity Holdings</div>
+          <div class="nav-item" data-page="mf">💼 Mutual Funds</div>
           <div class="nav-item" data-page="wallets">👛 Wallets</div>
           <div class="nav-item" data-page="documents">📄 Documents</div>
-          <div class="nav-item" data-page="analytics">📈 Analytics</div>
+          <div class="nav-item" data-page="portfolio">🎯 Portfolio</div>
         </div>
       </div>
 
@@ -609,104 +658,95 @@
       <div class="section active" id="dashboard">
         <div class="section-header">
           <div class="section-title">Dashboard</div>
-          <div class="section-description">Overview of your finances</div>
+          <div class="section-description">Overview of your holdings and net worth</div>
         </div>
 
         <div class="dashboard-grid">
           <div class="stat-card">
-            <div class="stat-label">Total Balance</div>
-            <div class="stat-value" id="totalBalance">₹0</div>
-            <div class="stat-change">Across all wallets</div>
+            <div class="stat-label">Total Portfolio Value</div>
+            <div class="stat-value" id="totalPortfolioValue">₹0</div>
+            <div class="stat-change">All holdings</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">This Month Expenses</div>
-            <div class="stat-value" id="monthExpenses">₹0</div>
-            <div class="stat-change">All categories</div>
+            <div class="stat-label">Total Cash</div>
+            <div class="stat-value" id="totalCash">₹0</div>
+            <div class="stat-change">Across wallets</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">This Month Income</div>
-            <div class="stat-value" id="monthIncome">₹0</div>
-            <div class="stat-change">All sources</div>
+            <div class="stat-label">Net Worth</div>
+            <div class="stat-value" id="netWorth">₹0</div>
+            <div class="stat-change">Portfolio + Cash</div>
           </div>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Recent Transactions</h3>
-          <div class="list" id="recentTransactions">
-            <div class="empty-state">
-              <div class="empty-state-icon">📭</div>
-              <div class="empty-state-title">No transactions yet</div>
-              <div>Start by adding an expense or income</div>
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Holdings Summary</h3>
+          <div id="holdingsSummary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; color: var(--neutral-600); padding: 2rem;">
+              No holdings yet. Start by adding stocks or mutual funds.
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Expenses -->
-      <div class="section" id="expenses">
+      <!-- Equity Holdings -->
+      <div class="section" id="equity">
         <div class="section-header">
-          <div class="section-title">Expenses</div>
-          <div class="section-description">Track your spending</div>
+          <div class="section-title">Equity Holdings</div>
+          <div class="section-description">Track your stock investments</div>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Expense</h3>
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Stock</h3>
           <div class="form-grid">
-            <input type="number" id="expenseAmount" placeholder="Amount" min="0" step="0.01">
-            <input type="text" id="expenseCategory" placeholder="Category (e.g., Food, Transport)">
-            <input type="date" id="expenseDate">
-            <input type="text" id="expenseDescription" placeholder="Description (optional)">
+            <input type="text" id="stockSymbol" placeholder="Symbol (e.g., TCS, INFY)">
+            <input type="number" id="stockQuantity" placeholder="Quantity" min="0.01" step="0.01">
+            <input type="number" id="stockBuyPrice" placeholder="Buy Price" min="0" step="0.01">
+            <input type="date" id="stockBuyDate">
+            <input type="number" id="stockCurrentPrice" placeholder="Current Price" min="0" step="0.01">
           </div>
-          <div class="form-grid">
-            <select id="expenseWallet" style="padding: 0.75rem 1rem; border: 1px solid var(--neutral-300); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif;">
-              <option value="">Select Wallet</option>
-            </select>
-          </div>
-          <div class="success-message" id="expenseSuccess">✓ Expense added successfully</div>
-          <button class="btn-primary" id="addExpenseBtn">Add Expense</button>
+          <div class="success-message" id="stockSuccess">✓ Stock added successfully</div>
+          <button class="btn-primary" id="addStockBtn">Add Stock</button>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Recent Expenses</h3>
-          <div class="list" id="expensesList">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Stocks</h3>
+          <div class="list" id="stocksList">
             <div class="empty-state">
-              <div class="empty-state-icon">💸</div>
-              <div class="empty-state-title">No expenses yet</div>
+              <div class="empty-state-icon">📈</div>
+              <div class="empty-state-title">No stocks yet</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Income -->
-      <div class="section" id="income">
+      <!-- Mutual Funds -->
+      <div class="section" id="mf">
         <div class="section-header">
-          <div class="section-title">Income</div>
-          <div class="section-description">Track your earnings</div>
+          <div class="section-title">Mutual Funds</div>
+          <div class="section-description">Manage your MF investments</div>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Income</h3>
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Mutual Fund</h3>
           <div class="form-grid">
-            <input type="number" id="incomeAmount" placeholder="Amount" min="0" step="0.01">
-            <input type="text" id="incomeSource" placeholder="Source (e.g., Salary, Freelance)">
-            <input type="date" id="incomeDate">
-            <input type="text" id="incomeDescription" placeholder="Description (optional)">
+            <input type="text" id="mfName" placeholder="Fund Name (e.g., HDFC Growth)">
+            <input type="text" id="mfCategory" placeholder="Category (e.g., Equity, Debt, Hybrid)">
+            <input type="number" id="mfUnits" placeholder="Units Held" min="0.01" step="0.01">
+            <input type="number" id="mfBuyValue" placeholder="Total Investment" min="0" step="0.01">
+            <input type="date" id="mfInvestDate">
+            <input type="number" id="mfCurrentNAV" placeholder="Current NAV per unit" min="0" step="0.01">
           </div>
-          <div class="form-grid">
-            <select id="incomeWallet" style="padding: 0.75rem 1rem; border: 1px solid var(--neutral-300); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif;">
-              <option value="">Select Wallet</option>
-            </select>
-          </div>
-          <div class="success-message" id="incomeSuccess">✓ Income added successfully</div>
-          <button class="btn-primary" id="addIncomeBtn">Add Income</button>
+          <div class="success-message" id="mfSuccess">✓ Mutual Fund added successfully</div>
+          <button class="btn-primary" id="addMFBtn">Add Mutual Fund</button>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Recent Income</h3>
-          <div class="list" id="incomeList">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Mutual Funds</h3>
+          <div class="list" id="mfList">
             <div class="empty-state">
-              <div class="empty-state-icon">💰</div>
-              <div class="empty-state-title">No income yet</div>
+              <div class="empty-state-icon">💼</div>
+              <div class="empty-state-title">No mutual funds yet</div>
             </div>
           </div>
         </div>
@@ -716,15 +756,15 @@
       <div class="section" id="wallets">
         <div class="section-header">
           <div class="section-title">Wallets</div>
-          <div class="section-description">Manage your accounts and wallets</div>
+          <div class="section-description">Manage cash and accounts</div>
         </div>
 
         <div class="card">
           <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Create Wallet</h3>
           <div class="form-grid">
-            <input type="text" id="walletName" placeholder="Wallet Name (e.g., Checking, Savings)">
-            <input type="number" id="walletBalance" placeholder="Initial Balance" min="0" step="0.01">
-            <input type="text" id="walletType" placeholder="Type (e.g., Bank, Cash, Credit Card)">
+            <input type="text" id="walletName" placeholder="Wallet Name (e.g., Savings Account)">
+            <input type="number" id="walletBalance" placeholder="Balance" min="0" step="0.01">
+            <input type="text" id="walletType" placeholder="Type (e.g., Bank, Cash)">
           </div>
           <div class="success-message" id="walletSuccess">✓ Wallet created successfully</div>
           <button class="btn-primary" id="addWalletBtn">Create Wallet</button>
@@ -736,7 +776,6 @@
             <div class="empty-state">
               <div class="empty-state-icon">👛</div>
               <div class="empty-state-title">No wallets yet</div>
-              <div>Create a wallet to get started</div>
             </div>
           </div>
         </div>
@@ -746,18 +785,18 @@
       <div class="section" id="documents">
         <div class="section-header">
           <div class="section-title">Documents</div>
-          <div class="section-description">Store important financial documents</div>
+          <div class="section-description">Store investment documents and records</div>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Upload Document</h3>
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Add Document</h3>
           <div class="form-grid">
-            <input type="text" id="docTitle" placeholder="Document Title (e.g., Tax Return 2024)">
-            <input type="text" id="docCategory" placeholder="Category (e.g., Tax, Insurance, Bank)">
+            <input type="text" id="docTitle" placeholder="Document Title">
+            <input type="text" id="docCategory" placeholder="Category (e.g., Statements, Tax, Certificates)">
             <input type="date" id="docDate">
           </div>
           <div class="form-grid">
-            <textarea id="docDescription" placeholder="Description or notes..." style="padding: 0.75rem 1rem; border: 1px solid var(--neutral-300); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; min-height: 100px;"></textarea>
+            <textarea id="docNotes" placeholder="Notes or description..." style="grid-column: 1 / -1; min-height: 100px;"></textarea>
           </div>
           <div class="success-message" id="docSuccess">✓ Document added successfully</div>
           <button class="btn-primary" id="addDocBtn">Add Document</button>
@@ -769,30 +808,25 @@
             <div class="empty-state">
               <div class="empty-state-icon">📄</div>
               <div class="empty-state-title">No documents yet</div>
-              <div>Store important documents for safekeeping</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Analytics -->
-      <div class="section" id="analytics">
+      <!-- Portfolio -->
+      <div class="section" id="portfolio">
         <div class="section-header">
-          <div class="section-title">Analytics</div>
-          <div class="section-description">Insights into your spending patterns</div>
+          <div class="section-title">Portfolio Analysis</div>
+          <div class="section-description">Complete view of all holdings</div>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Expense Breakdown by Category</h3>
-          <div id="categoryBreakdown" style="padding: 2rem; text-align: center; color: var(--neutral-600);">
-            Load data to view analytics
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Monthly Summary</h3>
-          <div id="monthlySummary" style="padding: 2rem; text-align: center; color: var(--neutral-600);">
-            Load data to view summary
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">All Holdings</h3>
+          <div id="allHoldings" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="empty-state">
+              <div class="empty-state-icon">🎯</div>
+              <div class="empty-state-title">No holdings yet</div>
+            </div>
           </div>
         </div>
       </div>
@@ -800,42 +834,32 @@
   </div>
 
   <script>
-    // App State
     const APP_STATE = {
       email: 'seeksiddharth@gmail.com',
-      password: null,
       isAuthenticated: false,
+      stocks: [],
+      mfs: [],
       wallets: [],
-      expenses: [],
-      income: [],
       documents: []
     };
 
     const AUTHORIZED_EMAIL = 'seeksiddharth@gmail.com';
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       loadFromLocalStorage();
-
-      if (APP_STATE.isAuthenticated) {
-        showApp();
-      } else {
-        showAuth();
-      }
-
+      if (APP_STATE.isAuthenticated) showApp();
+      else showAuth();
       setupEventListeners();
       setDateInputsToToday();
     });
 
-    // Auth
     function setupEventListeners() {
       document.getElementById('authForm').addEventListener('submit', handleLogin);
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-      document.getElementById('addExpenseBtn').addEventListener('click', addExpense);
-      document.getElementById('addIncomeBtn').addEventListener('click', addIncome);
+      document.getElementById('addStockBtn').addEventListener('click', addStock);
+      document.getElementById('addMFBtn').addEventListener('click', addMF);
       document.getElementById('addWalletBtn').addEventListener('click', addWallet);
       document.getElementById('addDocBtn').addEventListener('click', addDocument);
-
       document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', navigateTo);
       });
@@ -859,16 +883,14 @@
         return;
       }
 
-      APP_STATE.password = btoa(password); // Simple encoding (not secure for production)
       APP_STATE.isAuthenticated = true;
       saveToLocalStorage();
       showApp();
     }
 
     function handleLogout() {
-      if (confirm('Are you sure you want to sign out?')) {
+      if (confirm('Sign out?')) {
         APP_STATE.isAuthenticated = false;
-        APP_STATE.password = null;
         saveToLocalStorage();
         showAuth();
         document.getElementById('authForm').reset();
@@ -885,187 +907,189 @@
       document.getElementById('appLayout').classList.add('active');
       document.getElementById('sidebarEmail').textContent = APP_STATE.email;
       updateDashboard();
-      updateExpensesList();
-      updateIncomeList();
+      updateStocksList();
+      updateMFList();
       updateWalletsList();
       updateDocumentsList();
-      populateWalletSelects();
+      updatePortfolioView();
     }
 
-    // Navigation
     function navigateTo(e) {
       const page = e.target.getAttribute('data-page');
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-      });
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
       e.target.classList.add('active');
-
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.getElementById(page).classList.add('active');
     }
 
-    // Expenses
-    function addExpense() {
-      const amount = parseFloat(document.getElementById('expenseAmount').value);
-      const category = document.getElementById('expenseCategory').value;
-      const date = document.getElementById('expenseDate').value;
-      const description = document.getElementById('expenseDescription').value;
-      const wallet = document.getElementById('expenseWallet').value;
+    // Stocks
+    function addStock() {
+      const symbol = document.getElementById('stockSymbol').value;
+      const quantity = parseFloat(document.getElementById('stockQuantity').value);
+      const buyPrice = parseFloat(document.getElementById('stockBuyPrice').value);
+      const buyDate = document.getElementById('stockBuyDate').value;
+      const currentPrice = parseFloat(document.getElementById('stockCurrentPrice').value);
 
-      if (!amount || !category || !date || !wallet) {
-        alert('Please fill in all required fields');
+      if (!symbol || !quantity || !buyPrice || !buyDate || !currentPrice) {
+        alert('Please fill all fields');
         return;
       }
 
-      const expense = {
+      const stock = {
         id: Date.now(),
-        amount,
+        symbol,
+        quantity,
+        buyPrice,
+        buyDate,
+        currentPrice,
+        investedAmount: quantity * buyPrice,
+        currentValue: quantity * currentPrice
+      };
+
+      APP_STATE.stocks.push(stock);
+      saveToLocalStorage();
+
+      document.getElementById('stockSymbol').value = '';
+      document.getElementById('stockQuantity').value = '';
+      document.getElementById('stockBuyPrice').value = '';
+      document.getElementById('stockBuyDate').value = '';
+      document.getElementById('stockCurrentPrice').value = '';
+
+      showSuccessMessage('stockSuccess');
+      updateStocksList();
+      updateDashboard();
+      updatePortfolioView();
+    }
+
+    function updateStocksList() {
+      const list = document.getElementById('stocksList');
+      if (APP_STATE.stocks.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📈</div><div class="empty-state-title">No stocks yet</div></div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.stocks.map(stock => {
+        const gainLoss = stock.currentValue - stock.investedAmount;
+        const gainLossPercent = ((gainLoss / stock.investedAmount) * 100).toFixed(2);
+        return `
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-title">${stock.symbol} <span class="holding-badge">Equity</span></div>
+              <div class="list-item-subtitle">${stock.quantity} units @ ₹${stock.currentPrice.toFixed(2)}</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="list-item-amount">₹${stock.currentValue.toFixed(2)}</div>
+              <div class="gain-loss ${gainLoss >= 0 ? 'positive' : 'negative'}">
+                ${gainLoss >= 0 ? '+' : ''}₹${gainLoss.toFixed(2)} (${gainLossPercent}%)
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-danger btn-small" onclick="deleteStock(${stock.id})">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteStock(id) {
+      if (confirm('Delete this stock?')) {
+        APP_STATE.stocks = APP_STATE.stocks.filter(s => s.id !== id);
+        saveToLocalStorage();
+        updateStocksList();
+        updateDashboard();
+        updatePortfolioView();
+      }
+    }
+
+    // Mutual Funds
+    function addMF() {
+      const name = document.getElementById('mfName').value;
+      const category = document.getElementById('mfCategory').value;
+      const units = parseFloat(document.getElementById('mfUnits').value);
+      const buyValue = parseFloat(document.getElementById('mfBuyValue').value);
+      const investDate = document.getElementById('mfInvestDate').value;
+      const currentNAV = parseFloat(document.getElementById('mfCurrentNAV').value);
+
+      if (!name || !category || !units || !buyValue || !investDate || !currentNAV) {
+        alert('Please fill all fields');
+        return;
+      }
+
+      const mf = {
+        id: Date.now(),
+        name,
         category,
-        date,
-        description,
-        wallet,
-        type: 'expense'
+        units,
+        buyValue,
+        investDate,
+        currentNAV,
+        currentValue: units * currentNAV
       };
 
-      APP_STATE.expenses.push(expense);
-      updateWalletBalance(wallet, -amount);
+      APP_STATE.mfs.push(mf);
       saveToLocalStorage();
 
-      document.getElementById('expenseAmount').value = '';
-      document.getElementById('expenseCategory').value = '';
-      document.getElementById('expenseDate').value = '';
-      document.getElementById('expenseDescription').value = '';
-      document.getElementById('expenseWallet').value = '';
+      document.getElementById('mfName').value = '';
+      document.getElementById('mfCategory').value = '';
+      document.getElementById('mfUnits').value = '';
+      document.getElementById('mfBuyValue').value = '';
+      document.getElementById('mfInvestDate').value = '';
+      document.getElementById('mfCurrentNAV').value = '';
 
-      showSuccessMessage('expenseSuccess');
+      showSuccessMessage('mfSuccess');
+      updateMFList();
       updateDashboard();
-      updateExpensesList();
-      setDateInputsToToday();
+      updatePortfolioView();
     }
 
-    function updateExpensesList() {
-      const list = document.getElementById('expensesList');
-      const expenses = APP_STATE.expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      if (expenses.length === 0) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💸</div><div class="empty-state-title">No expenses yet</div></div>';
+    function updateMFList() {
+      const list = document.getElementById('mfList');
+      if (APP_STATE.mfs.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💼</div><div class="empty-state-title">No mutual funds yet</div></div>';
         return;
       }
 
-      list.innerHTML = expenses.map(exp => `
-        <div class="list-item">
-          <div class="list-item-left">
-            <div class="list-item-title">${exp.category}</div>
-            <div class="list-item-subtitle">${exp.date} • ${APP_STATE.wallets.find(w => w.id == exp.wallet)?.name || 'Unknown'}</div>
+      list.innerHTML = APP_STATE.mfs.map(mf => {
+        const gainLoss = mf.currentValue - mf.buyValue;
+        const gainLossPercent = ((gainLoss / mf.buyValue) * 100).toFixed(2);
+        return `
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-title">${mf.name} <span class="holding-badge">${mf.category}</span></div>
+              <div class="list-item-subtitle">${mf.units} units @ ₹${mf.currentNAV.toFixed(2)} NAV</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="list-item-amount">₹${mf.currentValue.toFixed(2)}</div>
+              <div class="gain-loss ${gainLoss >= 0 ? 'positive' : 'negative'}">
+                ${gainLoss >= 0 ? '+' : ''}₹${gainLoss.toFixed(2)} (${gainLossPercent}%)
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-danger btn-small" onclick="deleteMF(${mf.id})">Delete</button>
+            </div>
           </div>
-          <div style="text-align: right;">
-            <div class="list-item-amount">-₹${exp.amount.toFixed(2)}</div>
-            <div style="font-size: 0.75rem; color: var(--neutral-600);">${exp.description || ''}</div>
-          </div>
-          <div class="list-item-actions">
-            <button class="btn-danger btn-small" onclick="deleteExpense(${exp.id})">Delete</button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    function deleteExpense(id) {
-      const expense = APP_STATE.expenses.find(e => e.id === id);
-      if (expense && confirm('Delete this expense?')) {
-        updateWalletBalance(expense.wallet, expense.amount);
-        APP_STATE.expenses = APP_STATE.expenses.filter(e => e.id !== id);
+    function deleteMF(id) {
+      if (confirm('Delete this mutual fund?')) {
+        APP_STATE.mfs = APP_STATE.mfs.filter(m => m.id !== id);
         saveToLocalStorage();
-        updateExpensesList();
+        updateMFList();
         updateDashboard();
-      }
-    }
-
-    // Income
-    function addIncome() {
-      const amount = parseFloat(document.getElementById('incomeAmount').value);
-      const source = document.getElementById('incomeSource').value;
-      const date = document.getElementById('incomeDate').value;
-      const description = document.getElementById('incomeDescription').value;
-      const wallet = document.getElementById('incomeWallet').value;
-
-      if (!amount || !source || !date || !wallet) {
-        alert('Please fill in all required fields');
-        return;
-      }
-
-      const incomeItem = {
-        id: Date.now(),
-        amount,
-        source,
-        date,
-        description,
-        wallet,
-        type: 'income'
-      };
-
-      APP_STATE.income.push(incomeItem);
-      updateWalletBalance(wallet, amount);
-      saveToLocalStorage();
-
-      document.getElementById('incomeAmount').value = '';
-      document.getElementById('incomeSource').value = '';
-      document.getElementById('incomeDate').value = '';
-      document.getElementById('incomeDescription').value = '';
-      document.getElementById('incomeWallet').value = '';
-
-      showSuccessMessage('incomeSuccess');
-      updateDashboard();
-      updateIncomeList();
-      setDateInputsToToday();
-    }
-
-    function updateIncomeList() {
-      const list = document.getElementById('incomeList');
-      const incomes = APP_STATE.income.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      if (incomes.length === 0) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💰</div><div class="empty-state-title">No income yet</div></div>';
-        return;
-      }
-
-      list.innerHTML = incomes.map(inc => `
-        <div class="list-item">
-          <div class="list-item-left">
-            <div class="list-item-title">${inc.source}</div>
-            <div class="list-item-subtitle">${inc.date} • ${APP_STATE.wallets.find(w => w.id == inc.wallet)?.name || 'Unknown'}</div>
-          </div>
-          <div style="text-align: right;">
-            <div class="list-item-amount" style="color: var(--success);">+₹${inc.amount.toFixed(2)}</div>
-            <div style="font-size: 0.75rem; color: var(--neutral-600);">${inc.description || ''}</div>
-          </div>
-          <div class="list-item-actions">
-            <button class="btn-danger btn-small" onclick="deleteIncome(${inc.id})">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function deleteIncome(id) {
-      const incomeItem = APP_STATE.income.find(i => i.id === id);
-      if (incomeItem && confirm('Delete this income?')) {
-        updateWalletBalance(incomeItem.wallet, -incomeItem.amount);
-        APP_STATE.income = APP_STATE.income.filter(i => i.id !== id);
-        saveToLocalStorage();
-        updateIncomeList();
-        updateDashboard();
+        updatePortfolioView();
       }
     }
 
     // Wallets
     function addWallet() {
       const name = document.getElementById('walletName').value;
-      const balance = parseFloat(document.getElementById('walletBalance').value) || 0;
+      const balance = parseFloat(document.getElementById('walletBalance').value);
       const type = document.getElementById('walletType').value;
 
-      if (!name || !type) {
-        alert('Please fill in wallet name and type');
+      if (!name || !type || balance === '') {
+        alert('Please fill all fields');
         return;
       }
 
@@ -1073,8 +1097,7 @@
         id: Date.now(),
         name,
         balance,
-        type,
-        createdAt: new Date().toISOString()
+        type
       };
 
       APP_STATE.wallets.push(wallet);
@@ -1086,23 +1109,13 @@
 
       showSuccessMessage('walletSuccess');
       updateWalletsList();
-      populateWalletSelects();
       updateDashboard();
-    }
-
-    function updateWalletBalance(walletId, amount) {
-      const wallet = APP_STATE.wallets.find(w => w.id == walletId);
-      if (wallet) {
-        wallet.balance += amount;
-        saveToLocalStorage();
-      }
     }
 
     function updateWalletsList() {
       const list = document.getElementById('walletsList');
-
       if (APP_STATE.wallets.length === 0) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👛</div><div class="empty-state-title">No wallets yet</div><div>Create a wallet to get started</div></div>';
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👛</div><div class="empty-state-title">No wallets yet</div></div>';
         return;
       }
 
@@ -1112,9 +1125,7 @@
             <div class="list-item-title">${wallet.name}</div>
             <div class="list-item-subtitle">${wallet.type}</div>
           </div>
-          <div style="text-align: right;">
-            <div class="list-item-amount">₹${wallet.balance.toFixed(2)}</div>
-          </div>
+          <div class="list-item-amount">₹${wallet.balance.toFixed(2)}</div>
           <div class="list-item-actions">
             <button class="btn-danger btn-small" onclick="deleteWallet(${wallet.id})">Delete</button>
           </div>
@@ -1123,27 +1134,12 @@
     }
 
     function deleteWallet(id) {
-      if (APP_STATE.expenses.some(e => e.wallet == id) || APP_STATE.income.some(i => i.wallet == id)) {
-        alert('Cannot delete wallet with transactions');
-        return;
-      }
       if (confirm('Delete this wallet?')) {
         APP_STATE.wallets = APP_STATE.wallets.filter(w => w.id !== id);
         saveToLocalStorage();
         updateWalletsList();
-        populateWalletSelects();
+        updateDashboard();
       }
-    }
-
-    function populateWalletSelects() {
-      const selects = ['expenseWallet', 'incomeWallet'];
-      selects.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        const currentValue = select.value;
-        select.innerHTML = '<option value="">Select Wallet</option>' +
-          APP_STATE.wallets.map(w => `<option value="${w.id}">${w.name}</option>`).join('');
-        select.value = currentValue;
-      });
     }
 
     // Documents
@@ -1151,10 +1147,10 @@
       const title = document.getElementById('docTitle').value;
       const category = document.getElementById('docCategory').value;
       const date = document.getElementById('docDate').value;
-      const description = document.getElementById('docDescription').value;
+      const notes = document.getElementById('docNotes').value;
 
       if (!title || !category) {
-        alert('Please fill in title and category');
+        alert('Please fill title and category');
         return;
       }
 
@@ -1163,8 +1159,7 @@
         title,
         category,
         date: date || new Date().toISOString().split('T')[0],
-        description,
-        addedAt: new Date().toISOString()
+        notes
       };
 
       APP_STATE.documents.push(doc);
@@ -1173,7 +1168,7 @@
       document.getElementById('docTitle').value = '';
       document.getElementById('docCategory').value = '';
       document.getElementById('docDate').value = '';
-      document.getElementById('docDescription').value = '';
+      document.getElementById('docNotes').value = '';
 
       showSuccessMessage('docSuccess');
       updateDocumentsList();
@@ -1181,19 +1176,17 @@
 
     function updateDocumentsList() {
       const list = document.getElementById('documentsList');
-      const docs = APP_STATE.documents.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt));
-
-      if (docs.length === 0) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-title">No documents yet</div><div>Store important documents for safekeeping</div></div>';
+      if (APP_STATE.documents.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📄</div><div class="empty-state-title">No documents yet</div></div>';
         return;
       }
 
-      list.innerHTML = docs.map(doc => `
+      list.innerHTML = APP_STATE.documents.map(doc => `
         <div class="list-item">
           <div class="list-item-left">
             <div class="list-item-title">${doc.title}</div>
             <div class="list-item-subtitle">${doc.category} • ${doc.date}</div>
-            ${doc.description ? `<div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">${doc.description}</div>` : ''}
+            ${doc.notes ? `<div style="font-size: 0.875rem; color: var(--neutral-600); margin-top: 0.25rem;">${doc.notes}</div>` : ''}
           </div>
           <div class="list-item-actions">
             <button class="btn-danger btn-small" onclick="deleteDocument(${doc.id})">Delete</button>
@@ -1212,44 +1205,103 @@
 
     // Dashboard
     function updateDashboard() {
-      const totalBalance = APP_STATE.wallets.reduce((sum, w) => sum + w.balance, 0);
-      const thisMonth = new Date().toISOString().slice(0, 7);
-      const monthExpenses = APP_STATE.expenses
-        .filter(e => e.date.startsWith(thisMonth))
-        .reduce((sum, e) => sum + e.amount, 0);
-      const monthIncome = APP_STATE.income
-        .filter(i => i.date.startsWith(thisMonth))
-        .reduce((sum, i) => sum + i.amount, 0);
+      const stocksValue = APP_STATE.stocks.reduce((sum, s) => sum + s.currentValue, 0);
+      const mfsValue = APP_STATE.mfs.reduce((sum, m) => sum + m.currentValue, 0);
+      const cashValue = APP_STATE.wallets.reduce((sum, w) => sum + w.balance, 0);
+      const totalPortfolioValue = stocksValue + mfsValue;
+      const netWorth = totalPortfolioValue + cashValue;
 
-      document.getElementById('totalBalance').textContent = '₹' + totalBalance.toFixed(2);
-      document.getElementById('monthExpenses').textContent = '₹' + monthExpenses.toFixed(2);
-      document.getElementById('monthIncome').textContent = '₹' + monthIncome.toFixed(2);
+      document.getElementById('totalPortfolioValue').textContent = '₹' + totalPortfolioValue.toFixed(2);
+      document.getElementById('totalCash').textContent = '₹' + cashValue.toFixed(2);
+      document.getElementById('netWorth').textContent = '₹' + netWorth.toFixed(2);
 
-      updateRecentTransactions();
+      updateHoldingsSummary(stocksValue, mfsValue, cashValue);
     }
 
-    function updateRecentTransactions() {
-      const container = document.getElementById('recentTransactions');
-      const allTransactions = [
-        ...APP_STATE.expenses.map(e => ({ ...e, type: 'expense' })),
-        ...APP_STATE.income.map(i => ({ ...i, type: 'income' }))
-      ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+    function updateHoldingsSummary(stocksValue, mfsValue, cashValue) {
+      const container = document.getElementById('holdingsSummary');
+      const total = stocksValue + mfsValue + cashValue;
 
-      if (allTransactions.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">No transactions yet</div><div>Start by adding an expense or income</div></div>';
+      if (total === 0) {
+        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--neutral-600); padding: 2rem;">No holdings yet. Start by adding stocks, mutual funds or wallets.</div>';
         return;
       }
 
-      container.innerHTML = allTransactions.map(tx => {
-        const isExpense = tx.type === 'expense';
+      const items = [];
+      if (stocksValue > 0) items.push({ label: 'Equity', value: stocksValue, color: '#14b8a6' });
+      if (mfsValue > 0) items.push({ label: 'Mutual Funds', value: mfsValue, color: '#0f766e' });
+      if (cashValue > 0) items.push({ label: 'Cash', value: cashValue, color: '#a3a3a3' });
+
+      container.innerHTML = items.map(item => {
+        const percent = ((item.value / total) * 100).toFixed(1);
         return `
-          <div class="list-item">
-            <div class="list-item-left">
-              <div class="list-item-title">${isExpense ? tx.category : tx.source}</div>
-              <div class="list-item-subtitle">${tx.date}</div>
+          <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">${item.label}</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: ${item.color}; margin-bottom: 0.5rem;">₹${item.value.toFixed(0)}</div>
+            <div style="font-size: 0.875rem; color: var(--neutral-600);">${percent}%</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updatePortfolioView() {
+      const container = document.getElementById('allHoldings');
+      const allHoldings = [];
+
+      APP_STATE.stocks.forEach(stock => {
+        allHoldings.push({
+          type: 'stock',
+          name: stock.symbol,
+          category: 'Equity',
+          value: stock.currentValue,
+          gain: stock.currentValue - stock.investedAmount,
+          invested: stock.investedAmount,
+          details: `${stock.quantity} @ ₹${stock.currentPrice.toFixed(2)}`,
+          id: stock.id
+        });
+      });
+
+      APP_STATE.mfs.forEach(mf => {
+        allHoldings.push({
+          type: 'mf',
+          name: mf.name,
+          category: mf.category,
+          value: mf.currentValue,
+          gain: mf.currentValue - mf.buyValue,
+          invested: mf.buyValue,
+          details: `${mf.units} units @ ₹${mf.currentNAV.toFixed(2)} NAV`,
+          id: mf.id
+        });
+      });
+
+      if (allHoldings.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><div class="empty-state-title">No holdings yet</div></div>';
+        return;
+      }
+
+      container.innerHTML = allHoldings.map(holding => {
+        const gainLossPercent = ((holding.gain / holding.invested) * 100).toFixed(2);
+        return `
+          <div class="portfolio-item">
+            <div class="portfolio-header">
+              <div class="portfolio-name">${holding.name} <span class="holding-badge">${holding.category}</span></div>
+              <div class="portfolio-value">₹${holding.value.toFixed(2)}</div>
             </div>
-            <div class="list-item-amount" style="color: ${isExpense ? 'var(--danger)' : 'var(--success)'};">
-              ${isExpense ? '-' : '+'}₹${tx.amount.toFixed(2)}
+            <div class="portfolio-details">
+              <div class="portfolio-detail">
+                <span>Invested:</span>
+                <strong>₹${holding.invested.toFixed(2)}</strong>
+              </div>
+              <div class="portfolio-detail">
+                <span>Gain/Loss:</span>
+                <strong class="gain-loss ${holding.gain >= 0 ? 'positive' : 'negative'}" style="border-radius: 4px; padding: 0.25rem 0.5rem;">
+                  ${holding.gain >= 0 ? '+' : ''}₹${holding.gain.toFixed(2)} (${gainLossPercent}%)
+                </strong>
+              </div>
+              <div class="portfolio-detail" style="grid-column: 1 / -1;">
+                <span>Details:</span>
+                <strong>${holding.details}</strong>
+              </div>
             </div>
           </div>
         `;
@@ -1258,11 +1310,11 @@
 
     // Utilities
     function saveToLocalStorage() {
-      localStorage.setItem('dhana_app_state', JSON.stringify(APP_STATE));
+      localStorage.setItem('advait_app_state', JSON.stringify(APP_STATE));
     }
 
     function loadFromLocalStorage() {
-      const saved = localStorage.getItem('dhana_app_state');
+      const saved = localStorage.getItem('advait_app_state');
       if (saved) {
         Object.assign(APP_STATE, JSON.parse(saved));
       }
@@ -1271,19 +1323,14 @@
     function showSuccessMessage(elementId) {
       const el = document.getElementById(elementId);
       el.classList.add('active');
-      setTimeout(() => {
-        el.classList.remove('active');
-      }, 3000);
+      setTimeout(() => el.classList.remove('active'), 3000);
     }
 
     function setDateInputsToToday() {
       const today = new Date().toISOString().split('T')[0];
-      const dateInputs = ['expenseDate', 'incomeDate', 'docDate'];
-      dateInputs.forEach(id => {
+      ['stockBuyDate', 'mfInvestDate', 'docDate'].forEach(id => {
         const el = document.getElementById(id);
-        if (el && !el.value) {
-          el.value = today;
-        }
+        if (el && !el.value) el.value = today;
       });
     }
   </script>
