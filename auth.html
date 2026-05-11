@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Mishra Family</title>
+    <title>Hardware Key Login — Mishra Family</title>
     <style>
         * {
             margin: 0;
@@ -26,7 +26,7 @@
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
             padding: 40px;
         }
 
@@ -51,6 +51,54 @@
         .login-header-subtitle {
             font-size: 14px;
             color: #666;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #1565c0;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
         .form-group {
@@ -88,59 +136,7 @@
             color: #999;
         }
 
-        .form-error {
-            border-color: #f44336 !important;
-        }
-
-        .error-message {
-            color: #f44336;
-            font-size: 12px;
-            margin-top: 6px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .form-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: #667eea;
-        }
-
-        .checkbox-container label {
-            cursor: pointer;
-            color: #666;
-        }
-
-        .forgot-password {
-            color: #667eea;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .forgot-password:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-
-        .login-button {
+        .button {
             width: 100%;
             padding: 14px 16px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -151,77 +147,38 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
         }
 
-        .login-button:hover {
+        .button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .login-button:active {
+        .button:active {
             transform: translateY(0);
         }
 
-        .login-button:disabled {
+        .button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
 
-        .demo-button {
-            width: 100%;
-            padding: 12px 16px;
+        .button.secondary {
             background: #f5f5f5;
             color: #333;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
         }
 
-        .demo-button:hover {
+        .button.secondary:hover {
             border-color: #667eea;
             background: #f9f9ff;
             color: #667eea;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #e0e0e0;
-        }
-
-        .divider-text {
-            position: relative;
-            background: white;
-            padding: 0 10px;
-            color: #999;
-            font-size: 12px;
-            display: inline-block;
-        }
-
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 12px 14px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #1565c0;
-            margin-bottom: 20px;
-            line-height: 1.5;
         }
 
         .guest-button {
@@ -241,38 +198,121 @@
             background: #f9f9ff;
         }
 
-        .loading-spinner {
+        .alert {
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
             display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
         }
 
-        @keyframes spin {
-            0% { transform: translateY(-50%) rotate(0deg); }
-            100% { transform: translateY(-50%) rotate(360deg); }
-        }
-
-        .login-button-wrapper {
-            position: relative;
-        }
-
-        .login-button.loading {
-            color: transparent;
-        }
-
-        .login-button.loading .loading-spinner {
+        .alert.show {
             display: block;
         }
 
-        /* Session info */
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #f5c6cb;
+        }
+
+        .alert.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .key-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .registered-keys {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .registered-keys-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .key-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .key-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .key-name {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .key-date {
+            color: #999;
+            font-size: 11px;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #da190b;
+        }
+
         .session-info {
             display: none;
             background: #f9f9f9;
@@ -308,6 +348,59 @@
             border-bottom: none;
         }
 
+        .logout-button {
+            width: 100%;
+            padding: 10px 12px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .logout-button:hover {
+            background: #da190b;
+        }
+
+        .browser-support {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #856404;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider-text {
+            position: relative;
+            background: white;
+            padding: 0 10px;
+            color: #999;
+            font-size: 12px;
+            display: inline-block;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;
@@ -320,174 +413,339 @@
             .login-header-icon {
                 font-size: 40px;
             }
+
+            .tabs {
+                font-size: 12px;
+            }
+
+            .tab-btn {
+                padding: 10px 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-header">
-            <span class="login-header-icon">👨‍👩‍👧‍👦</span>
+            <span class="login-header-icon">🔐</span>
             <h1 class="login-header-title">Mishra Family</h1>
-            <p class="login-header-subtitle">Personal Records & Finance Manager</p>
+            <p class="login-header-subtitle">Hardware Key Authentication</p>
         </div>
 
-        <div class="info-box" id="infoBox">
-            Master login required. Use your email and password to access the family records.
+        <div id="alertBox" class="alert"></div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="window.webauthn.switchTab('authenticate')">
+                🔑 Authenticate
+            </button>
+            <button class="tab-btn" onclick="window.webauthn.switchTab('register')">
+                ➕ Register Key
+            </button>
         </div>
 
-        <form id="loginForm">
+        <!-- Authenticate Tab -->
+        <div id="authenticate" class="tab-content active">
+            <div class="info-box">
+                🔐 Insert your registered hardware security key and click "Authenticate"
+            </div>
+
+            <div class="browser-support" id="supportWarning" style="display: none;">
+                ⚠️ WebAuthn not supported in your browser. Please use Chrome, Firefox, Safari, or Edge.
+            </div>
+
+            <button class="button" onclick="window.webauthn.authenticate()" id="authBtn">
+                <span>🔑</span>
+                <span>Authenticate with Hardware Key</span>
+            </button>
+
+            <div class="loading" id="authLoading">
+                <div class="spinner"></div>
+                <p>Waiting for hardware key...</p>
+            </div>
+
+            <div id="registeredKeysList"></div>
+
+            <div class="divider">
+                <span class="divider-text">or</span>
+            </div>
+
+            <button class="guest-button" onclick="window.webauthn.loginAsGuest()">
+                👁️ Access as Viewer (Read-Only)
+            </button>
+        </div>
+
+        <!-- Register Tab -->
+        <div id="register" class="tab-content">
+            <div class="info-box">
+                📝 Register a new hardware security key (YubiKey, Windows Hello, etc.)
+            </div>
+
             <div class="form-group">
-                <label class="form-label">Email Address</label>
+                <label class="form-label">Key Name</label>
                 <input
-                    type="email"
-                    id="emailInput"
+                    type="text"
+                    id="keyName"
                     class="form-input"
-                    placeholder="seeksiddharth@gmail.com"
-                    required
+                    placeholder="e.g., YubiKey 5, Windows Hello"
+                    maxlength="50"
                 />
-                <div class="error-message" id="emailError"></div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <div style="position: relative;">
-                    <input
-                        type="password"
-                        id="passwordInput"
-                        class="form-input"
-                        placeholder="••••••••"
-                        minlength="6"
-                        required
-                    />
-                    <div class="error-message" id="passwordError"></div>
-                </div>
-            </div>
+            <button class="button" onclick="window.webauthn.register()" id="registerBtn">
+                <span>➕</span>
+                <span>Register New Key</span>
+            </button>
 
-            <div class="form-footer">
-                <div class="checkbox-container">
-                    <input type="checkbox" id="rememberMe" />
-                    <label for="rememberMe">Remember me</label>
-                </div>
-                <a href="#" class="forgot-password" id="forgotPassword">Forgot password?</a>
+            <div class="loading" id="regLoading">
+                <div class="spinner"></div>
+                <p>Waiting for hardware key...</p>
             </div>
-
-            <div class="login-button-wrapper">
-                <button type="submit" class="login-button" id="loginBtn">
-                    Sign In
-                    <div class="loading-spinner"></div>
-                </button>
-            </div>
-        </form>
-
-        <div class="divider">
-            <span class="divider-text">or</span>
         </div>
 
-        <button class="guest-button" onclick="window.auth.loginAsGuest()">
-            👁️ Access as Viewer (Read-Only)
-        </button>
-
-        <div class="session-info" id="sessionInfo">
-            <div class="session-info-header">Current Session</div>
-            <div class="session-info-item">
-                <span>Email:</span>
-                <span id="sessionEmail">-</span>
-            </div>
+        <!-- Session Info -->
+        <div id="sessionInfo" class="session-info">
+            <div class="session-info-header">✅ Authenticated</div>
             <div class="session-info-item">
                 <span>Access Level:</span>
-                <span id="sessionLevel">-</span>
+                <span id="sessionLevel">Admin (Full Access)</span>
+            </div>
+            <div class="session-info-item">
+                <span>Authentication:</span>
+                <span>Hardware Key (FIDO2)</span>
             </div>
             <div class="session-info-item">
                 <span>Login Time:</span>
                 <span id="sessionTime">-</span>
             </div>
+            <button class="logout-button" onclick="window.webauthn.logout()">
+                🚪 Sign Out
+            </button>
         </div>
     </div>
 
     <script>
-        // Master credentials
-        const MASTER_EMAIL = 'seeksiddharth@gmail.com';
-        const MASTER_PASSWORD_HASH = 'family2024'; // In production, use bcrypt or similar
-
-        // Authentication Module
-        window.auth = {
+        // WebAuthn Authentication Module
+        window.webauthn = {
             SESSION_KEY: 'mishraFamilySession',
+            CREDENTIALS_KEY: 'mishraWebAuthnCredentials',
             SESSION_TIMEOUT: 24 * 60 * 60 * 1000, // 24 hours
 
-            init() {
-                const form = document.getElementById('loginForm');
-                form.addEventListener('submit', (e) => this.handleLogin(e));
-                document.getElementById('forgotPassword').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.showError('Please contact the system administrator to reset your password');
-                });
+            async init() {
+                // Check browser support
+                if (!window.PublicKeyCredential) {
+                    document.getElementById('supportWarning').style.display = 'block';
+                    document.getElementById('authBtn').disabled = true;
+                    document.getElementById('registerBtn').disabled = true;
+                    return;
+                }
 
                 // Check if already logged in
                 const session = this.getSession();
                 if (session && this.isSessionValid(session)) {
-                    this.redirectToDashboard();
-                }
-
-                // Show session info if available
-                if (session) {
                     this.displaySessionInfo(session);
-                }
-            },
-
-            handleLogin(e) {
-                e.preventDefault();
-
-                const email = document.getElementById('emailInput').value.trim();
-                const password = document.getElementById('passwordInput').value;
-                const rememberMe = document.getElementById('rememberMe').checked;
-
-                // Clear previous errors
-                this.clearErrors();
-
-                // Validate inputs
-                if (!email) {
-                    this.showFieldError('emailError', 'Email is required');
                     return;
                 }
 
-                if (!password) {
-                    this.showFieldError('passwordError', 'Password is required');
+                // Display registered keys
+                this.displayRegisteredKeys();
+            },
+
+            switchTab(tabName) {
+                // Hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Remove active state from all buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Show selected tab
+                document.getElementById(tabName).classList.add('active');
+
+                // Find and activate the corresponding button
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    if (btn.getAttribute('onclick').includes(`'${tabName}'`)) {
+                        btn.classList.add('active');
+                    }
+                });
+            },
+
+            async register() {
+                const keyName = document.getElementById('keyName').value.trim();
+
+                if (!keyName) {
+                    this.showError('Please enter a name for your key');
                     return;
                 }
 
-                if (password.length < 6) {
-                    this.showFieldError('passwordError', 'Password must be at least 6 characters');
+                document.getElementById('registerBtn').disabled = true;
+                this.showLoading('regLoading', true);
+
+                try {
+                    // Create credential
+                    const credential = await navigator.credentials.create({
+                        publicKey: {
+                            challenge: new Uint8Array(32),
+                            rp: {
+                                name: 'Mishra Family',
+                                id: window.location.hostname
+                            },
+                            user: {
+                                id: new Uint8Array(16),
+                                name: 'admin@mishrafamily.local',
+                                displayName: 'Mishra Family Admin'
+                            },
+                            pubKeyCredParams: [
+                                { alg: -7, type: 'public-key' },
+                                { alg: -257, type: 'public-key' }
+                            ],
+                            authenticatorSelection: {
+                                authenticatorAttachment: 'cross-platform',
+                                userVerification: 'preferred'
+                            },
+                            timeout: 60000,
+                            attestation: 'direct'
+                        }
+                    });
+
+                    if (credential) {
+                        // Store credential
+                        const storedCredential = {
+                            id: this.arrayBufferToBase64(credential.id),
+                            name: keyName,
+                            publicKey: this.arrayBufferToBase64(credential.response.getPublicKey()),
+                            registeredAt: new Date().toISOString()
+                        };
+
+                        let credentials = this.getStoredCredentials();
+                        credentials.push(storedCredential);
+                        localStorage.setItem(this.CREDENTIALS_KEY, JSON.stringify(credentials));
+
+                        this.showSuccess(`✅ Key "${keyName}" registered successfully!`);
+                        document.getElementById('keyName').value = '';
+                        this.displayRegisteredKeys();
+
+                        // Switch to authenticate tab
+                        setTimeout(() => {
+                            this.switchTab('authenticate');
+                        }, 1500);
+                    }
+                } catch (error) {
+                    this.showError('❌ Registration failed: ' + error.message);
+                } finally {
+                    document.getElementById('registerBtn').disabled = false;
+                    this.showLoading('regLoading', false);
+                }
+            },
+
+            async authenticate() {
+                const credentials = this.getStoredCredentials();
+
+                if (credentials.length === 0) {
+                    this.showError('❌ No registered keys found. Register a key first.');
                     return;
                 }
 
-                // Check credentials
-                if (email === MASTER_EMAIL && password === MASTER_PASSWORD_HASH) {
-                    this.createSession(email, 'admin', rememberMe);
-                    this.showSuccess('✅ Login successful! Redirecting...');
-                    setTimeout(() => this.redirectToDashboard(), 1500);
-                } else {
-                    this.showError('❌ Invalid email or password');
-                    // Shake animation
-                    document.getElementById('loginForm').style.animation = 'shake 0.5s';
-                    setTimeout(() => {
-                        document.getElementById('loginForm').style.animation = '';
-                    }, 500);
+                document.getElementById('authBtn').disabled = true;
+                this.showLoading('authLoading', true);
+
+                try {
+                    // Get assertion
+                    const assertion = await navigator.credentials.get({
+                        publicKey: {
+                            challenge: new Uint8Array(32),
+                            allowCredentials: credentials.map(cred => ({
+                                id: this.base64ToArrayBuffer(cred.id),
+                                type: 'public-key',
+                                transports: ['usb', 'nfc', 'ble', 'internal']
+                            })),
+                            userVerification: 'preferred',
+                            timeout: 60000
+                        }
+                    });
+
+                    if (assertion) {
+                        // Verify credential ID matches
+                        const credentialId = this.arrayBufferToBase64(assertion.id);
+                        const storedCred = credentials.find(c => c.id === credentialId);
+
+                        if (storedCred) {
+                            // Create session
+                            this.createSession('admin@mishrafamily.local', 'Hardware Key', 'admin', true);
+                            this.showSuccess('✅ Authentication successful! Welcome back.');
+                            this.displaySessionInfo(this.getSession());
+
+                            setTimeout(() => {
+                                this.redirectToDashboard();
+                            }, 1500);
+                        } else {
+                            this.showError('❌ This key is not registered.');
+                        }
+                    }
+                } catch (error) {
+                    this.showError('❌ Authentication failed: ' + error.message);
+                } finally {
+                    document.getElementById('authBtn').disabled = false;
+                    this.showLoading('authLoading', false);
                 }
             },
 
-            loginAsGuest() {
-                this.createSession('guest@family.local', 'viewer', false);
-                this.showSuccess('✅ Accessing as viewer... Redirecting...');
-                setTimeout(() => this.redirectToDashboard(true), 1500);
+            displayRegisteredKeys() {
+                const credentials = this.getStoredCredentials();
+                const container = document.getElementById('registeredKeysList');
+
+                if (credentials.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                let html = '<div class="registered-keys">';
+                html += '<div class="registered-keys-title">🔑 Registered Keys</div>';
+
+                credentials.forEach((cred, index) => {
+                    const date = new Date(cred.registeredAt).toLocaleDateString('en-IN');
+                    html += `
+                        <div class="key-item">
+                            <div>
+                                <div class="key-name">${cred.name}</div>
+                                <div class="key-date">Registered: ${date}</div>
+                            </div>
+                            <button class="delete-btn" onclick="window.webauthn.deleteKey(${index})">Delete</button>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+                container.innerHTML = html;
             },
 
-            createSession(email, accessLevel, rememberMe) {
+            deleteKey(index) {
+                if (confirm('Delete this key? You won\'t be able to use it to login.')) {
+                    let credentials = this.getStoredCredentials();
+                    credentials.splice(index, 1);
+                    localStorage.setItem(this.CREDENTIALS_KEY, JSON.stringify(credentials));
+                    this.displayRegisteredKeys();
+                    this.showSuccess('✅ Key deleted');
+                }
+            },
+
+            getStoredCredentials() {
+                const stored = localStorage.getItem(this.CREDENTIALS_KEY);
+                return stored ? JSON.parse(stored) : [];
+            },
+
+            createSession(email, name, accessLevel, rememberMe) {
                 const session = {
                     email,
+                    name,
                     accessLevel,
                     loginTime: new Date().toISOString(),
                     expiresAt: new Date(Date.now() + this.SESSION_TIMEOUT).toISOString(),
-                    rememberMe
+                    rememberMe,
+                    authMethod: 'webauthn'
                 };
 
                 if (rememberMe) {
@@ -500,11 +758,9 @@
             },
 
             getSession() {
-                // Try localStorage first (if "remember me" was checked)
                 let session = localStorage.getItem(this.SESSION_KEY);
                 if (session) return JSON.parse(session);
 
-                // Try sessionStorage
                 session = sessionStorage.getItem(this.SESSION_KEY);
                 if (session) return JSON.parse(session);
 
@@ -516,79 +772,74 @@
                 return new Date(session.expiresAt) > new Date();
             },
 
+            loginAsGuest() {
+                this.createSession('guest@family.local', 'Guest User', 'viewer', false);
+                this.showSuccess('✅ Accessing as viewer... Redirecting...');
+                setTimeout(() => {
+                    sessionStorage.setItem('mishraFamilyViewMode', 'read-only');
+                    this.redirectToDashboard();
+                }, 1500);
+            },
+
             logout() {
                 localStorage.removeItem(this.SESSION_KEY);
                 sessionStorage.removeItem(this.SESSION_KEY);
                 window.mishraSession = null;
-                window.location.href = 'auth.html';
-            },
-
-            redirectToDashboard(isGuest = false) {
-                // Store guest mode if applicable
-                if (isGuest) {
-                    sessionStorage.setItem('mishraFamilyViewMode', 'read-only');
-                }
-                window.location.href = 'dashboard.html';
-            },
-
-            showError(message) {
-                document.getElementById('infoBox').innerHTML = `<strong>⚠️ Error:</strong> ${message}`;
-                document.getElementById('infoBox').style.background = '#ffebee';
-                document.getElementById('infoBox').style.borderLeftColor = '#f44336';
-                document.getElementById('infoBox').style.color = '#c62828';
-            },
-
-            showSuccess(message) {
-                document.getElementById('infoBox').innerHTML = message;
-                document.getElementById('infoBox').style.background = '#e8f5e9';
-                document.getElementById('infoBox').style.borderLeftColor = '#4caf50';
-                document.getElementById('infoBox').style.color = '#2e7d32';
-            },
-
-            showFieldError(fieldId, message) {
-                const errorEl = document.getElementById(fieldId);
-                errorEl.textContent = message;
-                errorEl.classList.add('show');
-
-                // Add error state to input
-                const inputId = fieldId.replace('Error', 'Input');
-                document.getElementById(inputId).classList.add('form-error');
-            },
-
-            clearErrors() {
-                document.querySelectorAll('.error-message').forEach(el => {
-                    el.classList.remove('show');
-                    el.textContent = '';
-                });
-                document.querySelectorAll('.form-input').forEach(el => {
-                    el.classList.remove('form-error');
-                });
+                window.location.href = 'auth-webauthn.html';
             },
 
             displaySessionInfo(session) {
-                const sessionInfo = document.getElementById('sessionInfo');
-                document.getElementById('sessionEmail').textContent = session.email;
-                document.getElementById('sessionLevel').textContent = session.accessLevel === 'admin' ? 'Master (Full Access)' : 'Viewer (Read-Only)';
+                document.getElementById('sessionInfo').classList.add('show');
                 document.getElementById('sessionTime').textContent = new Date(session.loginTime).toLocaleString('en-IN');
-                sessionInfo.classList.add('show');
+                document.querySelector('.tabs').style.display = 'none';
+                document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            },
+
+            redirectToDashboard() {
+                window.location.href = 'dashboard.html';
+            },
+
+            showLoading(id, show) {
+                const element = document.getElementById(id);
+                if (show) element.classList.add('active');
+                else element.classList.remove('active');
+            },
+
+            showError(message) {
+                const alertBox = document.getElementById('alertBox');
+                alertBox.textContent = message;
+                alertBox.className = 'alert error show';
+            },
+
+            showSuccess(message) {
+                const alertBox = document.getElementById('alertBox');
+                alertBox.textContent = message;
+                alertBox.className = 'alert success show';
+            },
+
+            arrayBufferToBase64(buffer) {
+                const bytes = new Uint8Array(buffer);
+                let binary = '';
+                for (let i = 0; i < bytes.byteLength; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return window.btoa(binary);
+            },
+
+            base64ToArrayBuffer(base64) {
+                const binary_string = window.atob(base64);
+                const bytes = new Uint8Array(binary_string.length);
+                for (let i = 0; i < binary_string.length; i++) {
+                    bytes[i] = binary_string.charCodeAt(i);
+                }
+                return bytes.buffer;
             }
         };
 
-        // Initialize authentication
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
-            window.auth.init();
+            window.webauthn.init();
         });
-
-        // Add CSS animation for shake effect
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-10px); }
-                75% { transform: translateX(10px); }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
