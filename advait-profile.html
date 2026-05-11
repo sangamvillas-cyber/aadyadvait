@@ -184,6 +184,31 @@
         padding: 0.75rem 0.5rem;
       }
     }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .back-link {
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    @media print {
+      .header-actions, .profile-avatar { display: none !important; }
+      body { background: white !important; }
+      .profile-header {
+        color: black !important;
+        background: white !important;
+        padding: 1rem 0 !important;
+      }
+      .profile-name, .profile-title { color: black !important; }
+      .tracking-section { break-inside: avoid; border: none; }
+      .summary-card { break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
@@ -191,7 +216,11 @@
     <div class="profile-avatar">👦</div>
     <div class="profile-name">Advait Mishra</div>
     <div class="profile-title">Minor Account</div>
-    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+    <div class="header-actions">
+      <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+      <button class="back-link" onclick="exportCSV()">📥 Export CSV</button>
+      <button class="back-link" onclick="window.print()">🖨️ Print</button>
+    </div>
   </div>
 
   <div class="container">
@@ -248,11 +277,37 @@
   </div>
 
   <script>
+    function exportCSV() {
+      const data = window.__memberData;
+      if (!data) { alert('Data not loaded yet'); return; }
+      const referenceDate = new Date('2026-05-11');
+      const rows = data.transactions.map(txn => {
+        const pv = txn.units * txn.purchaseNav;
+        const cv = txn.units * txn.currentNav;
+        const gain = cv - pv;
+        const purchaseDate = new Date(txn.purchaseDate);
+        const yrs = (referenceDate - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
+        const xirr = yrs > 0 ? (Math.pow(cv / pv, 1 / yrs) - 1) * 100 : 0;
+        return [txn.fund, txn.folio, txn.units.toFixed(3), txn.purchaseDate, txn.purchaseNav.toFixed(4), txn.currentNav.toFixed(4), pv.toFixed(2), cv.toFixed(2), gain.toFixed(2), xirr.toFixed(2) + '%'];
+      });
+      const headers = ['Fund','Folio','Units','Purchase Date','Purchase NAV','Current NAV','Purchase Value','Current Value','Gain/Loss','XIRR %'];
+      const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'advait-holdings-' + new Date().toISOString().slice(0,10) + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    }
+
     async function loadProfileData() {
       try {
         const response = await fetch('tracking-data.json?t=' + Date.now(), {cache: 'no-store'});
         const data = await response.json();
         const memberData = data.advait;
+        window.__memberData = memberData;
 
         // Update summary cards
         document.getElementById('totalInvested').textContent = '₹' + memberData.totalInvested.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
