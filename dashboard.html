@@ -289,11 +289,11 @@
               <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Siddharth</div>
               <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">View Profile</div>
             </a>
-            <div style="background: white; border: 2px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem; text-align: center; opacity: 0.6;">
+            <a href="archana-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
               <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👩</div>
               <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Archana</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">Coming Soon</div>
-            </div>
+              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">View Profile</div>
+            </a>
             <a href="aadya-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
               <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👧</div>
               <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Aadya</div>
@@ -324,10 +324,11 @@
           <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--neutral-900);">Real-Time NAV & XIRR Tracker</h2>
 
           <!-- Member Selector -->
-          <div style="margin-bottom: 2rem; display: flex; gap: 1rem;">
+          <div style="margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
             <button id="memberFilter_siddharth" class="member-filter-btn active" data-member="siddharth" style="padding: 0.75rem 1.5rem; background: var(--primary-lighter); color: var(--primary); border: 2px solid var(--primary-light); border-radius: 8px; cursor: pointer; font-weight: 600;">Siddharth</button>
             <button id="memberFilter_advait" class="member-filter-btn" data-member="advait" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Advait</button>
             <button id="memberFilter_aadya" class="member-filter-btn" data-member="aadya" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Aadya</button>
+            <button id="memberFilter_archana" class="member-filter-btn" data-member="archana" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Archana</button>
           </div>
 
           <!-- Summary Cards -->
@@ -460,7 +461,7 @@
           let html = '';
 
           // Display for each family member
-          ['siddharth', 'advait'].forEach(member => {
+          ['siddharth', 'advait', 'aadya', 'archana'].forEach(member => {
             const funds = data.funds[member];
             html += `<div style="margin-bottom: 3rem;">
               <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem;">${funds.name}'s Funds</h3>`;
@@ -543,7 +544,7 @@
     });
 
     function loadAndDisplayTracking() {
-      fetch('tracking-data.json')
+      fetch('tracking-data.json?v=20260511')
         .then(res => res.json())
         .then(data => {
           window.trackingData = data;

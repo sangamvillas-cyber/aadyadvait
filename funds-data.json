@@ -14,7 +14,15 @@
         },
         {
           "fundHouse": "HDFC",
-          "fundName": "HDFC Nifty 50 Index Fund - Direct Plan (Nifty Plan)",
+          "fundName": "HDFC Flexi Cap Fund - Direct Plan - Growth Option",
+          "folio": "18017755",
+          "units": 716.184,
+          "nav": 2163.717,
+          "valuation": 1549619.50
+        },
+        {
+          "fundHouse": "HDFC",
+          "fundName": "HDFC Nifty 50 Index Fund - Direct Plan",
           "folio": "18017755",
           "units": 11566.153,
           "nav": 235.0262,
@@ -22,11 +30,27 @@
         },
         {
           "fundHouse": "Sundaram",
-          "fundName": "SUNDARAM MD CAP FUND DIRECT GROWTH",
+          "fundName": "SUNDARAM MID CAP FUND DIRECT GROWTH",
           "folio": "501763676523",
           "units": 587.732,
           "nav": 1613.3581,
           "valuation": 948222.18
+        },
+        {
+          "fundHouse": "Quant",
+          "fundName": "Quant Small Cap Fund - Direct Plan - Growth",
+          "folio": "51059517961",
+          "units": 16.535,
+          "nav": 292.1925,
+          "valuation": 4831.40
+        },
+        {
+          "fundHouse": "Mirae Asset",
+          "fundName": "Mirae Asset Large and Midcap Fund - Direct Plan - Growth",
+          "folio": "71343368923",
+          "units": 44079.090,
+          "nav": 173.389,
+          "valuation": 7642829.34
         },
         {
           "fundHouse": "Mirae Asset",
@@ -37,15 +61,39 @@
           "valuation": 11929175.49
         },
         {
-          "fundHouse": "HDFC",
-          "fundName": "HDFC Flexi Cap Fund - Direct Plan - Growth Option",
-          "folio": "18017755",
-          "units": 716.184,
-          "nav": 2163.717,
-          "valuation": 1549619.50
+          "fundHouse": "Quantum",
+          "fundName": "Quantum Value Fund - Direct Plan Growth Option",
+          "folio": "9021161431",
+          "units": 28312.615,
+          "nav": 125.78,
+          "valuation": 3561160.71
+        },
+        {
+          "fundHouse": "Axis",
+          "fundName": "Axis ELSS Tax Saver Fund - Direct Growth",
+          "folio": "91046198861",
+          "units": 146.897,
+          "nav": 107.15,
+          "valuation": 15740.01
+        },
+        {
+          "fundHouse": "Axis",
+          "fundName": "Axis Liquid Fund - Direct Growth",
+          "folio": "91046198861",
+          "units": 354.689,
+          "nav": 3090.4174,
+          "valuation": 1096137.06
+        },
+        {
+          "fundHouse": "ICICI Prudential",
+          "fundName": "ICICI Prudential Nifty 50 Index Fund - Direct Plan Growth",
+          "folio": "9238588",
+          "units": 12627.311,
+          "nav": 254.0992,
+          "valuation": 3208589.62
         }
       ],
-      "totalValuation": 19462573.14
+      "totalValuation": 45576797.32
     },
     "advait": {
       "name": "Advait",
@@ -76,23 +124,15 @@
           "valuation": 1922313.26
         },
         {
-          "fundHouse": "HDFC",
-          "fundName": "HDFC Nifty 50 Index Fund - Direct Plan",
-          "folio": "TBD",
-          "units": 657.15,
-          "nav": 261.75,
-          "valuation": 171916.15
-        },
-        {
           "fundHouse": "Mirae Asset",
-          "fundName": "Mirae Asset Large and Midcap Fund - Direct Plan",
-          "folio": "71343368923",
-          "units": 44079.090,
-          "nav": 173.389,
-          "valuation": 7642829.34
+          "fundName": "Mirae Asset Midcap Fund - Direct Plan",
+          "folio": "79929508416",
+          "units": 97159.811,
+          "nav": 41.835,
+          "valuation": 4064680.69
         }
       ],
-      "totalValuation": 13240090.65
+      "totalValuation": 9475025.85
     },
     "aadya": {
       "name": "Aadya",
@@ -100,46 +140,69 @@
       "holdings": [
         {
           "fundHouse": "Axis",
-          "fundName": "Axis Midcap Fund",
-          "folio": "TBD",
-          "units": 450.00,
-          "nav": 2725.50,
-          "valuation": 1226475.00
+          "fundName": "Axis Mid Cap Fund - Direct Growth",
+          "folio": "913162762831",
+          "units": 9707.352,
+          "nav": 137.95,
+          "valuation": 1339129.21
         },
         {
           "fundHouse": "HDFC",
-          "fundName": "HDFC Flexi Cap Fund - Direct Plan",
-          "folio": "TBD",
-          "units": 1028.50,
-          "nav": 1906.25,
-          "valuation": 1959878.13
+          "fundName": "HDFC Flexi Cap Fund - Direct Plan - Growth Option",
+          "folio": "20253109/18",
+          "units": 917.691,
+          "nav": 2163.717,
+          "valuation": 1985623.62
         },
         {
           "fundHouse": "HDFC",
-          "fundName": "HDFC Midcap Opp Fund",
-          "folio": "TBD",
-          "units": 330.00,
-          "nav": 1733.33,
-          "valuation": 571999.89
+          "fundName": "HDFC Mid Cap Fund - Direct Plan - Growth Option",
+          "folio": "20253109/18",
+          "units": 2852.602,
+          "nav": 223.895,
+          "valuation": 638683.32
+        }
+      ],
+      "totalValuation": 3963436.15
+    },
+    "archana": {
+      "name": "Archana",
+      "pan": "CSHPA3795D",
+      "holdings": [
+        {
+          "fundHouse": "HSBC",
+          "fundName": "HSBC Small Cap Fund - Direct Growth",
+          "folio": "4829346/76",
+          "units": 12833.398,
+          "nav": 93.7162,
+          "valuation": 1202697.29
         },
         {
           "fundHouse": "PPFAS",
           "fundName": "Parag Parikh Flexi Cap Fund - Direct Plan Growth",
-          "folio": "TBD",
-          "units": 4525.00,
-          "nav": 102.65,
-          "valuation": 464589.13
+          "folio": "10515541",
+          "units": 17562.969,
+          "nav": 91.5245,
+          "valuation": 1607441.96
         },
         {
-          "fundHouse": "SBI",
-          "fundName": "SBI Small Cap Fund",
-          "folio": "TBD",
-          "units": 90.00,
-          "nav": 2033.33,
-          "valuation": 182999.70
+          "fundHouse": "Mirae Asset",
+          "fundName": "Mirae Asset Large and Midcap Fund - Direct Plan - Growth",
+          "folio": "7991289491",
+          "units": 13785.194,
+          "nav": 173.389,
+          "valuation": 2390201.00
+        },
+        {
+          "fundHouse": "Mirae Asset",
+          "fundName": "Mirae Asset Large Cap Fund - Direct Plan - Growth",
+          "folio": "7991289491",
+          "units": 12374.781,
+          "nav": 124.695,
+          "valuation": 1543073.32
         }
       ],
-      "totalValuation": 5406941.85
+      "totalValuation": 6743413.57
     }
   },
   "lastUpdated": "2026-05-11",

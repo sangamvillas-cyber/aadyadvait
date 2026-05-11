@@ -225,12 +225,11 @@
             <tr>
               <th>Fund</th>
               <th style="text-align: right;">Units</th>
-              <th style="text-align: right;">Buy NAV</th>
               <th style="text-align: right;">Current NAV</th>
               <th style="text-align: right;">Purchase Value</th>
               <th style="text-align: right;">Current Value</th>
               <th style="text-align: right;">Gain/Loss</th>
-              <th style="text-align: right;">Return %</th>
+              <th style="text-align: right;">XIRR %</th>
             </tr>
           </thead>
           <tbody id="trackingTableBody">
@@ -250,7 +249,7 @@
   <script>
     async function loadProfileData() {
       try {
-        const response = await fetch('tracking-data.json');
+        const response = await fetch('tracking-data.json?v=20260511');
         const data = await response.json();
         const memberData = data.siddharth;
 
@@ -270,21 +269,25 @@
 
         // Build tracking table
         let tableHtml = '';
+        const referenceDate = new Date('2026-05-11'); // Reference date for XIRR calculation
         memberData.transactions.forEach(txn => {
           const purchaseValue = txn.units * txn.purchaseNav;
           const currentValue = txn.units * txn.currentNav;
           const gain = currentValue - purchaseValue;
-          const gainPercent = (gain / purchaseValue) * 100;
+
+          // Calculate XIRR: ((currentValue / purchaseValue) ^ (1 / yearsHeld)) - 1) * 100
+          const purchaseDate = new Date(txn.purchaseDate);
+          const yearsHeld = (referenceDate - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
+          const xirr = yearsHeld > 0 ? (Math.pow(currentValue / purchaseValue, 1 / yearsHeld) - 1) * 100 : 0;
 
           tableHtml += `<tr>
             <td class="fund-name">${txn.fund}</td>
             <td style="text-align: right;">${txn.units.toFixed(2)}</td>
-            <td style="text-align: right;">₹${txn.purchaseNav.toFixed(2)}</td>
             <td style="text-align: right;">₹${txn.currentNav.toFixed(2)}</td>
             <td style="text-align: right;">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
             <td style="text-align: right; font-weight: 600;">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
             <td style="text-align: right;" class="${gain >= 0 ? 'gain-positive' : 'gain-negative'}">₹${Math.abs(gain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-            <td style="text-align: right;" class="${gainPercent >= 0 ? 'gain-positive' : 'gain-negative'}">${(gainPercent >= 0 ? '+' : '')}${gainPercent.toFixed(2)}%</td>
+            <td style="text-align: right;" class="${xirr >= 0 ? 'gain-positive' : 'gain-negative'}">${(xirr >= 0 ? '+' : '')}${xirr.toFixed(2)}%</td>
           </tr>`;
         });
 

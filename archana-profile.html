@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advait Profile — Advait</title>
+  <title>Archana Profile — Advait</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -188,9 +188,9 @@
 </head>
 <body>
   <div class="profile-header">
-    <div class="profile-avatar">👦</div>
-    <div class="profile-name">Advait Mishra</div>
-    <div class="profile-title">Minor Account</div>
+    <div class="profile-avatar">👩</div>
+    <div class="profile-name">Archana Mishra</div>
+    <div class="profile-title">Family Account</div>
     <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
   </div>
 
@@ -224,6 +224,7 @@
           <thead>
             <tr>
               <th>Fund</th>
+              <th style="text-align: center;">Folio</th>
               <th style="text-align: right;">Units</th>
               <th style="text-align: right;">Current NAV</th>
               <th style="text-align: right;">Purchase Value</th>
@@ -251,7 +252,7 @@
       try {
         const response = await fetch('tracking-data.json?v=20260511');
         const data = await response.json();
-        const memberData = data.advait;
+        const memberData = data.archana;
 
         // Update summary cards
         document.getElementById('totalInvested').textContent = '₹' + memberData.totalInvested.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -269,19 +270,21 @@
 
         // Build tracking table
         let tableHtml = '';
-        const referenceDate = new Date('2026-05-11'); // Reference date for XIRR calculation
         memberData.transactions.forEach(txn => {
           const purchaseValue = txn.units * txn.purchaseNav;
           const currentValue = txn.units * txn.currentNav;
           const gain = currentValue - purchaseValue;
+          const gainPercent = (gain / purchaseValue) * 100;
 
-          // Calculate XIRR: ((currentValue / purchaseValue) ^ (1 / yearsHeld)) - 1) * 100
+          // Calculate XIRR for individual fund
           const purchaseDate = new Date(txn.purchaseDate);
-          const yearsHeld = (referenceDate - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
-          const xirr = yearsHeld > 0 ? (Math.pow(currentValue / purchaseValue, 1 / yearsHeld) - 1) * 100 : 0;
+          const today = new Date();
+          const yearsDiff = (today - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
+          const xirr = yearsDiff > 0 ? (Math.pow(currentValue / purchaseValue, 1 / yearsDiff) - 1) * 100 : 0;
 
           tableHtml += `<tr>
             <td class="fund-name">${txn.fund}</td>
+            <td style="text-align: center; font-family: monospace;">${txn.folio}</td>
             <td style="text-align: right;">${txn.units.toFixed(2)}</td>
             <td style="text-align: right;">₹${txn.currentNav.toFixed(2)}</td>
             <td style="text-align: right;">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>

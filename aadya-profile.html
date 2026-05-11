@@ -226,12 +226,11 @@
               <th>Fund</th>
               <th style="text-align: center;">Folio</th>
               <th style="text-align: right;">Units</th>
-              <th style="text-align: right;">Buy NAV</th>
               <th style="text-align: right;">Current NAV</th>
               <th style="text-align: right;">Purchase Value</th>
               <th style="text-align: right;">Current Value</th>
               <th style="text-align: right;">Gain/Loss</th>
-              <th style="text-align: right;">Return %</th>
+              <th style="text-align: right;">XIRR %</th>
             </tr>
           </thead>
           <tbody id="trackingTableBody">
@@ -251,7 +250,7 @@
   <script>
     async function loadProfileData() {
       try {
-        const response = await fetch('tracking-data.json');
+        const response = await fetch('tracking-data.json?v=20260511');
         const data = await response.json();
         const memberData = data.aadya;
 
@@ -287,12 +286,11 @@
             <td class="fund-name">${txn.fund}</td>
             <td style="text-align: center; font-family: monospace;">${txn.folio}</td>
             <td style="text-align: right;">${txn.units.toFixed(2)}</td>
-            <td style="text-align: right;">₹${txn.purchaseNav.toFixed(2)}</td>
             <td style="text-align: right;">₹${txn.currentNav.toFixed(2)}</td>
             <td style="text-align: right;">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
             <td style="text-align: right; font-weight: 600;">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
             <td style="text-align: right;" class="${gain >= 0 ? 'gain-positive' : 'gain-negative'}">₹${Math.abs(gain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-            <td style="text-align: right;" class="${gainPercent >= 0 ? 'gain-positive' : 'gain-negative'}">${(gainPercent >= 0 ? '+' : '')}${gainPercent.toFixed(2)}%</td>
+            <td style="text-align: right;" class="${xirr >= 0 ? 'gain-positive' : 'gain-negative'}">${(xirr >= 0 ? '+' : '')}${xirr.toFixed(2)}%</td>
           </tr>`;
         });
 
