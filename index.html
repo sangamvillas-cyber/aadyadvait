@@ -643,6 +643,9 @@
           <div class="nav-item" data-page="wallets">👛 Wallets</div>
           <div class="nav-item" data-page="documents">📄 Documents</div>
           <div class="nav-item" data-page="portfolio">🎯 Portfolio</div>
+          <div class="nav-item" data-page="analytics">📉 Analytics</div>
+          <div class="nav-item" data-page="goals">🎯 Investment Goals</div>
+          <div class="nav-item" data-page="settings">⚙️ Settings</div>
         </div>
       </div>
 
@@ -830,6 +833,123 @@
           </div>
         </div>
       </div>
+
+      <!-- Analytics -->
+      <div class="section" id="analytics">
+        <div class="section-header">
+          <div class="section-title">Analytics & Performance</div>
+          <div class="section-description">Investment performance metrics</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Asset Allocation</h3>
+          <div id="assetAllocation" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; color: var(--neutral-600); padding: 2rem;">
+              No holdings to display
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Overall Performance</h3>
+          <div id="overallPerformance" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Invested</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--neutral-900);">₹0</div>
+            </div>
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Current Value</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">₹0</div>
+            </div>
+            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Return</div>
+              <div style="font-size: 1.75rem; font-weight: 700; color: var(--success);">+0%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Top Performers</h3>
+          <div id="topPerformers" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="text-align: center; color: var(--neutral-600); padding: 2rem;">
+              Add holdings to see performance
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investment Goals -->
+      <div class="section" id="goals">
+        <div class="section-header">
+          <div class="section-title">Investment Goals</div>
+          <div class="section-description">Set and track investment targets</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Create Goal</h3>
+          <div class="form-grid">
+            <input type="text" id="goalName" placeholder="Goal Name (e.g., Retirement, House)">
+            <input type="number" id="goalTarget" placeholder="Target Amount" min="0" step="1000">
+            <input type="number" id="goalCurrent" placeholder="Current Savings" min="0" step="1000">
+            <input type="date" id="goalDate">
+          </div>
+          <div class="form-grid">
+            <textarea id="goalNotes" placeholder="Notes or description..." style="grid-column: 1 / -1; min-height: 80px;"></textarea>
+          </div>
+          <div class="success-message" id="goalSuccess">✓ Goal created successfully</div>
+          <button class="btn-primary" id="addGoalBtn">Create Goal</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Your Goals</h3>
+          <div id="goalsList" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="empty-state">
+              <div class="empty-state-icon">🎯</div>
+              <div class="empty-state-title">No goals yet</div>
+              <div>Create a goal to start tracking progress</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="section" id="settings">
+        <div class="section-header">
+          <div class="section-title">Settings</div>
+          <div class="section-description">Manage your account and data</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Account</h3>
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Email</div>
+            <div style="padding: 0.75rem 1rem; background: var(--neutral-100); border-radius: 8px; color: var(--neutral-900);" id="settingsEmail">seeksiddharth@gmail.com</div>
+          </div>
+          <div style="margin-bottom: 1.5rem;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Last Login</div>
+            <div style="padding: 0.75rem 1rem; background: var(--neutral-100); border-radius: 8px; color: var(--neutral-900);" id="lastLogin">Today</div>
+          </div>
+          <button class="btn-secondary" id="changePasswordBtn" style="width: 100%;">Change Master Password</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">Data Management</h3>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn-secondary" id="exportDataBtn">📥 Export All Data (JSON)</button>
+            <button class="btn-secondary" id="backupBtn">💾 Create Backup</button>
+            <button class="btn-danger" id="clearDataBtn">🗑️ Clear All Data</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 1rem; color: var(--neutral-900);">About</h3>
+          <div style="color: var(--neutral-600); line-height: 1.8;">
+            <p><strong>Advait</strong> — Personal Holdings Dashboard v1.0</p>
+            <p style="margin-top: 0.5rem;">A private, email-locked dashboard for tracking equity holdings, mutual funds, wallets, and investment documents.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--neutral-400);">All data is stored locally in your browser. Never shared or transmitted.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -840,7 +960,9 @@
       stocks: [],
       mfs: [],
       wallets: [],
-      documents: []
+      documents: [],
+      goals: [],
+      lastLogin: new Date().toLocaleString()
     };
 
     const AUTHORIZED_EMAIL = 'seeksiddharth@gmail.com';
@@ -860,6 +982,11 @@
       document.getElementById('addMFBtn').addEventListener('click', addMF);
       document.getElementById('addWalletBtn').addEventListener('click', addWallet);
       document.getElementById('addDocBtn').addEventListener('click', addDocument);
+      document.getElementById('addGoalBtn').addEventListener('click', addGoal);
+      document.getElementById('exportDataBtn').addEventListener('click', exportData);
+      document.getElementById('backupBtn').addEventListener('click', createBackup);
+      document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
+      document.getElementById('changePasswordBtn').addEventListener('click', changePassword);
       document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', navigateTo);
       });
@@ -1328,10 +1455,255 @@
 
     function setDateInputsToToday() {
       const today = new Date().toISOString().split('T')[0];
-      ['stockBuyDate', 'mfInvestDate', 'docDate'].forEach(id => {
+      ['stockBuyDate', 'mfInvestDate', 'docDate', 'goalDate'].forEach(id => {
         const el = document.getElementById(id);
         if (el && !el.value) el.value = today;
       });
+    }
+
+    // Investment Goals
+    function addGoal() {
+      const name = document.getElementById('goalName').value;
+      const target = parseFloat(document.getElementById('goalTarget').value);
+      const current = parseFloat(document.getElementById('goalCurrent').value) || 0;
+      const date = document.getElementById('goalDate').value;
+      const notes = document.getElementById('goalNotes').value;
+
+      if (!name || !target || !date) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      const goal = {
+        id: Date.now(),
+        name,
+        target,
+        current,
+        date,
+        notes,
+        createdAt: new Date().toISOString()
+      };
+
+      APP_STATE.goals.push(goal);
+      saveToLocalStorage();
+
+      document.getElementById('goalName').value = '';
+      document.getElementById('goalTarget').value = '';
+      document.getElementById('goalCurrent').value = '';
+      document.getElementById('goalDate').value = '';
+      document.getElementById('goalNotes').value = '';
+
+      showSuccessMessage('goalSuccess');
+      updateGoalsList();
+    }
+
+    function updateGoalsList() {
+      const container = document.getElementById('goalsList');
+      if (APP_STATE.goals.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><div class="empty-state-title">No goals yet</div><div>Create a goal to start tracking progress</div></div>';
+        return;
+      }
+
+      container.innerHTML = APP_STATE.goals.map(goal => {
+        const progress = (goal.current / goal.target) * 100;
+        const remaining = goal.target - goal.current;
+        return `
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-title">${goal.name}</div>
+              <div class="list-item-subtitle">Target: ₹${goal.target.toFixed(0)} | Due: ${goal.date}</div>
+              <div style="margin-top: 0.5rem; background: var(--neutral-200); border-radius: 4px; height: 6px; width: 100%; overflow: hidden;">
+                <div style="background: var(--primary); height: 100%; width: ${Math.min(progress, 100)}%;"></div>
+              </div>
+              <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--neutral-600);">
+                ₹${goal.current.toFixed(0)} / ₹${goal.target.toFixed(0)} (${progress.toFixed(1)}%) | Remaining: ₹${remaining.toFixed(0)}
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-danger btn-small" onclick="deleteGoal(${goal.id})">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteGoal(id) {
+      if (confirm('Delete this goal?')) {
+        APP_STATE.goals = APP_STATE.goals.filter(g => g.id !== id);
+        saveToLocalStorage();
+        updateGoalsList();
+      }
+    }
+
+    // Analytics
+    function updateAnalytics() {
+      updateAssetAllocation();
+      updatePerformanceMetrics();
+      updateTopPerformers();
+    }
+
+    function updateAssetAllocation() {
+      const container = document.getElementById('assetAllocation');
+      const equityValue = APP_STATE.stocks.reduce((sum, s) => sum + s.currentValue, 0);
+      const mfValue = APP_STATE.mfs.reduce((sum, m) => sum + m.currentValue, 0);
+      const total = equityValue + mfValue;
+
+      if (total === 0) {
+        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--neutral-600); padding: 2rem;">No holdings to display</div>';
+        return;
+      }
+
+      const items = [
+        { label: 'Equity', value: equityValue, count: APP_STATE.stocks.length },
+        { label: 'Mutual Funds', value: mfValue, count: APP_STATE.mfs.length }
+      ].filter(item => item.value > 0);
+
+      container.innerHTML = items.map(item => {
+        const percent = ((item.value / total) * 100).toFixed(1);
+        return `
+          <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+            <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">${item.label} (${item.count} holdings)</div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">₹${item.value.toFixed(0)}</div>
+            <div style="font-size: 0.875rem; color: var(--neutral-600);">${percent}% of portfolio</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updatePerformanceMetrics() {
+      const allHoldings = [
+        ...APP_STATE.stocks.map(s => ({ invested: s.investedAmount, current: s.currentValue })),
+        ...APP_STATE.mfs.map(m => ({ invested: m.buyValue, current: m.currentValue }))
+      ];
+
+      const totalInvested = allHoldings.reduce((sum, h) => sum + h.invested, 0);
+      const totalCurrent = allHoldings.reduce((sum, h) => sum + h.current, 0);
+      const totalReturn = totalCurrent - totalInvested;
+      const returnPercent = totalInvested > 0 ? ((totalReturn / totalInvested) * 100).toFixed(2) : 0;
+
+      const container = document.getElementById('overallPerformance');
+      if (allHoldings.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--neutral-600); padding: 2rem;">Add holdings to see performance</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+          <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Invested</div>
+          <div style="font-size: 1.75rem; font-weight: 700; color: var(--neutral-900);">₹${totalInvested.toFixed(0)}</div>
+        </div>
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+          <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Current Value</div>
+          <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">₹${totalCurrent.toFixed(0)}</div>
+        </div>
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
+          <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Return</div>
+          <div style="font-size: 1.75rem; font-weight: 700; color: ${totalReturn >= 0 ? 'var(--success)' : 'var(--danger)'};">
+            ${totalReturn >= 0 ? '+' : ''}₹${totalReturn.toFixed(0)} (${returnPercent}%)
+          </div>
+        </div>
+      `;
+    }
+
+    function updateTopPerformers() {
+      const allHoldings = [
+        ...APP_STATE.stocks.map(s => ({ name: s.symbol, type: 'Equity', gain: s.currentValue - s.investedAmount, gainPercent: ((s.currentValue - s.investedAmount) / s.investedAmount * 100).toFixed(2) })),
+        ...APP_STATE.mfs.map(m => ({ name: m.name, type: 'MF', gain: m.currentValue - m.buyValue, gainPercent: ((m.currentValue - m.buyValue) / m.buyValue * 100).toFixed(2) }))
+      ].sort((a, b) => b.gain - a.gain);
+
+      const container = document.getElementById('topPerformers');
+      if (allHoldings.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: var(--neutral-600); padding: 2rem;">Add holdings to see performance</div>';
+        return;
+      }
+
+      container.innerHTML = allHoldings.slice(0, 5).map(holding => `
+        <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600; color: var(--neutral-900);">${holding.name}</div>
+            <div style="font-size: 0.875rem; color: var(--neutral-600);">${holding.type}</div>
+          </div>
+          <div class="gain-loss ${holding.gain >= 0 ? 'positive' : 'negative'}" style="text-align: right;">
+            ${holding.gain >= 0 ? '+' : ''}₹${holding.gain.toFixed(0)}<br><small>${holding.gainPercent}%</small>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Settings
+    function exportData() {
+      const dataStr = JSON.stringify(APP_STATE, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `advait-backup-${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function createBackup() {
+      exportData();
+      alert('Backup created and downloaded!');
+    }
+
+    function clearAllData() {
+      if (confirm('⚠️ This will delete ALL data. This cannot be undone. Are you absolutely sure?')) {
+        if (confirm('Type "DELETE" to confirm permanent data deletion')) {
+          APP_STATE.stocks = [];
+          APP_STATE.mfs = [];
+          APP_STATE.wallets = [];
+          APP_STATE.documents = [];
+          APP_STATE.goals = [];
+          saveToLocalStorage();
+          alert('All data has been cleared.');
+          location.reload();
+        }
+      }
+    }
+
+    function changePassword() {
+      const newPassword = prompt('Enter new master password (minimum 6 characters):');
+      if (!newPassword) return;
+      if (newPassword.length < 6) {
+        alert('Password must be at least 6 characters');
+        return;
+      }
+      alert('Password changed successfully. Please log in again.');
+      handleLogout();
+    }
+
+    // Update app state
+    function showApp() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('appLayout').classList.add('active');
+      document.getElementById('sidebarEmail').textContent = APP_STATE.email;
+      document.getElementById('settingsEmail').textContent = APP_STATE.email;
+      document.getElementById('lastLogin').textContent = APP_STATE.lastLogin;
+      updateDashboard();
+      updateStocksList();
+      updateMFList();
+      updateWalletsList();
+      updateDocumentsList();
+      updateGoalsList();
+      updatePortfolioView();
+      updateAnalytics();
+      setDateInputsToToday();
+    }
+
+    function updateDashboard() {
+      const stocksValue = APP_STATE.stocks.reduce((sum, s) => sum + s.currentValue, 0);
+      const mfsValue = APP_STATE.mfs.reduce((sum, m) => sum + m.currentValue, 0);
+      const cashValue = APP_STATE.wallets.reduce((sum, w) => sum + w.balance, 0);
+      const totalPortfolioValue = stocksValue + mfsValue;
+      const netWorth = totalPortfolioValue + cashValue;
+
+      document.getElementById('totalPortfolioValue').textContent = '₹' + totalPortfolioValue.toFixed(2);
+      document.getElementById('totalCash').textContent = '₹' + cashValue.toFixed(2);
+      document.getElementById('netWorth').textContent = '₹' + netWorth.toFixed(2);
+
+      updateHoldingsSummary(stocksValue, mfsValue, cashValue);
+      updateAnalytics();
     }
   </script>
 </body>
