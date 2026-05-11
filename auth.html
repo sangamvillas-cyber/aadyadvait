@@ -603,6 +603,8 @@
                     const userId = new Uint8Array(16);
                     crypto.getRandomValues(userId);
 
+                    console.log('WebAuthn Register: Starting', { rpId: this.getRPID(), keyName: keyName });
+
                     // Create credential
                     const credential = await navigator.credentials.create({
                         publicKey: {
@@ -630,6 +632,11 @@
                     });
 
                     if (credential) {
+                        console.log('WebAuthn Register: Credential received', {
+                            idLength: credential.id ? credential.id.byteLength : 0,
+                            hasPublicKey: !!credential.response.getPublicKey
+                        });
+
                         // Try to extract public key
                         let publicKeyBase64 = '';
                         try {
@@ -642,8 +649,14 @@
                         }
 
                         // Store credential
+                        const credentialId = this.arrayBufferToBase64(credential.id);
+                        console.log('WebAuthn Register: Storing credential', {
+                            idLength: credentialId.length,
+                            name: keyName
+                        });
+
                         const storedCredential = {
-                            id: this.arrayBufferToBase64(credential.id),
+                            id: credentialId,
                             name: keyName,
                             publicKey: publicKeyBase64,
                             registeredAt: new Date().toISOString()
@@ -653,6 +666,7 @@
                         credentials.push(storedCredential);
                         localStorage.setItem(this.CREDENTIALS_KEY, JSON.stringify(credentials));
 
+                        console.log('WebAuthn Register: Success', { totalKeys: credentials.length });
                         this.showSuccess(`✅ Key "${keyName}" registered successfully!`);
                         document.getElementById('keyName').value = '';
                         this.displayRegisteredKeys();
@@ -663,6 +677,7 @@
                         }, 1500);
                     }
                 } catch (error) {
+                    console.error('WebAuthn Register: Error', error);
                     this.showError('❌ Registration failed: ' + error.message);
                 } finally {
                     document.getElementById('registerBtn').disabled = false;
@@ -689,6 +704,12 @@
                     const challenge = new Uint8Array(32);
                     crypto.getRandomValues(challenge);
 
+                    console.log('WebAuthn Authenticate: Starting', {
+                        rpId: this.getRPID(),
+                        registeredKeysCount: credentials.length,
+                        keyNames: credentials.map(c => c.name)
+                    });
+
                     // Get assertion
                     const assertion = await navigator.credentials.get({
                         publicKey: {
@@ -706,9 +727,14 @@
                     if (assertion) {
                         // Verify credential ID matches
                         const credentialId = this.arrayBufferToBase64(assertion.id);
+                        console.log('WebAuthn Authenticate: Assertion received', {
+                            credentialId: credentialId.substring(0, 20) + '...'
+                        });
+
                         const storedCred = credentials.find(c => c.id === credentialId);
 
                         if (storedCred) {
+                            console.log('WebAuthn Authenticate: Key matched', { keyName: storedCred.name });
                             // Create session
                             this.createSession('admin@mishrafamily.local', 'Hardware Key', 'admin', true);
                             this.showSuccess('✅ Authentication successful! Welcome back.');
@@ -718,10 +744,17 @@
                                 this.redirectToDashboard();
                             }, 1500);
                         } else {
+                            console.error('WebAuthn Authenticate: Key not found', {
+                                assertionId: credentialId.substring(0, 20) + '...',
+                                registeredIds: credentials.map(c => c.id.substring(0, 20) + '...')
+                            });
                             this.showError('❌ This key is not registered.');
                         }
+                    } else {
+                        console.warn('WebAuthn Authenticate: No assertion returned');
                     }
                 } catch (error) {
+                    console.error('WebAuthn Authenticate: Error', error);
                     this.showError('❌ Authentication failed: ' + error.message);
                 } finally {
                     document.getElementById('authBtn').disabled = false;
