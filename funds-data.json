@@ -35,9 +35,17 @@
           "units": 95666.831,
           "nav": 124.695,
           "valuation": 11929175.49
+        },
+        {
+          "fundHouse": "HDFC",
+          "fundName": "HDFC Flexi Cap Fund - Direct Plan - Growth Option",
+          "folio": "18017755",
+          "units": 716.184,
+          "nav": 2163.717,
+          "valuation": 1549619.50
         }
       ],
-      "totalValuation": 17912953.64
+      "totalValuation": 19462573.14
     },
     "advait": {
       "name": "Advait",
@@ -58,14 +66,6 @@
           "units": 38100.935,
           "nav": 91.5245,
           "valuation": 3487169.03
-        },
-        {
-          "fundHouse": "HDFC",
-          "fundName": "HDFC Flexi Cap Fund - Direct Plan - Growth Option",
-          "folio": "18017755",
-          "units": 716.184,
-          "nav": 2163.717,
-          "valuation": 1549619.50
         },
         {
           "fundHouse": "HDFC",
@@ -92,7 +92,7 @@
           "valuation": 7642829.34
         }
       ],
-      "totalValuation": 14622625.40
+      "totalValuation": 13073005.90
     }
   },
   "lastUpdated": "2026-05-11",

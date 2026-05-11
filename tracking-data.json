@@ -65,13 +65,25 @@
         "purchaseNav": 95.00,
         "currentNav": 124.695,
         "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "sid_hdfc_flexi_1",
+        "fund": "HDFC Flexi Cap Fund - Direct Plan",
+        "fundHouse": "HDFC",
+        "folio": "18017755",
+        "type": "holding",
+        "units": 716.184,
+        "purchaseDate": "2023-02-20",
+        "purchaseNav": 1980.00,
+        "currentNav": 2163.717,
+        "lastNavUpdate": "2026-05-08"
       }
     ],
-    "totalInvested": 9863423.45,
-    "totalCurrentValue": 17912953.64,
-    "totalGain": 8049530.19,
-    "totalGainPercent": 81.59,
-    "overallXIRR": 18.5
+    "totalInvested": 10077466.97,
+    "totalCurrentValue": 19428573.14,
+    "totalGain": 9351106.17,
+    "totalGainPercent": 92.84,
+    "overallXIRR": 20.2
   },
   "advait": {
     "transactions": [
@@ -97,18 +109,6 @@
         "purchaseDate": "2022-12-15",
         "purchaseNav": 70.00,
         "currentNav": 91.5245,
-        "lastNavUpdate": "2026-05-08"
-      },
-      {
-        "id": "adv_hdfc_flexi_1",
-        "fund": "HDFC Flexi Cap Fund - Direct Plan",
-        "fundHouse": "HDFC",
-        "folio": "18017755",
-        "type": "holding",
-        "units": 716.184,
-        "purchaseDate": "2023-02-20",
-        "purchaseNav": 1980.00,
-        "currentNav": 2163.717,
         "lastNavUpdate": "2026-05-08"
       },
       {
@@ -148,10 +148,10 @@
         "lastNavUpdate": "2026-05-08"
       }
     ],
-    "totalInvested": 8976342.80,
-    "totalCurrentValue": 14622625.40,
-    "totalGain": 5646282.60,
-    "totalGainPercent": 62.89,
-    "overallXIRR": 15.2
+    "totalInvested": 7858299.28,
+    "totalCurrentValue": 12713005.90,
+    "totalGain": 4854706.62,
+    "totalGainPercent": 61.77,
+    "overallXIRR": 14.8
   }
 }
