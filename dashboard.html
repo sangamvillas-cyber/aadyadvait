@@ -253,10 +253,11 @@
 
       <!-- Mutual Funds Section -->
       <div class="section" id="mf">
-        <div class="section-placeholder">
-          <div class="section-icon">💼</div>
-          <div class="section-title">Mutual Funds</div>
-          <div class="section-subtitle">Manage your MF investments</div>
+        <div style="padding: 2rem;">
+          <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--neutral-900);">Mutual Funds Portfolio</h2>
+          <div id="mfContainer">
+            <div style="text-align: center; padding: 2rem; color: var(--neutral-600);">Loading fund data...</div>
+          </div>
         </div>
       </div>
 
@@ -399,6 +400,73 @@
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
     }
+
+    function loadAndDisplayFunds() {
+      fetch('funds-data.json')
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('mfContainer');
+          let html = '';
+
+          // Display for each family member
+          ['siddharth', 'advait'].forEach(member => {
+            const funds = data.funds[member];
+            html += `<div style="margin-bottom: 3rem;">
+              <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem;">${funds.name}'s Funds</h3>`;
+
+            if (funds.holdings.length === 0) {
+              html += `<div style="background: var(--neutral-100); padding: 1rem; border-radius: 8px; color: var(--neutral-600); text-align: center;">No holdings yet</div>`;
+            } else {
+              html += `<div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+                  <thead>
+                    <tr style="background: var(--neutral-100); border-bottom: 2px solid var(--neutral-200);">
+                      <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund House</th>
+                      <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund Name</th>
+                      <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Units</th>
+                      <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">NAV</th>
+                      <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Valuation (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody>`;
+
+              funds.holdings.forEach(holding => {
+                html += `<tr style="border-bottom: 1px solid var(--neutral-200);">
+                  <td style="padding: 1rem; color: var(--primary); font-weight: 500;">${holding.fundHouse}</td>
+                  <td style="padding: 1rem; color: var(--neutral-900);">${holding.fundName}</td>
+                  <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">${holding.units.toFixed(2)}</td>
+                  <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">₹${holding.nav.toFixed(2)}</td>
+                  <td style="padding: 1rem; text-align: right; color: var(--neutral-900); font-weight: 600;">₹${holding.valuation.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                </tr>`;
+              });
+
+              html += `</tbody>
+                </table>
+              </div>`;
+            }
+
+            html += `<div style="margin-top: 1rem; padding: 1rem; background: var(--primary-lighter); border-radius: 8px; text-align: right;">
+              <div style="font-size: 0.875rem; color: var(--primary); margin-bottom: 0.5rem;">Total Valuation</div>
+              <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₹${funds.totalValuation.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+            </div>
+            </div>`;
+          });
+
+          container.innerHTML = html;
+        })
+        .catch(err => {
+          console.error('Error loading funds data:', err);
+          document.getElementById('mfContainer').innerHTML = '<div style="color: red; padding: 1rem;">Error loading fund data</div>';
+        });
+    }
+
+    // Load funds data when MF tab is clicked
+    document.addEventListener('DOMContentLoaded', () => {
+      const mfTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-tab') === 'mf');
+      if (mfTab) {
+        mfTab.addEventListener('click', loadAndDisplayFunds);
+      }
+    });
   </script>
 </body>
 </html>
