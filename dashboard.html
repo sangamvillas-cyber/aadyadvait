@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mishra Family — Personal Records & Holdings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: white;
+      border-right: 1px solid #e2e8f0;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f766e;
+    }
+
+    .sidebar-brand span {
+      font-size: 2rem;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-section {
+      margin-bottom: 2rem;
+    }
+
+    .nav-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #64748b;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-item:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .nav-item.active {
+      background: #ccfbf1;
+      color: #0f766e;
+      font-weight: 600;
+    }
+
+    .nav-item::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0;
+    }
+
+    .nav-item.active::before {
+      opacity: 1;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .header-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-subtitle {
+      font-size: 1rem;
+      color: #64748b;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      border-color: #0f766e;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.1);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-change {
+      font-size: 0.85rem;
+      color: #16a34a;
+    }
+
+    .stat-change.negative {
+      color: #dc2626;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .section-action {
+      padding: 0.75rem 1.5rem;
+      background: #0f766e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .section-action:hover {
+      background: #0d5d5a;
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+    }
+
+    /* Family Members Grid */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .member-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .member-card:hover {
+      border-color: #0f766e;
+      box-shadow: 0 8px 16px rgba(15, 118, 110, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .member-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ccfbf1 0%, #a78bfa 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 1rem;
+      flex-shrink: 0;
+    }
+
+    .member-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.25rem;
+    }
+
+    .member-relation {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+
+    .member-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: left;
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .member-stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .member-stat-label {
+      color: #64748b;
+    }
+
+    .member-stat-value {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .member-action {
+      width: 100%;
+      padding: 0.75rem;
+      background: #0f766e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .member-action:hover {
+      background: #0d5d5a;
+    }
+
+    /* Activity Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0f766e;
+      border: 3px solid white;
+      box-shadow: 0 0 0 1px #e2e8f0;
+    }
+
+    .timeline-date {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .timeline-text {
+      font-size: 0.95rem;
+      color: #1e293b;
+      margin-top: 0.25rem;
+    }
+
+    /* Storage */
+    .storage-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .storage-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .storage-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .storage-total {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .storage-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .storage-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .storage-member {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .storage-member-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .storage-member-usage {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .storage-progress {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .storage-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem;
+      }
+
+      .main-content {
+        margin-left: 0;
+        height: auto;
+        padding: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .members-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+
+      .header-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>👨‍👩‍👧‍👦</span>
+        <div>Mishra Family</div>
+      </div>
+      <div class="sidebar-subtitle">Personal Records</div>
+
+      <nav class="nav-section">
+        <div class="nav-section-title">Dashboard</div>
+        <div class="nav-items">
+          <div class="nav-item active" onclick="navigateTo('dashboard')">
+            📊 Dashboard
+          </div>
+          <div class="nav-item" onclick="navigateTo('members')">
+            👥 Family Members
+          </div>
+        </div>
+      </nav>
+
+      <nav class="nav-section">
+        <div class="nav-section-title">Data Management</div>
+        <div class="nav-items">
+          <div class="nav-item" onclick="navigateTo('financial')">
+            💰 Financial
+          </div>
+          <div class="nav-item" onclick="navigateTo('documents')">
+            📄 Documents
+          </div>
+          <div class="nav-item" onclick="navigateTo('education')">
+            🎓 Education
+          </div>
+        </div>
+      </nav>
+
+      <nav class="nav-section">
+        <div class="nav-section-title">Tools</div>
+        <div class="nav-items">
+          <div class="nav-item" onclick="navigateTo('backup')">
+            ☁️ Backup & Export
+          </div>
+          <div class="nav-item" onclick="navigateTo('search')">
+            🔍 Search
+          </div>
+          <div class="nav-item" onclick="navigateTo('settings')">
+            ⚙️ Settings
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard Section -->
+      <section id="dashboard-section" style="display: block;">
+        <div class="header">
+          <div class="header-title">Dashboard</div>
+          <div class="header-subtitle">Overview of Mishra Family records & holdings</div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Family Members</div>
+            <div class="stat-value" id="totalMembers">6</div>
+            <div class="stat-change">All profiles active</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Net Worth</div>
+            <div class="stat-value" id="totalNetWorth">₹0</div>
+            <div class="stat-change" id="netWorthChange">Calculating...</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Mutual Funds</div>
+            <div class="stat-value" id="totalMFCount">0</div>
+            <div class="stat-change" id="mfValue">₹0 invested</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Storage Used</div>
+            <div class="stat-value" id="storageUsedPercent">0%</div>
+            <div class="stat-change" id="storageUsedAmount">0 MB / 3 GB</div>
+          </div>
+        </div>
+
+        <!-- Family Members Section -->
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Family Members</div>
+            <button class="section-action" onclick="navigateTo('members')">View All</button>
+          </div>
+          <div class="members-grid" id="membersGrid">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Storage Overview -->
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Storage Status</div>
+          </div>
+          <div class="storage-section">
+            <div class="storage-header">
+              <div class="storage-title">Storage Usage by Member</div>
+              <div class="storage-total">3 GB total capacity (500 MB × 6 members)</div>
+            </div>
+            <div class="storage-bars" id="storageChart">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Recent Activity</div>
+          </div>
+          <div class="timeline" id="activityTimeline">
+            <div class="timeline-item">
+              <div class="timeline-date">Today</div>
+              <div class="timeline-text">Backup created automatically</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Yesterday</div>
+              <div class="timeline-text">System initialized - Family records created</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Members Section (hidden by default) -->
+      <section id="members-section" style="display: none;">
+        <div class="header">
+          <div class="header-title">Family Members</div>
+          <div class="header-subtitle">Manage and view family member profiles</div>
+        </div>
+        <div class="members-grid" id="allMembersGrid" style="margin-top: 2rem;">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- Financial Section -->
+      <section id="financial-section" style="display: none;">
+        <div class="header">
+          <div class="header-title">Financial Management</div>
+          <div class="header-subtitle">Mutual funds, bank accounts, and investments</div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
+          <div class="empty-state-icon">💰</div>
+          <div class="empty-state-title">Financial Module</div>
+          <div class="empty-state-text">Coming soon - View and manage all financial records</div>
+        </div>
+      </section>
+
+      <!-- Documents Section -->
+      <section id="documents-section" style="display: none;">
+        <div class="header">
+          <div class="header-title">Documents & Records</div>
+          <div class="header-subtitle">Upload, organize, and search documents with OCR</div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
+          <div class="empty-state-icon">📄</div>
+          <div class="empty-state-title">Document Manager</div>
+          <div class="empty-state-text">Coming soon - Upload and manage family documents</div>
+        </div>
+      </section>
+
+      <!-- Education Section -->
+      <section id="education-section" style="display: none;">
+        <div class="header">
+          <div class="header-title">Education Records</div>
+          <div class="header-subtitle">School marksheets, certificates, and academic records</div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
+          <div class="empty-state-icon">🎓</div>
+          <div class="empty-state-title">Education Module</div>
+          <div class="empty-state-text">Coming soon - Track academic progress and records</div>
+        </div>
+      </section>
+
+      <!-- Backup Section -->
+      <section id="backup-section" style="display: none;">
+        <div class="header">
+          <div class="header-title">Backup & Export</div>
+          <div class="header-subtitle">Manage cloud backups and export family data</div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
+          <div class="empty-state-icon">☁️</div>
+          <div class="empty-state-title">Backup Manager</div>
+          <div class="empty-state-text">Coming soon - Backup and export family records</div>
+        </div>
+      </section>
+
+      <!-- Search Section -->
+      <section id="search-section" style="display: none;">
+        <div class="header">
+          <div class="header-title">Search</div>
+          <div class="header-subtitle">Search across all family records and documents</div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
+          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-title">Global Search</div>
+          <div class="empty-state-text">Coming soon - Search all family records and documents</div>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="settings-section" style="display: none;">
+        <div class="header">
+          <div class="header-title">Settings</div>
+          <div class="header-subtitle">Configure app preferences and security</div>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; text-align: center; margin-top: 2rem;">
+          <div class="empty-state-icon">⚙️</div>
+          <div class="empty-state-title">Settings</div>
+          <div class="empty-state-text">Coming soon - Manage app settings and preferences</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Family data structure
+    const FAMILY = {
+      members: [
+        {
+          id: 'siddharth',
+          name: 'Siddharth',
+          relation: 'Father',
+          email: 'seeksiddharth@gmail.com',
+          role: 'Admin',
+          icon: '👨',
+          dob: '1970-06-15',
+          phone: '+91-9876543210',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'archana',
+          name: 'Archana',
+          relation: 'Mother',
+          email: 'mf.archana@example.com',
+          role: 'Monitoring',
+          icon: '👩',
+          dob: '1972-03-22',
+          phone: '+91-9876543211',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'aadya',
+          name: 'Aadya',
+          relation: 'Daughter',
+          email: 'mf.aadya@example.com',
+          role: 'Monitoring',
+          icon: '👧',
+          dob: '2010-08-10',
+          phone: '+91-9876543212',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'advait',
+          name: 'Advait',
+          relation: 'Son',
+          email: 'mf.advait@example.com',
+          role: 'Monitoring',
+          icon: '👦',
+          dob: '2012-11-05',
+          phone: '+91-9876543213',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'sarla',
+          name: 'Sarla Mishra',
+          relation: 'Grandmother',
+          email: 'sarla.mishra@example.com',
+          role: 'Monitoring',
+          icon: '👵',
+          dob: '1945-02-14',
+          phone: '+91-9876543214',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        },
+        {
+          id: 'shyam',
+          name: 'Sheo Shyam Mishra',
+          relation: 'Grandfather',
+          email: 'shyam.mishra@example.com',
+          role: 'Monitoring',
+          icon: '👴',
+          dob: '1942-07-20',
+          phone: '+91-9876543215',
+          address: 'Delhi, India',
+          financial: {
+            mutualFunds: [],
+            bankAccounts: [],
+            totalInvested: 0,
+            totalValue: 0
+          },
+          documents: {
+            count: 0,
+            storageUsed: 0
+          }
+        }
+      ],
+      storagePerMember: 524288000, // 500MB in bytes
+      maxStoragePerMember: 524288000 // 500MB
+    };
+
+    // Initialize app
+    function init() {
+      loadFromStorage();
+      renderDashboard();
+      renderMembers();
+      updateStats();
+    }
+
+    // Load data from localStorage
+    function loadFromStorage() {
+      const stored = localStorage.getItem('mishraFamily');
+      if (stored) {
+        const data = JSON.parse(stored);
+        FAMILY.members = data.members;
+      }
+    }
+
+    // Save data to localStorage
+    function saveToStorage() {
+      localStorage.setItem('mishraFamily', JSON.stringify(FAMILY));
+    }
+
+    // Render dashboard
+    function renderDashboard() {
+      renderMembersGrid('membersGrid');
+      renderStorageChart();
+    }
+
+    // Render members grid
+    function renderMembersGrid(containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = FAMILY.members.map(member => `
+        <div class="member-card" onclick="viewMember('${member.id}')">
+          <div class="member-avatar" style="background: linear-gradient(135deg, ${getMemberGradient(member.id)} 0%, ${getMemberGradient(member.id)}dd 100%);">
+            ${member.icon}
+          </div>
+          <div class="member-name">${member.name}</div>
+          <div class="member-relation">${member.relation}</div>
+          <div class="member-stats">
+            <div class="member-stat-row">
+              <span class="member-stat-label">Invested</span>
+              <span class="member-stat-value">₹${member.financial.totalInvested.toLocaleString()}</span>
+            </div>
+            <div class="member-stat-row">
+              <span class="member-stat-label">Current</span>
+              <span class="member-stat-value">₹${member.financial.totalValue.toLocaleString()}</span>
+            </div>
+            <div class="member-stat-row">
+              <span class="member-stat-label">Funds</span>
+              <span class="member-stat-value">${member.financial.mutualFunds.length}</span>
+            </div>
+            <div class="member-stat-row">
+              <span class="member-stat-label">Docs</span>
+              <span class="member-stat-value">${member.documents.count}</span>
+            </div>
+          </div>
+          <button class="member-action">View Profile →</button>
+        </div>
+      `).join('');
+    }
+
+    // Render storage chart
+    function renderStorageChart() {
+      const container = document.getElementById('storageChart');
+      container.innerHTML = FAMILY.members.map(member => {
+        const percentage = (member.documents.storageUsed / FAMILY.storagePerMember) * 100;
+        return `
+          <div class="storage-bar">
+            <div class="storage-member">
+              <span class="storage-member-name">${member.icon} ${member.name}</span>
+              <span class="storage-member-usage">${(member.documents.storageUsed / 1024 / 1024).toFixed(1)} MB / 500 MB</span>
+            </div>
+            <div class="storage-progress">
+              <div class="storage-progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Get member gradient color
+    function getMemberGradient(memberId) {
+      const colors = {
+        'siddharth': '#14b8a6',
+        'archana': '#a78bfa',
+        'aadya': '#fbbf24',
+        'advait': '#60a5fa',
+        'sarla': '#f87171',
+        'shyam': '#34d399'
+      };
+      return colors[memberId] || '#14b8a6';
+    }
+
+    // Render all members section
+    function renderMembers() {
+      const container = document.getElementById('allMembersGrid');
+      renderMembersGrid('allMembersGrid');
+    }
+
+    // Update statistics
+    function updateStats() {
+      let totalNetWorth = 0;
+      let totalMFCount = 0;
+      let totalStorageUsed = 0;
+
+      FAMILY.members.forEach(member => {
+        totalNetWorth += member.financial.totalValue;
+        totalMFCount += member.financial.mutualFunds.length;
+        totalStorageUsed += member.documents.storageUsed;
+      });
+
+      document.getElementById('totalMembers').textContent = FAMILY.members.length;
+      document.getElementById('totalNetWorth').textContent = '₹' + totalNetWorth.toLocaleString();
+      document.getElementById('totalMFCount').textContent = totalMFCount;
+
+      const totalStorageGB = totalStorageUsed / 1024 / 1024 / 1024;
+      const storagePercent = (totalStorageUsed / (FAMILY.storagePerMember * FAMILY.members.length)) * 100;
+      document.getElementById('storageUsedPercent').textContent = Math.round(storagePercent) + '%';
+      document.getElementById('storageUsedAmount').textContent = totalStorageGB.toFixed(2) + ' GB / 3 GB';
+    }
+
+    // Navigate to sections
+    function navigateTo(section) {
+      // Hide all sections
+      document.querySelectorAll('main > section').forEach(sec => sec.style.display = 'none');
+
+      // Show selected section
+      const sectionId = section + '-section';
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.style.display = 'block';
+      }
+
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      event.target.closest('.nav-item').classList.add('active');
+
+      // Scroll to top
+      document.querySelector('.main-content').scrollTop = 0;
+    }
+
+    // View member profile
+    function viewMember(memberId) {
+      const member = FAMILY.members.find(m => m.id === memberId);
+      if (member) {
+        console.log('Viewing profile for:', member.name);
+        // TODO: Navigate to member profile page
+        alert('Member profile page coming soon for ' + member.name);
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
