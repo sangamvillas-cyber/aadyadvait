@@ -357,12 +357,9 @@
                 <tr style="background: var(--neutral-100); border-bottom: 2px solid var(--neutral-200);">
                   <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Units</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Buy NAV</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Current NAV</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Purchase Value</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Current Value</th>
                   <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Gain/Loss</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Return %</th>
                 </tr>
               </thead>
               <tbody id="trackingTableBody">
@@ -584,12 +581,9 @@
         tableHtml += `<tr style="border-bottom: 1px solid var(--neutral-200);">
           <td style="padding: 1rem; color: var(--primary); font-weight: 500;">${txn.fund}</td>
           <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">${txn.units.toFixed(2)}</td>
-          <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">₹${txn.purchaseNav.toFixed(2)}</td>
-          <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">₹${txn.currentNav.toFixed(2)}</td>
           <td style="padding: 1rem; text-align: right; color: var(--neutral-900);">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
           <td style="padding: 1rem; text-align: right; font-weight: 600; color: var(--primary);">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
           <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${gain >= 0 ? '#10b981' : '#ef4444'};">₹${gain.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-          <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${gainPercent >= 0 ? '#10b981' : '#ef4444'};">${(gainPercent >= 0 ? '+' : '')}${gainPercent.toFixed(2)}%</td>
         </tr>`;
       });
 
