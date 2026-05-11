@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Mishra Family</title>
+    <!-- Google Identity Services Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .login-header-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .login-header-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #1565c0;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .google-signin-section {
+            margin-bottom: 20px;
+        }
+
+        .google-signin-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        #g_id_onload {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Google Sign-In Button Customization */
+        .g_id_signin {
+            width: 100% !important;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider-text {
+            position: relative;
+            background: white;
+            padding: 0 10px;
+            color: #999;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .guest-button {
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .guest-button:hover {
+            background: #f9f9ff;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #f5c6cb;
+        }
+
+        .alert.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .session-info {
+            display: none;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+
+        .session-info.show {
+            display: block;
+        }
+
+        .session-info-header {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .session-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .session-info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 10px 12px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .logout-button:hover {
+            background: #da190b;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .login-header-title {
+                font-size: 24px;
+            }
+
+            .login-header-icon {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <span class="login-header-icon">👨‍👩‍👧‍👦</span>
+            <h1 class="login-header-title">Mishra Family</h1>
+            <p class="login-header-subtitle">Personal Records & Finance Manager</p>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <div class="info-box" id="infoBox">
+            Sign in with Google to access family records. Only authorized users can access.
+        </div>
+
+        <!-- Google Sign-In Section -->
+        <div class="google-signin-section">
+            <div class="google-signin-title">Google Sign-In</div>
+            <div id="g_id_onload"
+                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                 data-callback="window.googleAuth.handleCredentialResponse">
+            </div>
+            <div id="g_id_signin" style="display: flex; justify-content: center; margin-top: 10px;"></div>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">or</span>
+        </div>
+
+        <!-- Guest Access -->
+        <button class="guest-button" onclick="window.googleAuth.loginAsGuest()">
+            👁️ Access as Viewer (Read-Only)
+        </button>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>Authenticating...</p>
+        </div>
+
+        <!-- Session Info -->
+        <div id="sessionInfo" class="session-info">
+            <div class="session-info-header">Current Session</div>
+            <div class="session-info-item">
+                <span>Email:</span>
+                <span id="sessionEmail">-</span>
+            </div>
+            <div class="session-info-item">
+                <span>Name:</span>
+                <span id="sessionName">-</span>
+            </div>
+            <div class="session-info-item">
+                <span>Access Level:</span>
+                <span id="sessionLevel">-</span>
+            </div>
+            <button class="logout-button" onclick="window.googleAuth.logout()">
+                🚪 Sign Out
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Google Authentication Module
+        window.googleAuth = {
+            SESSION_KEY: 'mishraFamilySession',
+            AUTHORIZED_EMAIL: 'seeksiddharth@gmail.com',
+            SESSION_TIMEOUT: 24 * 60 * 60 * 1000, // 24 hours
+
+            init() {
+                // Check if already logged in
+                const session = this.getSession();
+                if (session && this.isSessionValid(session)) {
+                    this.displaySessionInfo(session);
+                    document.getElementById('g_id_onload').style.display = 'none';
+                    document.getElementById('g_id_signin').style.display = 'none';
+                    document.querySelector('.google-signin-section').style.display = 'none';
+                    document.querySelector('.divider').style.display = 'none';
+                    document.querySelector('.guest-button').style.display = 'none';
+                } else {
+                    // Initialize Google Sign-In
+                    this.initializeGoogleSignIn();
+                }
+
+                // Set up JWT decode function
+                this.setupJWTDecode();
+            },
+
+            setupJWTDecode() {
+                // Helper to decode JWT token
+                window.googleAuth.decodeJWT = function(token) {
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    return JSON.parse(jsonPayload);
+                };
+            },
+
+            initializeGoogleSignIn() {
+                // Render the Google Sign-In button
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    window.google.accounts.id.renderButton(
+                        document.getElementById('g_id_signin'),
+                        {
+                            theme: 'outline',
+                            size: 'large',
+                            width: '100%',
+                            text: 'signin_with'
+                        }
+                    );
+                }
+            },
+
+            handleCredentialResponse(response) {
+                if (!response.credential) {
+                    window.googleAuth.showError('No credential received');
+                    return;
+                }
+
+                window.googleAuth.showLoading(true);
+
+                // Decode JWT to get user info
+                const payload = window.googleAuth.decodeJWT(response.credential);
+                const email = payload.email;
+                const name = payload.name;
+                const picture = payload.picture;
+
+                // Check if email is authorized
+                if (email !== window.googleAuth.AUTHORIZED_EMAIL) {
+                    window.googleAuth.showLoading(false);
+                    window.googleAuth.showError(
+                        `❌ Access Denied: Only ${window.googleAuth.AUTHORIZED_EMAIL} can access this system. ` +
+                        `You logged in as: ${email}`
+                    );
+                    return;
+                }
+
+                // Create session
+                window.googleAuth.createSession(email, name, picture, 'admin', true);
+                window.googleAuth.showSuccess('✅ Authentication successful! Redirecting...');
+
+                setTimeout(() => {
+                    window.googleAuth.redirectToDashboard();
+                }, 1500);
+            },
+
+            createSession(email, name, picture, accessLevel, rememberMe) {
+                const session = {
+                    email,
+                    name,
+                    picture,
+                    accessLevel,
+                    loginTime: new Date().toISOString(),
+                    expiresAt: new Date(Date.now() + this.SESSION_TIMEOUT).toISOString(),
+                    rememberMe,
+                    authMethod: 'google'
+                };
+
+                if (rememberMe) {
+                    localStorage.setItem(this.SESSION_KEY, JSON.stringify(session));
+                } else {
+                    sessionStorage.setItem(this.SESSION_KEY, JSON.stringify(session));
+                }
+
+                window.mishraSession = session;
+            },
+
+            getSession() {
+                let session = localStorage.getItem(this.SESSION_KEY);
+                if (session) return JSON.parse(session);
+
+                session = sessionStorage.getItem(this.SESSION_KEY);
+                if (session) return JSON.parse(session);
+
+                return null;
+            },
+
+            isSessionValid(session) {
+                if (!session) return false;
+                return new Date(session.expiresAt) > new Date();
+            },
+
+            loginAsGuest() {
+                this.createSession('guest@family.local', 'Guest User', '', 'viewer', false);
+                this.showSuccess('✅ Accessing as viewer... Redirecting...');
+                setTimeout(() => {
+                    sessionStorage.setItem('mishraFamilyViewMode', 'read-only');
+                    this.redirectToDashboard();
+                }, 1500);
+            },
+
+            logout() {
+                localStorage.removeItem(this.SESSION_KEY);
+                sessionStorage.removeItem(this.SESSION_KEY);
+                window.mishraSession = null;
+
+                // Sign out from Google
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    window.google.accounts.id.disableAutoSelect();
+                }
+
+                window.location.href = 'auth-google.html';
+            },
+
+            redirectToDashboard() {
+                window.location.href = 'dashboard.html';
+            },
+
+            showLoading(show = true) {
+                const loading = document.getElementById('loadingState');
+                if (show) loading.classList.add('active');
+                else loading.classList.remove('active');
+            },
+
+            showError(message) {
+                const alertBox = document.getElementById('alertBox');
+                alertBox.textContent = message;
+                alertBox.className = 'alert error show';
+                this.showLoading(false);
+            },
+
+            showSuccess(message) {
+                const alertBox = document.getElementById('alertBox');
+                alertBox.textContent = message;
+                alertBox.className = 'alert success show';
+            },
+
+            displaySessionInfo(session) {
+                const sessionInfo = document.getElementById('sessionInfo');
+                document.getElementById('sessionEmail').textContent = session.email;
+                document.getElementById('sessionName').textContent = session.name;
+                document.getElementById('sessionLevel').textContent = session.accessLevel === 'admin' ? 'Admin (Full Access)' : 'Viewer (Read-Only)';
+                sessionInfo.classList.add('show');
+            }
+        };
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            window.googleAuth.init();
+        });
+    </script>
+</body>
+</html>
