@@ -14,7 +14,7 @@
         "type": "holding",
         "units": 25318.969,
         "purchaseDate": "2023-06-20",
-        "purchaseNav": 75.50,
+        "purchaseNav": 75.5,
         "currentNav": 91.5245,
         "lastNavUpdate": "2026-05-08"
       },
@@ -26,7 +26,7 @@
         "type": "holding",
         "units": 716.184,
         "purchaseDate": "2023-02-20",
-        "purchaseNav": 1980.00,
+        "purchaseNav": 1980.0,
         "currentNav": 2163.717,
         "lastNavUpdate": "2026-05-08"
       },
@@ -38,7 +38,7 @@
         "type": "holding",
         "units": 11566.153,
         "purchaseDate": "2022-03-10",
-        "purchaseNav": 185.50,
+        "purchaseNav": 185.5,
         "currentNav": 235.0262,
         "lastNavUpdate": "2026-05-08"
       },
@@ -50,20 +50,8 @@
         "type": "holding",
         "units": 587.732,
         "purchaseDate": "2023-11-05",
-        "purchaseNav": 1350.00,
+        "purchaseNav": 1350.0,
         "currentNav": 1613.3581,
-        "lastNavUpdate": "2026-05-08"
-      },
-      {
-        "id": "sid_quant_sc_1",
-        "fund": "Quant Small Cap Fund - Direct Plan - Growth",
-        "fundHouse": "Quant",
-        "folio": "51059517961",
-        "type": "holding",
-        "units": 16.535,
-        "purchaseDate": "2024-02-10",
-        "purchaseNav": 185.00,
-        "currentNav": 292.1925,
         "lastNavUpdate": "2026-05-08"
       },
       {
@@ -72,9 +60,9 @@
         "fundHouse": "Mirae Asset",
         "folio": "71343368923",
         "type": "holding",
-        "units": 44079.090,
+        "units": 44079.09,
         "purchaseDate": "2022-01-15",
-        "purchaseNav": 62.50,
+        "purchaseNav": 62.5,
         "currentNav": 173.389,
         "lastNavUpdate": "2026-05-08"
       },
@@ -86,7 +74,7 @@
         "type": "holding",
         "units": 95666.831,
         "purchaseDate": "2021-09-20",
-        "purchaseNav": 95.00,
+        "purchaseNav": 95.0,
         "currentNav": 124.695,
         "lastNavUpdate": "2026-05-08"
       },
@@ -98,7 +86,7 @@
         "type": "holding",
         "units": 28312.615,
         "purchaseDate": "2023-06-01",
-        "purchaseNav": 85.00,
+        "purchaseNav": 85.0,
         "currentNav": 125.78,
         "lastNavUpdate": "2026-05-08"
       },
@@ -110,7 +98,7 @@
         "type": "holding",
         "units": 146.897,
         "purchaseDate": "2025-01-20",
-        "purchaseNav": 78.50,
+        "purchaseNav": 78.5,
         "currentNav": 107.15,
         "lastNavUpdate": "2026-05-08"
       },
@@ -122,7 +110,7 @@
         "type": "holding",
         "units": 354.689,
         "purchaseDate": "2025-11-01",
-        "purchaseNav": 3050.00,
+        "purchaseNav": 3050.0,
         "currentNav": 3090.4174,
         "lastNavUpdate": "2026-05-10"
       },
@@ -134,15 +122,15 @@
         "type": "holding",
         "units": 12627.311,
         "purchaseDate": "2022-08-15",
-        "purchaseNav": 162.00,
+        "purchaseNav": 162.0,
         "currentNav": 254.0992,
         "lastNavUpdate": "2026-05-08"
       }
     ],
-    "totalInvested": 23176756.15,
-    "totalCurrentValue": 45576797.32,
-    "totalGain": 22400041.17,
-    "totalGainPercent": 96.59,
+    "totalInvested": 23173697.17,
+    "totalCurrentValue": 45571965.92,
+    "totalGain": 22398268.75,
+    "totalGainPercent": 96.65,
     "overallXIRR": 24.8
   },
   "advait": {
@@ -155,7 +143,7 @@
         "type": "holding",
         "units": 495.085,
         "purchaseDate": "2024-01-15",
-        "purchaseNav": 28.50,
+        "purchaseNav": 28.5,
         "currentNav": 32.0407,
         "lastNavUpdate": "2026-05-08"
       },
@@ -167,7 +155,7 @@
         "type": "holding",
         "units": 38100.935,
         "purchaseDate": "2023-04-15",
-        "purchaseNav": 68.50,
+        "purchaseNav": 68.5,
         "currentNav": 91.5245,
         "lastNavUpdate": "2026-05-08"
       },
@@ -179,7 +167,7 @@
         "type": "holding",
         "units": 888.431,
         "purchaseDate": "2023-08-10",
-        "purchaseNav": 1950.00,
+        "purchaseNav": 1950.0,
         "currentNav": 2163.717,
         "lastNavUpdate": "2026-05-08"
       },
@@ -191,15 +179,27 @@
         "type": "holding",
         "units": 97159.811,
         "purchaseDate": "2023-03-05",
-        "purchaseNav": 28.50,
+        "purchaseNav": 28.5,
         "currentNav": 41.835,
+        "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "adv_quant_sc_1",
+        "fund": "Quant Small Cap Fund - Direct Plan - Growth",
+        "fundHouse": "Quant",
+        "folio": "51059517961",
+        "type": "holding",
+        "units": 16.535,
+        "purchaseDate": "2024-02-10",
+        "purchaseNav": 185.0,
+        "currentNav": 292.1925,
         "lastNavUpdate": "2026-05-08"
       }
     ],
-    "totalInvested": 7275411.18,
-    "totalCurrentValue": 9475025.85,
-    "totalGain": 2199614.67,
-    "totalGainPercent": 30.22,
+    "totalInvested": 7278470.15,
+    "totalCurrentValue": 9479857.25,
+    "totalGain": 2201387.1,
+    "totalGainPercent": 30.25,
     "overallXIRR": 17.8
   },
   "aadya": {
@@ -212,7 +212,7 @@
         "type": "holding",
         "units": 9707.352,
         "purchaseDate": "2023-08-15",
-        "purchaseNav": 112.00,
+        "purchaseNav": 112.0,
         "currentNav": 137.95,
         "lastNavUpdate": "2026-05-08"
       },
@@ -269,7 +269,7 @@
         "type": "holding",
         "units": 17562.969,
         "purchaseDate": "2022-10-01",
-        "purchaseNav": 68.50,
+        "purchaseNav": 68.5,
         "currentNav": 91.5245,
         "lastNavUpdate": "2026-05-08"
       },
@@ -293,14 +293,14 @@
         "type": "holding",
         "units": 12374.781,
         "purchaseDate": "2021-12-20",
-        "purchaseNav": 51.70,
+        "purchaseNav": 51.7,
         "currentNav": 124.695,
         "lastNavUpdate": "2026-05-08"
       }
     ],
     "totalInvested": 3486805.77,
     "totalCurrentValue": 6342413.57,
-    "totalGain": 2855607.80,
+    "totalGain": 2855607.8,
     "totalGainPercent": 81.88,
     "overallXIRR": 25.3
   }

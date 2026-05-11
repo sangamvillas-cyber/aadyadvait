@@ -18,7 +18,7 @@
           "folio": "18017755",
           "units": 716.184,
           "nav": 2163.717,
-          "valuation": 1549619.50
+          "valuation": 1549619.5
         },
         {
           "fundHouse": "HDFC",
@@ -37,18 +37,10 @@
           "valuation": 948222.18
         },
         {
-          "fundHouse": "Quant",
-          "fundName": "Quant Small Cap Fund - Direct Plan - Growth",
-          "folio": "51059517961",
-          "units": 16.535,
-          "nav": 292.1925,
-          "valuation": 4831.40
-        },
-        {
           "fundHouse": "Mirae Asset",
           "fundName": "Mirae Asset Large and Midcap Fund - Direct Plan - Growth",
           "folio": "71343368923",
-          "units": 44079.090,
+          "units": 44079.09,
           "nav": 173.389,
           "valuation": 7642829.34
         },
@@ -93,7 +85,7 @@
           "valuation": 3208589.62
         }
       ],
-      "totalValuation": 45576797.32
+      "totalValuation": 45571965.92
     },
     "advait": {
       "name": "Advait",
@@ -130,9 +122,17 @@
           "units": 97159.811,
           "nav": 41.835,
           "valuation": 4064680.69
+        },
+        {
+          "fundHouse": "Quant",
+          "fundName": "Quant Small Cap Fund - Direct Plan - Growth",
+          "folio": "51059517961",
+          "units": 16.535,
+          "nav": 292.1925,
+          "valuation": 4831.4
         }
       ],
-      "totalValuation": 9475025.85
+      "totalValuation": 9479857.25
     },
     "aadya": {
       "name": "Aadya",
@@ -191,7 +191,7 @@
           "folio": "7991289491",
           "units": 13785.194,
           "nav": 173.389,
-          "valuation": 2390201.00
+          "valuation": 2390201.0
         },
         {
           "fundHouse": "Mirae Asset",
