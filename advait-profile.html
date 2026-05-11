@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advait Profile — Advait</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-light: #14b8a6;
+      --primary-lighter: #ccfbf1;
+      --neutral-50: #fafafa;
+      --neutral-100: #f5f5f5;
+      --neutral-200: #e5e5e5;
+      --neutral-600: #525252;
+      --neutral-900: #171717;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--neutral-50);
+      color: var(--neutral-900);
+      line-height: 1.6;
+    }
+
+    .profile-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .profile-avatar {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .profile-name {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-title {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card {
+      background: white;
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .summary-label {
+      font-size: 0.875rem;
+      color: var(--neutral-600);
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+
+    .summary-subtext {
+      font-size: 0.875rem;
+      color: #10b981;
+      margin-top: 0.5rem;
+    }
+
+    .tracking-section {
+      background: white;
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--neutral-900);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead {
+      background: var(--neutral-100);
+      border-bottom: 2px solid var(--neutral-200);
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--neutral-900);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--neutral-200);
+    }
+
+    tr:hover {
+      background: var(--neutral-50);
+    }
+
+    .fund-name {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .gain-positive {
+      color: #10b981;
+      font-weight: 600;
+    }
+
+    .gain-negative {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        padding: 2rem 1rem;
+      }
+
+      .profile-name {
+        font-size: 1.5rem;
+      }
+
+      table {
+        font-size: 0.75rem;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-header">
+    <div class="profile-avatar">👦</div>
+    <div class="profile-name">Advait Mishra</div>
+    <div class="profile-title">Minor Account</div>
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+  </div>
+
+  <div class="container">
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-label">Total Invested</div>
+        <div class="summary-value" id="totalInvested">₹0.00</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Current Value</div>
+        <div class="summary-value" id="currentValue">₹0.00</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Total Gain</div>
+        <div class="summary-value gain-positive" id="totalGain">₹0.00</div>
+        <div class="summary-subtext" id="gainPercent">+0.00%</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Overall XIRR</div>
+        <div class="summary-value" id="overallXIRR">0.00%</div>
+      </div>
+    </div>
+
+    <!-- Mutual Funds Holding -->
+    <div class="tracking-section">
+      <div class="section-title">💼 Mutual Funds Tracker</div>
+      <div style="overflow-x: auto;">
+        <table id="trackingTable">
+          <thead>
+            <tr>
+              <th>Fund</th>
+              <th style="text-align: right;">Units</th>
+              <th style="text-align: right;">Buy NAV</th>
+              <th style="text-align: right;">Current NAV</th>
+              <th style="text-align: right;">Purchase Value</th>
+              <th style="text-align: right;">Current Value</th>
+              <th style="text-align: right;">Gain/Loss</th>
+              <th style="text-align: right;">Return %</th>
+            </tr>
+          </thead>
+          <tbody id="trackingTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Fund Summary -->
+    <div class="tracking-section">
+      <div class="section-title">📊 Portfolio Summary</div>
+      <div id="fundSummary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadProfileData() {
+      try {
+        const response = await fetch('tracking-data.json');
+        const data = await response.json();
+        const memberData = data.advait;
+
+        // Update summary cards
+        document.getElementById('totalInvested').textContent = '₹' + memberData.totalInvested.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('currentValue').textContent = '₹' + memberData.totalCurrentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+        const gainColor = memberData.totalGain >= 0 ? '#10b981' : '#ef4444';
+        document.getElementById('totalGain').textContent = (memberData.totalGain >= 0 ? '₹' : '-₹') + Math.abs(memberData.totalGain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('totalGain').style.color = gainColor;
+
+        const percentText = (memberData.totalGainPercent >= 0 ? '+' : '') + memberData.totalGainPercent.toFixed(2) + '%';
+        document.getElementById('gainPercent').textContent = percentText;
+        document.getElementById('gainPercent').style.color = gainColor;
+
+        document.getElementById('overallXIRR').textContent = memberData.overallXIRR.toFixed(2) + '%';
+
+        // Build tracking table
+        let tableHtml = '';
+        memberData.transactions.forEach(txn => {
+          const purchaseValue = txn.units * txn.purchaseNav;
+          const currentValue = txn.units * txn.currentNav;
+          const gain = currentValue - purchaseValue;
+          const gainPercent = (gain / purchaseValue) * 100;
+
+          tableHtml += `<tr>
+            <td class="fund-name">${txn.fund}</td>
+            <td style="text-align: right;">${txn.units.toFixed(2)}</td>
+            <td style="text-align: right;">₹${txn.purchaseNav.toFixed(2)}</td>
+            <td style="text-align: right;">₹${txn.currentNav.toFixed(2)}</td>
+            <td style="text-align: right;">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td style="text-align: right; font-weight: 600;">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td style="text-align: right;" class="${gain >= 0 ? 'gain-positive' : 'gain-negative'}">₹${Math.abs(gain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td style="text-align: right;" class="${gainPercent >= 0 ? 'gain-positive' : 'gain-negative'}">${(gainPercent >= 0 ? '+' : '')}${gainPercent.toFixed(2)}%</td>
+          </tr>`;
+        });
+
+        document.getElementById('trackingTableBody').innerHTML = tableHtml;
+
+        // Fund house summary
+        const fundHouseSummary = {};
+        memberData.transactions.forEach(txn => {
+          if (!fundHouseSummary[txn.fundHouse]) {
+            fundHouseSummary[txn.fundHouse] = { count: 0, value: 0 };
+          }
+          fundHouseSummary[txn.fundHouse].count++;
+          fundHouseSummary[txn.fundHouse].value += txn.units * txn.currentNav;
+        });
+
+        let summaryHtml = '';
+        Object.entries(fundHouseSummary).forEach(([house, data]) => {
+          summaryHtml += `
+            <div style="background: var(--primary-lighter); padding: 1rem; border-radius: 8px;">
+              <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">${house}</div>
+              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">${data.count} fund(s)</div>
+              <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">₹${data.value.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+            </div>
+          `;
+        });
+
+        document.getElementById('fundSummary').innerHTML = summaryHtml;
+      } catch (error) {
+        console.error('Error loading profile data:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProfileData);
+  </script>
+</body>
+</html>
