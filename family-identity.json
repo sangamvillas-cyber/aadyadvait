@@ -2,6 +2,15 @@
   "lastUpdated": "2026-05-12",
   "members": {
     "siddharth": {
+      "aadhaar": {
+        "number": "6929 2485 6064",
+        "dob": "1986-01-25",
+        "sex": "M",
+        "address": "S/O S S Mishra, 342, Eldeco Greens, Fun Mall, Gomti Nagar, Lucknow, Uttar Pradesh, 226010",
+        "printDate": "2022-01-24",
+        "imageFront": "aadhaar/siddharth-aadhaar-front.jpg",
+        "imageBack": "aadhaar/siddharth-aadhaar-back.jpg"
+      },
       "bankAccounts": [
         {
           "bank": "ICICI Bank",
@@ -83,6 +92,18 @@
       }
     },
     "advait": {
+      "bankAccounts": [
+        {
+          "bank": "ICICI Bank",
+          "branch": "Lucknow Vibhavkhand Branch, B-3/177, Vibhavkhand, Gomtinagar, Lucknow - 226010",
+          "accountNo": "237601002331",
+          "ifsc": "ICIC0002376",
+          "type": "Savings",
+          "joint": false,
+          "guardian": "archana",
+          "chequeImage": "cheques/icici-advait.jpg"
+        }
+      ],
       "passport": {
         "number": "AB251400",
         "type": "P",
