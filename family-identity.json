@@ -18,6 +18,7 @@
           "accountNo": "021401006099",
           "ifsc": "ICIC0000214",
           "type": "Savings",
+          "accountName": "SIDDHARTH MISHRA",
           "joint": true,
           "jointWith": "archana",
           "chequeImage": "cheques/icici-joint.jpg"
@@ -28,6 +29,7 @@
           "accountNo": "02261000123688",
           "ifsc": "HDFC0000226",
           "type": "Savings",
+          "accountName": "SIDDHARTH MISHRA",
           "joint": false,
           "chequeImage": "cheques/hdfc-siddharth-allahabad.jpg"
         }
