@@ -161,9 +161,33 @@
           "units": 2852.602,
           "nav": 223.895,
           "valuation": 638683.32
+        },
+        {
+          "fundHouse": "PPFAS",
+          "fundName": "Parag Parikh ELSS Tax Saver Fund - Direct Plan",
+          "folio": "12990772",
+          "units": 450.314,
+          "nav": 32.0407,
+          "valuation": 14428.38
+        },
+        {
+          "fundHouse": "PPFAS",
+          "fundName": "Parag Parikh Flexi Cap Fund - Direct Plan Growth",
+          "folio": "12990772",
+          "units": 51769.675,
+          "nav": 91.5245,
+          "valuation": 4738193.62
+        },
+        {
+          "fundHouse": "SBI",
+          "fundName": "SBI Small Cap Fund Direct Growth",
+          "folio": "31398632",
+          "units": 1053.034,
+          "nav": 196.8821,
+          "valuation": 207323.55
         }
       ],
-      "totalValuation": 3963436.15
+      "totalValuation": 8923381.69
     },
     "archana": {
       "name": "Archana",
@@ -188,7 +212,7 @@
         {
           "fundHouse": "Mirae Asset",
           "fundName": "Mirae Asset Large and Midcap Fund - Direct Plan - Growth",
-          "folio": "7991289491",
+          "folio": "79912894991",
           "units": 13785.194,
           "nav": 173.389,
           "valuation": 2390201.0
@@ -196,7 +220,7 @@
         {
           "fundHouse": "Mirae Asset",
           "fundName": "Mirae Asset Large Cap Fund - Direct Plan - Growth",
-          "folio": "7991289491",
+          "folio": "79912894991",
           "units": 12374.781,
           "nav": 124.695,
           "valuation": 1543073.32

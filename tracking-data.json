@@ -239,13 +239,49 @@
         "purchaseNav": 220.72,
         "currentNav": 223.895,
         "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "aad_ppfas_elss_12990772",
+        "fund": "Parag Parikh ELSS Tax Saver Fund - Direct Plan",
+        "fundHouse": "PPFAS",
+        "folio": "12990772",
+        "type": "holding",
+        "units": 450.314,
+        "purchaseDate": "2020-01-15",
+        "purchaseNav": 22.207,
+        "currentNav": 32.0407,
+        "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "aad_ppfas_flexi_12990772",
+        "fund": "Parag Parikh Flexi Cap Fund - Direct Plan Growth",
+        "fundHouse": "PPFAS",
+        "folio": "12990772",
+        "type": "holding",
+        "units": 51769.675,
+        "purchaseDate": "2021-03-15",
+        "purchaseNav": 61.146,
+        "currentNav": 91.5245,
+        "lastNavUpdate": "2026-05-08"
+      },
+      {
+        "id": "aad_sbi_smallcap_31398632",
+        "fund": "SBI Small Cap Fund Direct Growth",
+        "fundHouse": "SBI",
+        "folio": "31398632",
+        "type": "holding",
+        "units": 1053.034,
+        "purchaseDate": "2023-02-15",
+        "purchaseNav": 162.86,
+        "currentNav": 196.8821,
+        "lastNavUpdate": "2026-05-08"
       }
     ],
-    "totalInvested": 3712075.16,
-    "totalCurrentValue": 3963436.15,
-    "totalGain": 251360.99,
-    "totalGainPercent": 6.77,
-    "overallXIRR": 2.29
+    "totalInvested": 7059080.94,
+    "totalCurrentValue": 8923381.69,
+    "totalGain": 1864300.75,
+    "totalGainPercent": 26.41,
+    "overallXIRR": 6.15
   },
   "archana": {
     "transactions": [
@@ -277,7 +313,7 @@
         "id": "arch_mirae_mc_1",
         "fund": "Mirae Asset Large and Midcap Fund - Direct Plan - Growth",
         "fundHouse": "Mirae Asset",
-        "folio": "7991289491",
+        "folio": "79912894991",
         "type": "holding",
         "units": 13785.194,
         "purchaseDate": "2021-11-10",
@@ -289,7 +325,7 @@
         "id": "arch_mirae_lc_1",
         "fund": "Mirae Asset Large Cap Fund - Direct Plan - Growth",
         "fundHouse": "Mirae Asset",
-        "folio": "7991289491",
+        "folio": "79912894991",
         "type": "holding",
         "units": 12374.781,
         "purchaseDate": "2021-12-20",
