@@ -350,6 +350,11 @@
     </div>
 
     <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Allocation by market cap</div></div>
+      <div style="padding:1rem 1.25rem;" id="catSummary"></div>
+    </div>
+
+    <div class="section-card">
       <div class="section-card-header"><div class="section-card-title">Mutual fund holdings</div></div>
       <div class="table-wrapper">
         <table>
@@ -425,6 +430,7 @@
           </tr>`;
         });
         document.getElementById('trackingTableBody').innerHTML = tableHtml;
+        renderCatSummary(memberData.transactions);
 
         const fundHouseSummary = {};
         memberData.transactions.forEach(txn => {
@@ -443,6 +449,57 @@
       } catch (err) {
         console.error('Error loading profile data:', err);
       }
+    }
+
+    const CAT_MAP = {
+      'Parag Parikh Flexi Cap Fund - Direct Plan Growth': 'flexi',
+      'HDFC Flexi Cap Fund - Direct Plan - Growth Option': 'flexi',
+      'HDFC Nifty 50 Index Fund - Direct Plan': 'large',
+      'SUNDARAM MID CAP FUND DIRECT GROWTH': 'mid',
+      'Mirae Asset Large and Midcap Fund - Direct Plan - Growth': 'large_mid',
+      'Mirae Asset Large Cap Fund - Direct Plan': 'large',
+      'Mirae Asset Large Cap Fund - Direct Plan - Growth': 'large',
+      'Quantum Value Fund - Direct Plan Growth Option': 'large',
+      'Axis ELSS Tax Saver Fund - Direct Growth': 'large',
+      'Axis Liquid Fund - Direct Growth': 'liquid',
+      'ICICI Prudential Nifty 50 Index Fund - Direct Plan Growth': 'large',
+      'Parag Parikh ELSS Tax Saver Fund - Direct Plan': 'flexi',
+      'Mirae Asset Midcap Fund - Direct Plan': 'mid',
+      'Quant Small Cap Fund - Direct Plan - Growth': 'small',
+      'Axis Mid Cap Fund - Direct Growth': 'mid',
+      'HDFC Mid Cap Fund - Direct Plan - Growth Option': 'mid',
+      'SBI Small Cap Fund Direct Growth': 'small',
+      'HSBC Small Cap Fund - Direct Growth': 'small',
+    };
+
+    function renderCatSummary(transactions) {
+      const t = { large: 0, flexi: 0, mid: 0, small: 0, large_mid: 0 };
+      for (const tx of transactions) {
+        const cat = CAT_MAP[tx.fund];
+        if (cat && cat !== 'liquid') t[cat] = (t[cat] || 0) + tx.units * tx.currentNav;
+      }
+      t.large += t.large_mid / 2;
+      t.mid   += t.large_mid / 2;
+      const equity = t.large + t.flexi + t.mid + t.small;
+      if (!equity) return;
+      const cats = [
+        { key: 'large', label: 'Large cap', color: '#1E40AF' },
+        { key: 'flexi', label: 'Flexi cap', color: '#6D28D9' },
+        { key: 'mid',   label: 'Mid cap',   color: '#B45309' },
+        { key: 'small', label: 'Small cap', color: '#B91C1C' },
+      ];
+      document.getElementById('catSummary').innerHTML = cats.map(c => {
+        const pct = (t[c.key] / equity * 100).toFixed(1);
+        const val = t[c.key] >= 1e7 ? '₹' + (t[c.key]/1e7).toFixed(2) + ' Cr' : '₹' + (t[c.key]/1e5).toFixed(2) + ' L';
+        return `<div style="display:grid;grid-template-columns:90px 1fr 48px 80px;gap:0.75rem;align-items:center;margin-bottom:0.625rem;">
+          <div style="font-size:0.8125rem;color:#5C5A55;font-weight:500;">${c.label}</div>
+          <div style="height:5px;background:#F0EFE8;border-radius:999px;overflow:hidden;">
+            <div style="width:${pct}%;height:100%;background:${c.color};border-radius:999px;"></div>
+          </div>
+          <div style="font-size:0.8125rem;font-weight:700;color:#1A1817;text-align:right;">${pct}%</div>
+          <div style="font-size:0.75rem;color:#5C5A55;text-align:right;">${val}</div>
+        </div>`;
+      }).join('');
     }
 
     document.addEventListener('DOMContentLoaded', loadProfileData);
