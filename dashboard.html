@@ -567,9 +567,16 @@
 
       <!-- Mutual Funds -->
       <section class="section" id="funds">
-        <div class="page-header">
-          <h1 class="page-title">Mutual funds</h1>
-          <p class="page-subtitle">Every fund holding, grouped by family member.</p>
+        <div class="page-header" style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+          <div>
+            <h1 class="page-title">Mutual funds</h1>
+            <p class="page-subtitle">Every fund holding, grouped by family member.</p>
+          </div>
+          <div id="navStatus" style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:var(--text-secondary);">
+            <span id="navDot" style="width:8px;height:8px;border-radius:50%;background:#ccc;display:inline-block;"></span>
+            <span id="navLabel">Loading prices…</span>
+            <button id="navRefresh" onclick="refreshNavs()" style="display:none;font-size:0.75rem;padding:0.2rem 0.6rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-elevated);cursor:pointer;color:var(--text-secondary);">Refresh</button>
+          </div>
         </div>
         <div class="cat-summary">
           <div class="cat-summary-title">Allocation by market cap</div>
@@ -673,9 +680,77 @@
         renderFamily();
         renderFunds();
         setupTracker();
+        fetchLiveNavs();
       } catch (err) {
         console.error(err);
       }
+    }
+
+    async function fetchLiveNavs() {
+      const data = APP_STATE.data;
+      const dot   = document.getElementById('navDot');
+      const label = document.getElementById('navLabel');
+      const btn   = document.getElementById('navRefresh');
+
+      dot.style.background = '#F59E0B';
+      label.textContent = 'Fetching live prices…';
+
+      // Collect unique scheme codes → list of transactions
+      const schemes = new Map();
+      for (const md of Object.values(data)) {
+        if (!md?.transactions) continue;
+        for (const t of md.transactions) {
+          if (!t.schemeCode) continue;
+          if (!schemes.has(t.schemeCode)) schemes.set(t.schemeCode, []);
+          schemes.get(t.schemeCode).push(t);
+        }
+      }
+
+      const results = await Promise.allSettled(
+        [...schemes.keys()].map(code =>
+          fetch(`https://api.mfapi.in/mf/${code}/latest`)
+            .then(r => r.json())
+            .then(d => ({ code, nav: parseFloat(d.data[0].nav), date: d.data[0].date }))
+        )
+      );
+
+      let updated = 0;
+      for (const r of results) {
+        if (r.status !== 'fulfilled') continue;
+        const { code, nav, date } = r.value;
+        if (!nav || isNaN(nav)) continue;
+        // Convert "11-05-2026" → "2026-05-11"
+        const [dd, mm, yyyy] = date.split('-');
+        const isoDate = `${yyyy}-${mm}-${dd}`;
+        for (const t of (schemes.get(code) || [])) {
+          t.currentNav    = nav;
+          t.lastNavUpdate = isoDate;
+        }
+        updated++;
+      }
+
+      // Recompute totals per member
+      for (const md of Object.values(data)) {
+        if (!md?.transactions) continue;
+        md.totalCurrentValue = md.transactions.reduce((s, t) => s + t.units * t.currentNav, 0);
+        if (md.totalInvested) md.totalGain = md.totalCurrentValue - md.totalInvested;
+        if (md.totalInvested) md.totalGainPercent = (md.totalGain / md.totalInvested) * 100;
+      }
+
+      const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      dot.style.background   = updated > 0 ? '#22C55E' : '#EF4444';
+      label.textContent      = updated > 0 ? `Live · ${updated} funds · ${now}` : 'Live prices unavailable';
+      btn.style.display      = 'inline-block';
+
+      renderOverview();
+      renderFamily();
+      renderFunds();
+      renderTracker(document.querySelector('#trackerPills .filter-pill.active')?.dataset?.member || 'siddharth');
+    }
+
+    function refreshNavs() {
+      document.getElementById('navRefresh').style.display = 'none';
+      fetchLiveNavs();
     }
 
     function fmt(n) {
@@ -843,7 +918,7 @@
             <td class="fund-name">${t.fund}</td>
             <td class="text-center mono">${t.folio}</td>
             <td class="text-right">${t.units.toFixed(2)}</td>
-            <td class="text-right mono">₹${t.currentNav.toFixed(2)}</td>
+            <td class="text-right mono">₹${t.currentNav.toFixed(2)}<br><span style="font-size:0.7rem;color:var(--text-secondary);font-weight:400;">${t.lastNavUpdate || ''}</span></td>
             <td class="text-right">${fmt(cv)}</td>
           </tr>`;
         }).join('');

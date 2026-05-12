@@ -16,7 +16,8 @@
         "purchaseDate": "2023-06-20",
         "purchaseNav": 75.5,
         "currentNav": 91.5245,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 122639
       },
       {
         "id": "sid_hdfc_flexi_18017755",
@@ -28,7 +29,8 @@
         "purchaseDate": "2023-02-20",
         "purchaseNav": 1980.0,
         "currentNav": 2163.717,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118955
       },
       {
         "id": "sid_hdfc_nifty_1",
@@ -40,7 +42,8 @@
         "purchaseDate": "2022-03-10",
         "purchaseNav": 185.5,
         "currentNav": 235.0262,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 119063
       },
       {
         "id": "sid_sundaram_1",
@@ -52,7 +55,8 @@
         "purchaseDate": "2023-11-05",
         "purchaseNav": 1350.0,
         "currentNav": 1613.3581,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 119581
       },
       {
         "id": "sid_mirae_lmc_1",
@@ -64,7 +68,8 @@
         "purchaseDate": "2022-01-15",
         "purchaseNav": 62.5,
         "currentNav": 173.389,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118834
       },
       {
         "id": "sid_mirae_lc_1",
@@ -76,7 +81,8 @@
         "purchaseDate": "2021-09-20",
         "purchaseNav": 95.0,
         "currentNav": 124.695,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118825
       },
       {
         "id": "sid_quantum_vf_1",
@@ -88,7 +94,8 @@
         "purchaseDate": "2023-06-01",
         "purchaseNav": 85.0,
         "currentNav": 125.78,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 103490
       },
       {
         "id": "sid_axis_elss_1",
@@ -100,7 +107,8 @@
         "purchaseDate": "2025-01-20",
         "purchaseNav": 78.5,
         "currentNav": 107.15,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 120503
       },
       {
         "id": "sid_axis_liquid_1",
@@ -112,7 +120,8 @@
         "purchaseDate": "2025-11-01",
         "purchaseNav": 3050.0,
         "currentNav": 3090.4174,
-        "lastNavUpdate": "2026-05-10"
+        "lastNavUpdate": "2026-05-10",
+        "schemeCode": 120389
       },
       {
         "id": "sid_icici_nifty_1",
@@ -124,7 +133,8 @@
         "purchaseDate": "2022-08-15",
         "purchaseNav": 162.0,
         "currentNav": 254.0992,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 120620
       }
     ],
     "totalInvested": 23657407.65,
@@ -145,7 +155,8 @@
         "purchaseDate": "2024-01-15",
         "purchaseNav": 28.5,
         "currentNav": 32.0407,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 147481
       },
       {
         "id": "adv_ppfas_flexi_10354395",
@@ -157,7 +168,8 @@
         "purchaseDate": "2023-04-15",
         "purchaseNav": 68.5,
         "currentNav": 91.5245,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 122639
       },
       {
         "id": "adv_hdfc_flexi_1",
@@ -169,7 +181,8 @@
         "purchaseDate": "2023-08-10",
         "purchaseNav": 1950.0,
         "currentNav": 2163.717,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118955
       },
       {
         "id": "adv_mirae_mc_1",
@@ -181,7 +194,8 @@
         "purchaseDate": "2023-03-05",
         "purchaseNav": 28.5,
         "currentNav": 41.835,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 147445
       },
       {
         "id": "adv_quant_sc_1",
@@ -193,7 +207,8 @@
         "purchaseDate": "2024-02-10",
         "purchaseNav": 185.0,
         "currentNav": 292.1925,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 120828
       }
     ],
     "totalInvested": 7128578.01,
@@ -214,7 +229,8 @@
         "purchaseDate": "2023-08-15",
         "purchaseNav": 112.0,
         "currentNav": 137.95,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 120505
       },
       {
         "id": "aad_hdfc_flexi_1",
@@ -226,7 +242,8 @@
         "purchaseDate": "2023-05-20",
         "purchaseNav": 2174.18,
         "currentNav": 2163.717,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118955
       },
       {
         "id": "aad_hdfc_midcap_1",
@@ -238,7 +255,8 @@
         "purchaseDate": "2023-06-10",
         "purchaseNav": 220.72,
         "currentNav": 223.895,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118989
       },
       {
         "id": "aad_ppfas_elss_12990772",
@@ -250,7 +268,8 @@
         "purchaseDate": "2020-01-15",
         "purchaseNav": 22.207,
         "currentNav": 32.0407,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 147481
       },
       {
         "id": "aad_ppfas_flexi_12990772",
@@ -262,7 +281,8 @@
         "purchaseDate": "2021-03-15",
         "purchaseNav": 61.146,
         "currentNav": 91.5245,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 122639
       },
       {
         "id": "aad_sbi_smallcap_31398632",
@@ -274,7 +294,8 @@
         "purchaseDate": "2023-02-15",
         "purchaseNav": 162.86,
         "currentNav": 196.8821,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 125497
       }
     ],
     "totalInvested": 7059080.94,
@@ -295,7 +316,8 @@
         "purchaseDate": "2021-05-15",
         "purchaseNav": 51.05,
         "currentNav": 93.7162,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 151130
       },
       {
         "id": "arch_ppfas_flexi_1",
@@ -307,7 +329,8 @@
         "purchaseDate": "2022-10-01",
         "purchaseNav": 68.5,
         "currentNav": 91.5245,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 122639
       },
       {
         "id": "arch_mirae_mc_1",
@@ -319,7 +342,8 @@
         "purchaseDate": "2021-11-10",
         "purchaseNav": 71.65,
         "currentNav": 173.389,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118834
       },
       {
         "id": "arch_mirae_lc_1",
@@ -331,7 +355,8 @@
         "purchaseDate": "2021-12-20",
         "purchaseNav": 51.7,
         "currentNav": 124.695,
-        "lastNavUpdate": "2026-05-08"
+        "lastNavUpdate": "2026-05-08",
+        "schemeCode": 118825
       }
     ],
     "totalInvested": 3485693.67,
