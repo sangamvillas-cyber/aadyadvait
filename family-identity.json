@@ -57,6 +57,7 @@
           "accountNo": "021401006099",
           "ifsc": "ICIC0000214",
           "type": "Savings",
+          "accountName": "ARCHANA MISHRA",
           "joint": true,
           "jointWith": "siddharth",
           "chequeImage": "cheques/icici-joint.jpg"
@@ -67,6 +68,7 @@
           "accountNo": "50100453942533",
           "ifsc": "HDFC0001112",
           "type": "Savings",
+          "accountName": "ARCHANA MISHRA",
           "joint": false,
           "chequeImage": "cheques/hdfc-archana.jpg"
         },
@@ -76,6 +78,7 @@
           "accountNo": "55000004295632",
           "ifsc": "HDFC0000017",
           "type": "PPF",
+          "accountName": "ARCHANA W/O SIDDHARTH MISHRA",
           "joint": false,
           "openDate": "2021-08-19",
           "nomination": "SIDDHARTH MISHRA"
@@ -104,6 +107,7 @@
           "accountNo": "55000005923075",
           "ifsc": "HDFC0001112",
           "type": "PPF",
+          "accountName": "AADYA MISHRA U/G ARCHANA W/O S MISHRA",
           "joint": false,
           "guardian": "archana",
           "openDate": "2022-09-23"
@@ -114,6 +118,7 @@
           "accountNo": "50100563080121",
           "ifsc": "HDFC0001112",
           "type": "Kids Advantage",
+          "accountName": "AADYA MISHRA U/G ARCHANA W/O S MISHRA",
           "joint": true,
           "jointWith": "archana",
           "guardian": "archana",
@@ -144,6 +149,7 @@
           "accountNo": "237601002331",
           "ifsc": "ICIC0002376",
           "type": "Savings",
+          "accountName": "ADVAIT MISHRA",
           "joint": false,
           "guardian": "archana",
           "chequeImage": "cheques/icici-advait.jpg"

@@ -800,7 +800,7 @@
           </div>
           <div>
             <div class="passport-field-label">Holder</div>
-            <div class="passport-field-value">${acct.accountName || memberName(memberId)}${acct.joint ? ' + ' + memberName(acct.jointWith) : ''}</div>
+            <div class="passport-field-value">${acct.accountName || memberName(memberId)}${acct.joint ? ' + ' + (() => { const ja = (STATE.identity?.members?.[acct.jointWith]?.bankAccounts || []).find(a => a.accountNo === acct.accountNo); return ja?.accountName || memberName(acct.jointWith); })() : ''}</div>
           </div>
           <div style="grid-column:span 2;">
             <div class="passport-field-label">Branch</div>
