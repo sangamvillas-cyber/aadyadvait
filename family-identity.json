@@ -34,6 +34,14 @@
           "chequeImage": "cheques/hdfc-siddharth-allahabad.jpg"
         }
       ],
+      "cards": [
+        {
+          "type": "Priority Pass",
+          "memberName": "SIDDHARTH MISHRA",
+          "memberNumber": "4854983509177780976",
+          "expiry": "2031-09"
+        }
+      ],
       "passport": {
         "number": "Z4176504",
         "type": "P",
