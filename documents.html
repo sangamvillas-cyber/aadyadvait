@@ -418,19 +418,16 @@
         <div id="modalFileName" style="font-size: 0.875rem; color: var(--text-primary); background: var(--bg-elevated); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);">—</div>
       </div>
       <div class="form-group">
+        <label class="form-label" for="modalMember">Member</label>
+        <select class="form-select" id="modalMember"></select>
+      </div>
+      <div class="form-group">
         <label class="form-label" for="modalCategory">Category</label>
-        <select class="form-select" id="modalCategory">
-          <option value="cas">CAS / Statement</option>
-          <option value="kyc">KYC (PAN, Aadhaar)</option>
-          <option value="folio">Folio statement</option>
-          <option value="tax">Tax document</option>
-          <option value="insurance">Insurance</option>
-          <option value="other">Other</option>
-        </select>
+        <select class="form-select" id="modalCategory"></select>
       </div>
       <div class="form-group">
         <label class="form-label" for="modalNote">Note (optional)</label>
-        <input class="form-input" id="modalNote" type="text" placeholder="e.g. April CAS, FY 2025-26 returns">
+        <input class="form-input" id="modalNote" type="text" placeholder="e.g. Aadhaar front, HDFC savings A/C, April CAS">
       </div>
       <div class="modal-actions">
         <button class="btn" onclick="closeModal()">Cancel</button>
@@ -441,26 +438,44 @@
 
   <script>
     const MEMBERS = [
+      { id: 'family', name: 'Family', avatar: 'F', isFamily: true },
       { id: 'siddharth', name: 'Siddharth', avatar: 'S' },
       { id: 'archana', name: 'Archana', avatar: 'A' },
       { id: 'aadya', name: 'Aadya', avatar: 'A' },
       { id: 'advait', name: 'Advait', avatar: 'A' },
     ];
 
+    const INDIVIDUAL_MEMBERS = MEMBERS.filter(m => !m.isFamily);
+
     const CATEGORIES = [
       { id: 'all', label: 'All' },
-      { id: 'cas', label: 'CAS / Statement' },
-      { id: 'kyc', label: 'KYC' },
+      { id: 'aadhaar', label: 'Aadhaar' },
+      { id: 'pan', label: 'PAN' },
+      { id: 'voter', label: 'Voter ID' },
+      { id: 'driving', label: 'Driving licence' },
+      { id: 'passport', label: 'Passport' },
+      { id: 'bank', label: 'Bank account' },
+      { id: 'school', label: 'School / marksheet' },
+      { id: 'property', label: 'Property / registry' },
+      { id: 'cas', label: 'CAS / statement' },
       { id: 'folio', label: 'Folio' },
       { id: 'tax', label: 'Tax' },
       { id: 'insurance', label: 'Insurance' },
       { id: 'other', label: 'Other' },
     ];
 
+    const SUGGESTIONS = {
+      siddharth: ['Aadhaar', 'PAN', 'Voter ID', 'Driving licence', 'Passport', 'Bank account', 'Property / registry'],
+      archana: ['Aadhaar', 'PAN', 'Voter ID', 'Driving licence', 'Bank account', 'Property / registry'],
+      aadya: ['Aadhaar', 'PAN', 'School / marksheet', 'Bank account'],
+      advait: ['Aadhaar', 'PAN', 'School / marksheet', 'Bank account'],
+    };
+
     const STATE = {
-      currentMember: 'siddharth',
+      currentMember: 'family',
       currentCategory: 'all',
       pendingFile: null,
+      pendingMember: null,
     };
 
     // Storage helpers
@@ -473,12 +488,22 @@
     }
     function getMemberDocs(memberId) {
       const all = loadDocs();
-      return all[memberId] || [];
+      if (memberId === 'family') {
+        // Aggregate all members, tagging owner
+        return INDIVIDUAL_MEMBERS.flatMap(m =>
+          (all[m.id] || []).map(d => ({ ...d, _owner: m.id }))
+        );
+      }
+      return (all[memberId] || []).map(d => ({ ...d, _owner: memberId }));
     }
     function setMemberDocs(memberId, docs) {
       const all = loadDocs();
-      all[memberId] = docs;
+      // Strip the _owner virtual field before persisting
+      all[memberId] = docs.map(({ _owner, ...rest }) => rest);
       saveDocs(all);
+    }
+    function memberName(id) {
+      return (MEMBERS.find(m => m.id === id) || {}).name || id;
     }
 
     function formatBytes(b) {
@@ -537,6 +562,13 @@
       document.getElementById('storageFill').style.width = Math.min(100, (totalSize / QUOTA) * 100) + '%';
       const last = docs.reduce((max, d) => Math.max(max, d.uploadedAt || 0), 0);
       document.getElementById('lastUpload').textContent = last ? formatDate(last) : '—';
+      // Update page subtitle based on member
+      const sub = document.querySelector('.page-subtitle');
+      if (sub) {
+        sub.textContent = STATE.currentMember === 'family'
+          ? 'Shared identity, banking and property papers — pooled across the household.'
+          : `Statements, KYC and records for ${memberName(STATE.currentMember)}.`;
+      }
     }
 
     function renderDocs() {
@@ -548,18 +580,17 @@
 
       const container = document.getElementById('docsContainer');
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="empty-state">
-          <div class="empty-state-title">No documents yet</div>
-          <div class="empty-state-subtitle">Upload a PDF or image to get started.</div>
-        </div>`;
+        container.innerHTML = renderEmptyState();
         return;
       }
 
+      const showOwner = STATE.currentMember === 'family';
       container.innerHTML = '<div class="docs-grid">' + filtered.map(d => {
         const ext = (d.name.split('.').pop() || 'FILE').toUpperCase().slice(0, 4);
         return `<div class="doc-card">
           <div class="doc-card-top">
             <div class="doc-icon">${ext}</div>
+            ${showOwner ? `<span class="doc-category" style="background:var(--accent-soft);color:var(--accent);">${memberName(d._owner)}</span>` : ''}
           </div>
           <div>
             <div class="doc-name" title="${escapeHtml(d.name)}">${escapeHtml(d.name)}</div>
@@ -574,11 +605,36 @@
           </div>
           <div class="doc-actions">
             <a href="${d.data}" download="${escapeAttr(d.name)}" class="doc-action">Download</a>
-            <button class="doc-action" onclick="openDoc('${d.id}')">View</button>
-            <button class="doc-action danger" onclick="deleteDoc('${d.id}')">Delete</button>
+            <button class="doc-action" onclick="openDoc('${d._owner}','${d.id}')">View</button>
+            <button class="doc-action danger" onclick="deleteDoc('${d._owner}','${d.id}')">Delete</button>
           </div>
         </div>`;
       }).join('') + '</div>';
+    }
+
+    function renderEmptyState() {
+      if (STATE.currentMember === 'family') {
+        return `<div class="empty-state">
+          <div class="empty-state-title">No documents yet</div>
+          <div class="empty-state-subtitle">Pick a family member tab above and upload identity, banking, school or property papers.</div>
+          <div style="margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.5rem; max-width: 640px; margin-left: auto; margin-right: auto;">
+            ${INDIVIDUAL_MEMBERS.map(m =>
+              `<a href="javascript:void(0)" onclick="STATE.currentMember='${m.id}';STATE.currentCategory='all';renderAll();" style="text-decoration:none;background:var(--bg-elevated);border:1px solid var(--border-subtle);padding:0.625rem 0.875rem;border-radius:var(--radius-sm);color:var(--text-primary);font-size:0.8125rem;font-weight:500;">${m.name} →</a>`
+            ).join('')}
+          </div>
+        </div>`;
+      }
+      const suggestions = SUGGESTIONS[STATE.currentMember] || [];
+      return `<div class="empty-state">
+        <div class="empty-state-title">${STATE.currentCategory === 'all' ? 'No documents for ' + memberName(STATE.currentMember) : 'No ' + getCategoryLabel(STATE.currentCategory) + ' uploaded'}</div>
+        <div class="empty-state-subtitle">Upload a PDF or image to get started.</div>
+        ${suggestions.length ? `<div style="margin-top: 1.25rem; text-align: left; max-width: 480px; margin-left: auto; margin-right: auto;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem; text-align: center;">Suggested documents</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.375rem; justify-content: center;">
+            ${suggestions.map(s => `<span class="doc-category">${s}</span>`).join('')}
+          </div>
+        </div>` : ''}
+      </div>`;
     }
 
     function getCategoryLabel(catId) {
@@ -590,8 +646,8 @@
     }
     function escapeAttr(s) { return escapeHtml(s); }
 
-    function openDoc(id) {
-      const docs = getMemberDocs(STATE.currentMember);
+    function openDoc(owner, id) {
+      const docs = getMemberDocs(owner);
       const d = docs.find(x => x.id === id);
       if (!d) return;
       const w = window.open();
@@ -602,11 +658,10 @@
       }
     }
 
-    function deleteDoc(id) {
+    function deleteDoc(owner, id) {
       if (!confirm('Delete this document?')) return;
-      let docs = getMemberDocs(STATE.currentMember);
-      docs = docs.filter(d => d.id !== id);
-      setMemberDocs(STATE.currentMember, docs);
+      let docs = getMemberDocs(owner).filter(d => d.id !== id);
+      setMemberDocs(owner, docs);
       renderAll();
     }
 
@@ -634,6 +689,13 @@
     }
 
     async function handleFiles(files) {
+      // Populate selects once
+      const memSelect = document.getElementById('modalMember');
+      memSelect.innerHTML = INDIVIDUAL_MEMBERS.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+      const catSelect = document.getElementById('modalCategory');
+      catSelect.innerHTML = CATEGORIES.filter(c => c.id !== 'all')
+        .map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+
       for (const file of files) {
         if (file.size > 10 * 1024 * 1024) {
           alert(`"${file.name}" exceeds 10 MB. Use compressed PDFs for large statements.`);
@@ -642,10 +704,11 @@
         const dataUrl = await fileToDataUrl(file);
         STATE.pendingFile = { name: file.name, size: file.size, type: file.type, data: dataUrl };
         document.getElementById('modalFileName').textContent = file.name + ' · ' + formatBytes(file.size);
-        document.getElementById('modalCategory').value = guessCategory(file.name);
+        // Pre-select current member (default to first if Family view)
+        memSelect.value = STATE.currentMember === 'family' ? INDIVIDUAL_MEMBERS[0].id : STATE.currentMember;
+        catSelect.value = guessCategory(file.name);
         document.getElementById('modalNote').value = '';
         document.getElementById('uploadModal').classList.add('active');
-        // Wait for modal close before showing next
         await new Promise(resolve => { STATE.pendingResolve = resolve; });
       }
       document.getElementById('fileInput').value = '';
@@ -653,10 +716,17 @@
 
     function guessCategory(name) {
       const l = name.toLowerCase();
+      if (l.includes('aadhaar') || l.includes('aadhar') || l.includes('uid')) return 'aadhaar';
+      if (l.includes('pan')) return 'pan';
+      if (l.includes('voter') || l.includes('epic') || l.includes('election')) return 'voter';
+      if (l.includes('driv') || l.includes('licence') || l.includes('license') || l.includes('dl')) return 'driving';
+      if (l.includes('passport')) return 'passport';
+      if (l.includes('bank') || l.includes('passbook') || l.includes('cheque') || l.includes('chequebook')) return 'bank';
+      if (l.includes('marksheet') || l.includes('school') || l.includes('report-card') || l.includes('report_card') || l.includes('transcript') || l.includes('certificate')) return 'school';
+      if (l.includes('registry') || l.includes('deed') || l.includes('property') || l.includes('sale-deed') || l.includes('lease')) return 'property';
       if (l.includes('cas') || l.includes('statement')) return 'cas';
-      if (l.includes('pan') || l.includes('aadhaar') || l.includes('kyc')) return 'kyc';
       if (l.includes('folio')) return 'folio';
-      if (l.includes('tax') || l.includes('form16') || l.includes('itr')) return 'tax';
+      if (l.includes('tax') || l.includes('form16') || l.includes('itr') || l.includes('26as')) return 'tax';
       if (l.includes('insur') || l.includes('policy')) return 'insurance';
       return 'other';
     }
@@ -672,9 +742,10 @@
 
     function confirmUpload() {
       if (!STATE.pendingFile) return;
+      const owner = document.getElementById('modalMember').value;
       const category = document.getElementById('modalCategory').value;
       const note = document.getElementById('modalNote').value.trim();
-      const docs = getMemberDocs(STATE.currentMember);
+      const docs = getMemberDocs(owner);
       docs.push({
         id: 'doc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
         name: STATE.pendingFile.name,
@@ -686,7 +757,7 @@
         uploadedAt: Date.now(),
       });
       try {
-        setMemberDocs(STATE.currentMember, docs);
+        setMemberDocs(owner, docs);
       } catch (err) {
         alert('Could not save document — storage may be full. Try removing older files first.');
         return;
