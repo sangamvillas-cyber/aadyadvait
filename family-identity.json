@@ -21,6 +21,15 @@
           "joint": true,
           "jointWith": "archana",
           "chequeImage": "cheques/icici-joint.jpg"
+        },
+        {
+          "bank": "HDFC Bank",
+          "branch": "18-A, S P Marg, Civil Lines, Allahabad - 211001",
+          "accountNo": "02261000123688",
+          "ifsc": "HDFC0000226",
+          "type": "Savings",
+          "joint": false,
+          "chequeImage": "cheques/hdfc-siddharth-allahabad.jpg"
         }
       ],
       "passport": {
