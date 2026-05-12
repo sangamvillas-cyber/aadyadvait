@@ -3,196 +3,494 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advait — Personal Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Mishra Family Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #0f766e;
-      --primary-light: #14b8a6;
-      --primary-lighter: #ccfbf1;
-      --neutral-50: #fafafa;
-      --neutral-100: #f5f5f5;
-      --neutral-200: #e5e5e5;
-      --neutral-600: #525252;
-      --neutral-900: #171717;
-      --danger: #ef4444;
+      --bg-base: #FAF9F5;
+      --bg-surface: #FFFFFF;
+      --bg-elevated: #F5F4ED;
+      --bg-hover: #EFEEE6;
+      --border-subtle: #E8E5DE;
+      --border-default: #D7D3C7;
+      --text-primary: #1A1817;
+      --text-secondary: #5C5A55;
+      --text-tertiary: #8A8780;
+      --accent: #C96442;
+      --accent-hover: #B5563A;
+      --accent-soft: #F4E4DC;
+      --success: #2E7D4F;
+      --success-soft: #E3F0E7;
+      --danger: #C53030;
+      --danger-soft: #FBE5E5;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px rgba(26, 24, 23, 0.04);
+      --shadow-md: 0 4px 12px rgba(26, 24, 23, 0.06);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--neutral-50);
-      color: var(--neutral-900);
-      line-height: 1.6;
+    .serif { font-family: 'Source Serif 4', Georgia, serif; }
+
+    /* App Layout */
+    .app-layout { display: none; min-height: 100vh; flex-direction: column; }
+    .app-layout.active { display: flex; }
+
+    /* Top Bar */
+    .topbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.875rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
-    /* Auth Screen */
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .topbar-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+    .icon-button {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 0.5rem 0.875rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .icon-button:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    /* Navigation */
+    .nav-bar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 2rem;
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: none;
+      padding: 0.875rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      margin-bottom: -1px;
+    }
+
+    .nav-tab:hover { color: var(--text-primary); }
+
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Content */
+    .content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+      width: 100%;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .page-header { margin-bottom: 2rem; }
+
+    .page-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.375rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.375rem;
+    }
+
+    .stat-label {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .stat-value {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.625rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .stat-delta {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-top: 0.375rem;
+    }
+
+    .stat-delta.positive { color: var(--success); }
+    .stat-delta.negative { color: var(--danger); }
+
+    /* Section Heading */
+    .section-heading {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* Member Cards */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.875rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .member-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: all 0.15s ease;
+    }
+
+    .member-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .member-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.875rem;
+    }
+
+    .member-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+
+    .member-arrow {
+      color: var(--text-tertiary);
+      font-size: 0.875rem;
+      transition: transform 0.15s ease;
+    }
+
+    .member-card:hover .member-arrow {
+      color: var(--accent);
+      transform: translateX(2px);
+    }
+
+    .member-name {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.125rem;
+      letter-spacing: -0.01em;
+    }
+
+    .member-role {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+      margin-bottom: 0.875rem;
+    }
+
+    .member-stats { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+
+    .member-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .member-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-bottom: 0.125rem;
+    }
+
+    .member-stat-value {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .member-stat-value.positive { color: var(--success); }
+    .member-stat-value.negative { color: var(--danger); }
+
+    .member-card.disabled { opacity: 0.5; pointer-events: none; }
+
+    /* Filter pills */
+    .filter-pills {
+      display: flex;
+      gap: 0.375rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      padding: 0.5rem 0.875rem;
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .filter-pill.active {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+      color: white;
+    }
+
+    /* Tables */
+    .table-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .table-wrapper { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+
+    thead { background: var(--bg-elevated); }
+
+    th {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: var(--bg-elevated); }
+
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.8125rem; }
+    .fund-name { color: var(--text-primary); font-weight: 500; }
+    .pos { color: var(--success); font-weight: 600; }
+    .neg { color: var(--danger); font-weight: 600; }
+
+    /* Auth screen */
     .auth-screen {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      background: var(--bg-base);
       padding: 1rem;
     }
 
     .auth-card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-      padding: 3rem;
-      max-width: 420px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 2.5rem;
+      max-width: 380px;
       width: 100%;
       text-align: center;
     }
 
-    .auth-header {
-      margin-bottom: 2rem;
+    .auth-loader {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--border-subtle);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
     }
 
-    .app-logo {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .auth-notice {
-      background: var(--primary-lighter);
-      border: 1px solid var(--primary-light);
-      border-radius: 8px;
-      padding: 1rem;
-      font-size: 0.875rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .auth-button {
-      padding: 0.875rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
+    .auth-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.25rem;
       font-weight: 600;
-      cursor: pointer;
-      width: 100%;
+      color: var(--text-primary);
+      margin-bottom: 0.375rem;
     }
 
-    /* App Layout */
-    .app-layout {
-      display: none;
-      min-height: 100vh;
-      flex-direction: column;
+    .auth-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
     }
 
-    .app-layout.active {
-      display: flex;
+    /* Coming soon */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-tertiary);
     }
 
-    /* Header */
-    .header {
-      background: white;
-      border-bottom: 1px solid var(--neutral-200);
-      padding: 1.5rem 2rem;
+    .empty-state-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.375rem;
+    }
+
+    .empty-state-subtitle {
+      font-size: 0.875rem;
+    }
+
+    .fund-group {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .fund-group-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-elevated);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .header-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .logout-button {
-      padding: 0.75rem 1.5rem;
-      background: var(--danger);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* Navigation Tabs */
-    .nav-tabs {
-      display: flex;
-      gap: 1rem;
-      padding: 1.5rem 2rem;
-      background: white;
-      border-bottom: 1px solid var(--neutral-200);
-      overflow-x: auto;
-    }
-
-    .nav-tab {
-      padding: 1rem 1.5rem;
-      background: var(--neutral-100);
-      border: 2px solid transparent;
-      border-radius: 8px;
+    .fund-group-title {
+      font-family: 'Source Serif 4', Georgia, serif;
       font-size: 1rem;
       font-weight: 600;
-      cursor: pointer;
-      color: var(--neutral-600);
-      transition: all 0.2s;
-      white-space: nowrap;
-      min-width: 140px;
+      color: var(--text-primary);
     }
 
-    .nav-tab:hover {
-      background: var(--neutral-200);
+    .fund-group-total {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
     }
 
-    .nav-tab.active {
-      background: var(--primary-lighter);
-      color: var(--primary);
-      border-color: var(--primary-light);
+    .fund-group-total strong {
+      color: var(--text-primary);
+      font-weight: 600;
     }
 
-    /* Content */
-    .content {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
-    }
-
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    .section-placeholder {
-      text-align: center;
-      padding: 4rem 2rem;
-      color: var(--neutral-600);
-    }
-
-    .section-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--neutral-900);
-      margin-bottom: 0.5rem;
-    }
-
-    .section-subtitle {
-      font-size: 1rem;
-      color: var(--neutral-600);
+    @media (max-width: 640px) {
+      .topbar { padding: 0.75rem 1rem; }
+      .nav-bar { padding: 0 1rem; }
+      .content { padding: 1.5rem 1rem; }
+      .page-title { font-size: 1.5rem; }
+      .stat-value { font-size: 1.375rem; }
     }
   </style>
 </head>
@@ -200,236 +498,137 @@
   <!-- Auth Screen -->
   <div class="auth-screen" id="authScreen">
     <div class="auth-card">
-      <div class="auth-header">
-        <div class="app-logo">Advait</div>
-      </div>
-      <div class="auth-notice">
-        🔒 Please authenticate to continue
-      </div>
-      <button class="auth-button" onclick="window.location.href='auth.html'">← Go to Login</button>
+      <div class="auth-loader"></div>
+      <div class="auth-title">Verifying session</div>
+      <div class="auth-subtitle">Just a moment…</div>
     </div>
   </div>
 
   <!-- App Layout -->
   <div class="app-layout" id="appLayout">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-title">Advait Dashboard</div>
-      <button class="logout-button" id="logoutBtn">Sign Out</button>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs" id="navTabs">
-      <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
-      <button class="nav-tab" data-tab="equity">📈 Equity</button>
-      <button class="nav-tab" data-tab="mf">💼 Mutual Funds</button>
-      <button class="nav-tab" data-tab="wallets">👛 Wallets</button>
-      <button class="nav-tab" data-tab="documents">📄 Documents</button>
-      <button class="nav-tab" data-tab="portfolio">🎯 Portfolio</button>
-      <button class="nav-tab" data-tab="analytics">📉 Analytics</button>
-      <button class="nav-tab" data-tab="goals">🎯 Goals</button>
-      <button class="nav-tab" data-tab="settings">⚙️ Settings</button>
-    </div>
-
-    <!-- Content Area -->
-    <div class="content">
-      <!-- Dashboard Section -->
-      <div class="section active" id="dashboard">
-        <div class="section-placeholder">
-          <div class="section-icon">📊</div>
-          <div class="section-title">Dashboard</div>
-          <div class="section-subtitle">Overview of your holdings and net worth</div>
-        </div>
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <div class="brand-mark">M</div>
+        <div class="brand-title">Mishra Family Portfolio</div>
       </div>
-
-      <!-- Equity Section -->
-      <div class="section" id="equity">
-        <div class="section-placeholder">
-          <div class="section-icon">📈</div>
-          <div class="section-title">Equity Holdings</div>
-          <div class="section-subtitle">Track your stock investments</div>
-        </div>
+      <div class="topbar-actions">
+        <button class="icon-button" id="logoutBtn">Sign out</button>
       </div>
+    </header>
 
-      <!-- Mutual Funds Section -->
-      <div class="section" id="mf">
-        <div style="padding: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--neutral-900);">Mutual Funds Portfolio</h2>
-          <div id="mfContainer">
-            <div style="text-align: center; padding: 2rem; color: var(--neutral-600);">Loading fund data...</div>
-          </div>
+    <!-- Navigation -->
+    <nav class="nav-bar">
+      <button class="nav-tab active" data-tab="overview">Overview</button>
+      <button class="nav-tab" data-tab="family">Family</button>
+      <button class="nav-tab" data-tab="funds">Mutual funds</button>
+      <button class="nav-tab" data-tab="tracker">Tracker</button>
+    </nav>
+
+    <!-- Content -->
+    <main class="content">
+      <!-- Overview -->
+      <section class="section active" id="overview">
+        <div class="page-header">
+          <h1 class="page-title">Household overview</h1>
+          <p class="page-subtitle">Consolidated view of mutual fund holdings across the family.</p>
         </div>
-      </div>
 
-      <!-- Wallets Section -->
-      <div class="section" id="wallets">
-        <div class="section-placeholder">
-          <div class="section-icon">👛</div>
-          <div class="section-title">Wallets</div>
-          <div class="section-subtitle">Manage cash and accounts</div>
+        <div class="stats-grid" id="householdStats">
+          <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value" id="hhInvested">—</div></div>
+          <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value" id="hhCurrent">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value" id="hhGain">—</div><div class="stat-delta" id="hhGainPct">—</div></div>
+          <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value" id="hhXirr">—</div></div>
         </div>
-      </div>
 
-      <!-- Documents Section -->
-      <div class="section" id="documents">
-        <div class="section-placeholder">
-          <div class="section-icon">📄</div>
-          <div class="section-title">Documents</div>
-          <div class="section-subtitle">Store investment documents and records</div>
+        <h2 class="section-heading">Members</h2>
+        <div class="members-grid" id="overviewMembers"></div>
+      </section>
+
+      <!-- Family -->
+      <section class="section" id="family">
+        <div class="page-header">
+          <h1 class="page-title">Family</h1>
+          <p class="page-subtitle">Profiles for each family member with their holdings.</p>
         </div>
-      </div>
+        <div class="members-grid" id="familyMembers"></div>
+      </section>
 
-      <!-- Portfolio Section -->
-      <div class="section" id="portfolio">
-        <div style="padding: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--neutral-900);">Family Members</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-            <a href="siddharth-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
-              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👨</div>
-              <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Siddharth</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">View Profile</div>
-            </a>
-            <a href="archana-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
-              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👩</div>
-              <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Archana</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">View Profile</div>
-            </a>
-            <a href="aadya-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
-              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👧</div>
-              <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Aadya</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">View Profile</div>
-            </a>
-            <a href="advait-profile.html" style="text-decoration: none; display: block; background: white; border: 2px solid var(--primary-light); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s; color: inherit;" onclick="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';" onmouseout="this.style.borderColor = 'var(--primary-light)'; this.style.boxShadow = 'none';" onmouseover="this.style.borderColor = 'var(--primary)'; this.style.boxShadow = '0 4px 12px rgba(15, 118, 110, 0.15)';">
-              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👦</div>
-              <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Advait</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">View Profile</div>
-            </a>
-            <div style="background: white; border: 2px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem; text-align: center; opacity: 0.6;">
-              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👵</div>
-              <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Sarla Mishra</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">Coming Soon</div>
-            </div>
-            <div style="background: white; border: 2px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem; text-align: center; opacity: 0.6;">
-              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👴</div>
-              <div style="font-size: 1.125rem; font-weight: 600; color: var(--neutral-900);">Sheo Shyam Mishra</div>
-              <div style="font-size: 0.75rem; color: var(--neutral-600); margin-top: 0.5rem;">Coming Soon</div>
-            </div>
-          </div>
+      <!-- Mutual Funds -->
+      <section class="section" id="funds">
+        <div class="page-header">
+          <h1 class="page-title">Mutual funds</h1>
+          <p class="page-subtitle">Every fund holding, grouped by family member.</p>
         </div>
-      </div>
+        <div id="fundsContainer"></div>
+      </section>
 
-      <!-- Analytics Section -->
-      <div class="section" id="analytics">
-        <div style="padding: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; color: var(--neutral-900);">Real-Time NAV & XIRR Tracker</h2>
+      <!-- Tracker -->
+      <section class="section" id="tracker">
+        <div class="page-header">
+          <h1 class="page-title">Tracker</h1>
+          <p class="page-subtitle">Live NAV-driven valuation and XIRR per holding.</p>
+        </div>
 
-          <!-- Member Selector -->
-          <div style="margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button id="memberFilter_siddharth" class="member-filter-btn active" data-member="siddharth" style="padding: 0.75rem 1.5rem; background: var(--primary-lighter); color: var(--primary); border: 2px solid var(--primary-light); border-radius: 8px; cursor: pointer; font-weight: 600;">Siddharth</button>
-            <button id="memberFilter_advait" class="member-filter-btn" data-member="advait" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Advait</button>
-            <button id="memberFilter_aadya" class="member-filter-btn" data-member="aadya" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Aadya</button>
-            <button id="memberFilter_archana" class="member-filter-btn" data-member="archana" style="padding: 0.75rem 1.5rem; background: var(--neutral-100); color: var(--neutral-600); border: 2px solid transparent; border-radius: 8px; cursor: pointer; font-weight: 600;">Archana</button>
-          </div>
+        <div class="filter-pills" id="trackerPills"></div>
 
-          <!-- Summary Cards -->
-          <div id="summarCards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
-              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Invested</div>
-              <div id="totalInvested" style="font-size: 1.75rem; font-weight: 700; color: var(--neutral-900);">₹0.00</div>
-            </div>
-            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
-              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Current Value</div>
-              <div id="currentValue" style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">₹0.00</div>
-            </div>
-            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
-              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Total Gain</div>
-              <div id="totalGain" style="font-size: 1.75rem; font-weight: 700; color: #10b981;">₹0.00</div>
-              <div id="gainPercent" style="font-size: 0.875rem; color: #10b981; margin-top: 0.5rem;">+0.00%</div>
-            </div>
-            <div style="background: white; border: 1px solid var(--neutral-200); border-radius: 8px; padding: 1.5rem;">
-              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">Overall XIRR</div>
-              <div id="overallXIRR" style="font-size: 1.75rem; font-weight: 700; color: var(--primary-light);">0.00%</div>
-            </div>
-          </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value" id="tInvested">—</div></div>
+          <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value" id="tCurrent">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value" id="tGain">—</div><div class="stat-delta" id="tGainPct">—</div></div>
+          <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value" id="tXirr">—</div></div>
+        </div>
 
-          <!-- Tracking Table -->
-          <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;" id="trackingTable">
+        <div class="table-card">
+          <div class="table-wrapper">
+            <table>
               <thead>
-                <tr style="background: var(--neutral-100); border-bottom: 2px solid var(--neutral-200);">
-                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund</th>
-                  <th style="padding: 1rem; text-align: center; font-weight: 600; color: var(--neutral-900);">Folio</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Units</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Purchase Value</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Current Value</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Gain/Loss</th>
-                  <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">XIRR %</th>
+                <tr>
+                  <th>Fund</th>
+                  <th class="text-center">Folio</th>
+                  <th class="text-right">Units</th>
+                  <th class="text-right">Purchase value</th>
+                  <th class="text-right">Current value</th>
+                  <th class="text-right">Gain/loss</th>
+                  <th class="text-right">XIRR</th>
                 </tr>
               </thead>
-              <tbody id="trackingTableBody">
-              </tbody>
+              <tbody id="trackerBody"></tbody>
             </table>
           </div>
         </div>
-      </div>
-
-      <!-- Goals Section -->
-      <div class="section" id="goals">
-        <div class="section-placeholder">
-          <div class="section-icon">🎯</div>
-          <div class="section-title">Investment Goals</div>
-          <div class="section-subtitle">Set and track investment targets</div>
-        </div>
-      </div>
-
-      <!-- Settings Section -->
-      <div class="section" id="settings">
-        <div class="section-placeholder">
-          <div class="section-icon">⚙️</div>
-          <div class="section-title">Settings</div>
-          <div class="section-subtitle">Manage your account and data</div>
-        </div>
-      </div>
-    </div>
+      </section>
+    </main>
   </div>
 
   <script>
-    const APP_STATE = {
-      email: 'seeksiddharth@gmail.com',
-      isAuthenticated: false
-    };
+    const MEMBERS = [
+      { id: 'siddharth', name: 'Siddharth Mishra', role: 'Father · PAN AOMPM8103N', avatar: 'S', enabled: true },
+      { id: 'archana', name: 'Archana Mishra', role: 'Mother · PAN CSHPA3795D', avatar: 'A', enabled: true },
+      { id: 'aadya', name: 'Aadya Mishra', role: 'Minor account', avatar: 'A', enabled: true },
+      { id: 'advait', name: 'Advait Mishra', role: 'Minor account', avatar: 'A', enabled: true },
+    ];
+
+    const APP_STATE = { isAuthenticated: false, data: null };
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Check if authenticated via auth.html session
-      const sessionFromAuth = window.mishraSession || getSessionFromStorage();
-      if (sessionFromAuth && isSessionValid(sessionFromAuth)) {
-        APP_STATE.email = sessionFromAuth.email;
+      const session = getSessionFromStorage();
+      if (session && isSessionValid(session)) {
         APP_STATE.isAuthenticated = true;
         showApp();
+        loadData();
       } else {
         window.location.href = 'auth.html';
       }
 
-      // Setup event listeners
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-      document.querySelectorAll('.nav-tab').forEach(tab => {
-        tab.addEventListener('click', switchTab);
-      });
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', switchTab));
     });
 
     function getSessionFromStorage() {
-      try {
-        const session = localStorage.getItem('mishraFamilySession');
-        return session ? JSON.parse(session) : null;
-      } catch {
-        return null;
-      }
+      try { return JSON.parse(localStorage.getItem('mishraFamilySession') || 'null'); } catch { return null; }
     }
-
-    function isSessionValid(session) {
-      if (!session || !session.expiresAt) return false;
-      return new Date(session.expiresAt) > new Date();
-    }
+    function isSessionValid(s) { return s && s.expiresAt && new Date(s.expiresAt) > new Date(); }
 
     function showApp() {
       document.getElementById('authScreen').style.display = 'none';
@@ -444,162 +643,181 @@
     }
 
     function switchTab(e) {
-      const tabName = e.target.getAttribute('data-tab');
-
-      document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-      e.target.classList.add('active');
-
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      const tabName = e.currentTarget.getAttribute('data-tab');
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
     }
 
-    function loadAndDisplayFunds() {
-      fetch('funds-data.json')
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById('mfContainer');
-          let html = '';
-
-          // Display for each family member
-          ['siddharth', 'advait', 'aadya', 'archana'].forEach(member => {
-            const funds = data.funds[member];
-            html += `<div style="margin-bottom: 3rem;">
-              <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem;">${funds.name}'s Funds</h3>`;
-
-            if (funds.holdings.length === 0) {
-              html += `<div style="background: var(--neutral-100); padding: 1rem; border-radius: 8px; color: var(--neutral-600); text-align: center;">No holdings yet</div>`;
-            } else {
-              html += `<div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
-                  <thead>
-                    <tr style="background: var(--neutral-100); border-bottom: 2px solid var(--neutral-200);">
-                      <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund House</th>
-                      <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--neutral-900);">Fund Name</th>
-                      <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Units</th>
-                      <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">NAV</th>
-                      <th style="padding: 1rem; text-align: right; font-weight: 600; color: var(--neutral-900);">Valuation (₹)</th>
-                    </tr>
-                  </thead>
-                  <tbody>`;
-
-              funds.holdings.forEach(holding => {
-                html += `<tr style="border-bottom: 1px solid var(--neutral-200);">
-                  <td style="padding: 1rem; color: var(--primary); font-weight: 500;">${holding.fundHouse}</td>
-                  <td style="padding: 1rem; color: var(--neutral-900);">${holding.fundName}</td>
-                  <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">${holding.units.toFixed(2)}</td>
-                  <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">₹${holding.nav.toFixed(2)}</td>
-                  <td style="padding: 1rem; text-align: right; color: var(--neutral-900); font-weight: 600;">₹${holding.valuation.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                </tr>`;
-              });
-
-              html += `</tbody>
-                </table>
-              </div>`;
-            }
-
-            html += `<div style="margin-top: 1rem; padding: 1rem; background: var(--primary-lighter); border-radius: 8px; text-align: right;">
-              <div style="font-size: 0.875rem; color: var(--primary); margin-bottom: 0.5rem;">Total Valuation</div>
-              <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₹${funds.totalValuation.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-            </div>
-            </div>`;
-          });
-
-          container.innerHTML = html;
-        })
-        .catch(err => {
-          console.error('Error loading funds data:', err);
-          document.getElementById('mfContainer').innerHTML = '<div style="color: red; padding: 1rem;">Error loading fund data</div>';
-        });
+    async function loadData() {
+      try {
+        const res = await fetch('tracking-data.json?t=' + Date.now(), { cache: 'no-store' });
+        APP_STATE.data = await res.json();
+        renderOverview();
+        renderFamily();
+        renderFunds();
+        setupTracker();
+      } catch (err) {
+        console.error(err);
+      }
     }
 
-    // Load funds data when MF tab is clicked
-    document.addEventListener('DOMContentLoaded', () => {
-      const mfTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-tab') === 'mf');
-      if (mfTab) {
-        mfTab.addEventListener('click', loadAndDisplayFunds);
-      }
+    function fmt(n) {
+      return '₹' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function fmtCompact(n) {
+      if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + ' Cr';
+      if (n >= 100000) return '₹' + (n / 100000).toFixed(2) + ' L';
+      return '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    }
 
-      // Setup analytics tracking
-      const analyticsTab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('data-tab') === 'analytics');
-      if (analyticsTab) {
-        analyticsTab.addEventListener('click', loadAndDisplayTracking);
-      }
-
-      // Member filter buttons
-      document.querySelectorAll('.member-filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          document.querySelectorAll('.member-filter-btn').forEach(b => {
-            b.style.background = 'var(--neutral-100)';
-            b.style.color = 'var(--neutral-600)';
-            b.style.borderColor = 'transparent';
-          });
-          e.target.style.background = 'var(--primary-lighter)';
-          e.target.style.color = 'var(--primary)';
-          e.target.style.borderColor = 'var(--primary-light)';
-
-          const member = e.target.getAttribute('data-member');
-          displayTrackingData(member);
-        });
+    function renderOverview() {
+      const data = APP_STATE.data;
+      const enabledMembers = MEMBERS.filter(m => m.enabled && data[m.id]);
+      let inv = 0, cur = 0, xirrWeightedSum = 0;
+      enabledMembers.forEach(m => {
+        const d = data[m.id];
+        inv += d.totalInvested;
+        cur += d.totalCurrentValue;
+        xirrWeightedSum += d.totalInvested * d.overallXIRR;
       });
-    });
+      const gain = cur - inv;
+      const gainPct = inv ? (gain / inv) * 100 : 0;
+      const xirr = inv ? xirrWeightedSum / inv : 0;
 
-    function loadAndDisplayTracking() {
-      fetch('tracking-data.json?t=' + Date.now(), {cache: 'no-store'})
-        .then(res => res.json())
-        .then(data => {
-          window.trackingData = data;
-          displayTrackingData('siddharth');
-        })
-        .catch(err => {
-          console.error('Error loading tracking data:', err);
-          document.getElementById('trackingTableBody').innerHTML = '<tr><td colspan="7" style="padding: 1rem; color: red; text-align: center;">Error loading tracking data</td></tr>';
-        });
+      document.getElementById('hhInvested').textContent = fmtCompact(inv);
+      document.getElementById('hhCurrent').textContent = fmtCompact(cur);
+      const gainEl = document.getElementById('hhGain');
+      gainEl.textContent = (gain >= 0 ? '' : '−') + fmtCompact(Math.abs(gain)).replace('₹', '₹');
+      const pctEl = document.getElementById('hhGainPct');
+      pctEl.textContent = (gain >= 0 ? '+' : '') + gainPct.toFixed(2) + '%';
+      pctEl.className = 'stat-delta ' + (gain >= 0 ? 'positive' : 'negative');
+      document.getElementById('hhXirr').textContent = xirr.toFixed(2) + '%';
+
+      const container = document.getElementById('overviewMembers');
+      container.innerHTML = enabledMembers.map(m => memberCard(m, data[m.id])).join('');
     }
 
-    function displayTrackingData(member) {
-      const data = window.trackingData;
-      const memberData = data[member];
+    function memberCard(m, d) {
+      const gain = d.totalGain;
+      const gainPct = d.totalGainPercent;
+      const gainClass = gain >= 0 ? 'positive' : 'negative';
+      return `<a class="member-card" href="${m.id}-profile.html">
+        <div class="member-card-header">
+          <div class="member-avatar">${m.avatar}</div>
+          <span class="member-arrow">→</span>
+        </div>
+        <div class="member-name">${m.name}</div>
+        <div class="member-role">${m.role}</div>
+        <div class="member-stats">
+          <div class="member-stat">
+            <div class="member-stat-label">Current value</div>
+            <div class="member-stat-value">${fmtCompact(d.totalCurrentValue)}</div>
+          </div>
+          <div class="member-stat">
+            <div class="member-stat-label">Gain</div>
+            <div class="member-stat-value ${gainClass}">${gain >= 0 ? '+' : ''}${gainPct.toFixed(2)}%</div>
+          </div>
+        </div>
+      </a>`;
+    }
 
-      // Update summary cards
-      document.getElementById('totalInvested').textContent = '₹' + memberData.totalInvested.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('currentValue').textContent = '₹' + memberData.totalCurrentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    function renderFamily() {
+      const data = APP_STATE.data;
+      const container = document.getElementById('familyMembers');
+      container.innerHTML = MEMBERS.map(m => {
+        if (!m.enabled || !data[m.id]) {
+          return `<div class="member-card disabled">
+            <div class="member-card-header"><div class="member-avatar">${m.avatar}</div></div>
+            <div class="member-name">${m.name}</div>
+            <div class="member-role">Coming soon</div>
+          </div>`;
+        }
+        return memberCard(m, data[m.id]);
+      }).join('');
+    }
 
-      const gainColor = memberData.totalGain >= 0 ? '#10b981' : '#ef4444';
-      document.getElementById('totalGain').textContent = (memberData.totalGain >= 0 ? '₹' : '-₹') + Math.abs(memberData.totalGain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('totalGain').style.color = gainColor;
+    function renderFunds() {
+      const data = APP_STATE.data;
+      const container = document.getElementById('fundsContainer');
+      container.innerHTML = MEMBERS.filter(m => m.enabled && data[m.id]).map(m => {
+        const d = data[m.id];
+        const rows = d.transactions.map(t => {
+          const cv = t.units * t.currentNav;
+          return `<tr>
+            <td class="fund-name">${t.fund}</td>
+            <td class="text-center mono">${t.folio}</td>
+            <td class="text-right">${t.units.toFixed(2)}</td>
+            <td class="text-right mono">₹${t.currentNav.toFixed(2)}</td>
+            <td class="text-right">${fmt(cv)}</td>
+          </tr>`;
+        }).join('');
+        return `<div class="fund-group">
+          <div class="fund-group-header">
+            <div class="fund-group-title">${m.name}</div>
+            <div class="fund-group-total">Total: <strong>${fmt(d.totalCurrentValue)}</strong></div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr>
+                <th>Fund</th>
+                <th class="text-center">Folio</th>
+                <th class="text-right">Units</th>
+                <th class="text-right">NAV</th>
+                <th class="text-right">Current value</th>
+              </tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>`;
+      }).join('');
+    }
 
-      const percentText = (memberData.totalGainPercent >= 0 ? '+' : '') + memberData.totalGainPercent.toFixed(2) + '%';
-      document.getElementById('gainPercent').textContent = percentText;
-      document.getElementById('gainPercent').style.color = gainColor;
+    function setupTracker() {
+      const pills = document.getElementById('trackerPills');
+      pills.innerHTML = MEMBERS.filter(m => m.enabled && APP_STATE.data[m.id]).map((m, i) =>
+        `<button class="filter-pill${i === 0 ? ' active' : ''}" data-member="${m.id}">${m.name.split(' ')[0]}</button>`
+      ).join('');
+      pills.addEventListener('click', e => {
+        if (!e.target.matches('.filter-pill')) return;
+        pills.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        e.target.classList.add('active');
+        renderTracker(e.target.getAttribute('data-member'));
+      });
+      renderTracker('siddharth');
+    }
 
-      document.getElementById('overallXIRR').textContent = memberData.overallXIRR.toFixed(2) + '%';
+    function renderTracker(memberId) {
+      const d = APP_STATE.data[memberId];
+      document.getElementById('tInvested').textContent = fmtCompact(d.totalInvested);
+      document.getElementById('tCurrent').textContent = fmtCompact(d.totalCurrentValue);
+      const gainEl = document.getElementById('tGain');
+      gainEl.textContent = (d.totalGain >= 0 ? '' : '−') + fmtCompact(Math.abs(d.totalGain));
+      const pctEl = document.getElementById('tGainPct');
+      pctEl.textContent = (d.totalGain >= 0 ? '+' : '') + d.totalGainPercent.toFixed(2) + '%';
+      pctEl.className = 'stat-delta ' + (d.totalGain >= 0 ? 'positive' : 'negative');
+      document.getElementById('tXirr').textContent = d.overallXIRR.toFixed(2) + '%';
 
-      // Build tracking table
-      let tableHtml = '';
-      memberData.transactions.forEach(txn => {
-        const purchaseValue = txn.units * txn.purchaseNav;
-        const currentValue = txn.units * txn.currentNav;
-        const gain = currentValue - purchaseValue;
-        const gainPercent = (gain / purchaseValue) * 100;
-
-        // Calculate XIRR for individual fund
-        const purchaseDate = new Date(txn.purchaseDate);
-        const today = new Date();
-        const yearsDiff = (today - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
-        const xirr = yearsDiff > 0 ? (Math.pow(currentValue / purchaseValue, 1 / yearsDiff) - 1) * 100 : 0;
-
-        tableHtml += `<tr style="border-bottom: 1px solid var(--neutral-200);">
-          <td style="padding: 1rem; color: var(--primary); font-weight: 500;">${txn.fund}</td>
-          <td style="padding: 1rem; text-align: center; color: var(--neutral-600); font-family: monospace;">${txn.folio}</td>
-          <td style="padding: 1rem; text-align: right; color: var(--neutral-600);">${txn.units.toFixed(2)}</td>
-          <td style="padding: 1rem; text-align: right; color: var(--neutral-900);">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-          <td style="padding: 1rem; text-align: right; font-weight: 600; color: var(--primary);">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-          <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${gain >= 0 ? '#10b981' : '#ef4444'};">₹${gain.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-          <td style="padding: 1rem; text-align: right; font-weight: 600; color: ${xirr >= 0 ? '#10b981' : '#ef4444'};">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</td>
+      const refDate = new Date('2026-05-12');
+      const rows = d.transactions.map(t => {
+        const pv = t.units * t.purchaseNav;
+        const cv = t.units * t.currentNav;
+        const gain = cv - pv;
+        const yrs = (refDate - new Date(t.purchaseDate)) / (365.25 * 24 * 60 * 60 * 1000);
+        const xirr = yrs > 0 ? (Math.pow(cv / pv, 1 / yrs) - 1) * 100 : 0;
+        const gainCls = gain >= 0 ? 'pos' : 'neg';
+        return `<tr>
+          <td class="fund-name">${t.fund}</td>
+          <td class="text-center mono">${t.folio}</td>
+          <td class="text-right">${t.units.toFixed(2)}</td>
+          <td class="text-right">${fmt(pv)}</td>
+          <td class="text-right">${fmt(cv)}</td>
+          <td class="text-right ${gainCls}">${gain >= 0 ? '+' : ''}${fmt(gain)}</td>
+          <td class="text-right ${gainCls}">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</td>
         </tr>`;
-      });
-
-      document.getElementById('trackingTableBody').innerHTML = tableHtml;
+      }).join('');
+      document.getElementById('trackerBody').innerHTML = rows;
     }
   </script>
 </body>

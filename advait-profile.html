@@ -3,378 +3,448 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advait Profile — Advait</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Advait · Mishra Family Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #0f766e;
-      --primary-light: #14b8a6;
-      --primary-lighter: #ccfbf1;
-      --neutral-50: #fafafa;
-      --neutral-100: #f5f5f5;
-      --neutral-200: #e5e5e5;
-      --neutral-600: #525252;
-      --neutral-900: #171717;
-      --danger: #ef4444;
+      --bg-base: #FAF9F5;
+      --bg-surface: #FFFFFF;
+      --bg-elevated: #F5F4ED;
+      --bg-hover: #EFEEE6;
+      --border-subtle: #E8E5DE;
+      --border-default: #D7D3C7;
+      --text-primary: #1A1817;
+      --text-secondary: #5C5A55;
+      --text-tertiary: #8A8780;
+      --accent: #C96442;
+      --accent-hover: #B5563A;
+      --accent-soft: #F4E4DC;
+      --success: #2E7D4F;
+      --danger: #C53030;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px rgba(26, 24, 23, 0.04);
+      --shadow-md: 0 4px 12px rgba(26, 24, 23, 0.06);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--neutral-50);
-      color: var(--neutral-900);
-      line-height: 1.6;
+    /* Top Bar */
+    .topbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.875rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
-    .profile-header {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    .topbar-brand { display: flex; align-items: center; gap: 0.625rem; }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
-      padding: 3rem 2rem;
-      text-align: center;
+      font-weight: 700;
+      font-size: 0.875rem;
     }
+
+    .brand-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .header-actions { display: flex; gap: 0.5rem; }
+
+    .btn {
+      background: transparent;
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      padding: 0.5rem 0.875rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--text-tertiary);
+    }
+
+    .btn-primary {
+      background: var(--text-primary);
+      color: white;
+      border-color: var(--text-primary);
+    }
+
+    .btn-primary:hover {
+      background: #000;
+      color: white;
+      border-color: #000;
+    }
+
+    /* Page */
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .profile-identity { display: flex; align-items: center; gap: 1rem; }
 
     .profile-avatar {
-      font-size: 4rem;
-      margin-bottom: 1rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.375rem;
+      font-family: 'Source Serif 4', Georgia, serif;
     }
 
     .profile-name {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .profile-title {
-      font-size: 1rem;
-      opacity: 0.9;
-      margin-bottom: 1rem;
-    }
-
-    .back-link {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      color: white;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.875rem;
       font-weight: 600;
-      transition: all 0.2s;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.125rem;
     }
 
-    .back-link:hover {
-      background: rgba(255, 255, 255, 0.3);
+    .profile-meta {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .summary-grid {
+    /* Stats */
+    .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
       margin-bottom: 2rem;
     }
 
-    .summary-card {
-      background: white;
-      border: 1px solid var(--neutral-200);
-      border-radius: 8px;
-      padding: 1.5rem;
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.375rem;
     }
 
-    .summary-label {
-      font-size: 0.875rem;
-      color: var(--neutral-600);
+    .stat-label {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
       margin-bottom: 0.5rem;
     }
 
-    .summary-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--neutral-900);
+    .stat-value {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.625rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
     }
 
-    .summary-subtext {
-      font-size: 0.875rem;
-      color: #10b981;
-      margin-top: 0.5rem;
-    }
+    .stat-delta { font-size: 0.8125rem; font-weight: 500; margin-top: 0.375rem; }
+    .stat-delta.positive { color: var(--success); }
+    .stat-delta.negative { color: var(--danger); }
 
-    .tracking-section {
-      background: white;
-      border: 1px solid var(--neutral-200);
-      border-radius: 8px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
+    /* Section */
+    .section-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
       margin-bottom: 1.5rem;
-      color: var(--neutral-900);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
+    .section-card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-elevated);
     }
 
-    thead {
-      background: var(--neutral-100);
-      border-bottom: 2px solid var(--neutral-200);
+    .section-card-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
     }
+
+    /* Table */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
 
     th {
-      padding: 1rem;
+      padding: 0.875rem 1rem;
       text-align: left;
       font-weight: 600;
-      color: var(--neutral-900);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--neutral-200);
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
     }
 
-    tr:hover {
-      background: var(--neutral-50);
-    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-elevated); }
 
-    .fund-name {
-      color: var(--primary);
-      font-weight: 500;
-    }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.8125rem; }
+    .fund-name { color: var(--text-primary); font-weight: 500; }
+    .pos { color: var(--success); font-weight: 600; }
+    .neg { color: var(--danger); font-weight: 600; }
 
-    .gain-positive {
-      color: #10b981;
-      font-weight: 600;
-    }
-
-    .gain-negative {
-      color: var(--danger);
-      font-weight: 600;
-    }
-
-    @media (max-width: 768px) {
-      .profile-header {
-        padding: 2rem 1rem;
-      }
-
-      .profile-name {
-        font-size: 1.5rem;
-      }
-
-      table {
-        font-size: 0.75rem;
-      }
-
-      th, td {
-        padding: 0.75rem 0.5rem;
-      }
-    }
-
-    .header-actions {
-      display: flex;
+    /* Portfolio Summary chips */
+    .chips {
+      padding: 1.25rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
     }
 
-    .back-link {
-      font-family: inherit;
-      font-size: 0.95rem;
+    .chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1rem;
+    }
+
+    .chip-label {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.02em;
+    }
+
+    .chip-count {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.375rem;
+    }
+
+    .chip-value {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
     @media print {
-      .header-actions, .profile-avatar { display: none !important; }
-      body { background: white !important; }
-      .profile-header {
-        color: black !important;
-        background: white !important;
-        padding: 1rem 0 !important;
-      }
-      .profile-name, .profile-title { color: black !important; }
-      .tracking-section { break-inside: avoid; border: none; }
-      .summary-card { break-inside: avoid; }
+      .topbar, .header-actions { display: none !important; }
+      body { background: white; }
+      .stat-card, .section-card, .chip { border-color: #ddd; box-shadow: none; }
+      .page { padding: 1rem 0; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 0.75rem 1rem; }
+      .page { padding: 1.5rem 1rem; }
+      .profile-name { font-size: 1.5rem; }
+      .stat-value { font-size: 1.375rem; }
     }
   </style>
 </head>
 <body>
-  <div class="profile-header">
-    <div class="profile-avatar">👦</div>
-    <div class="profile-name">Advait Mishra</div>
-    <div class="profile-title">Minor Account</div>
+  <header class="topbar">
+    <a href="dashboard.html" class="topbar-brand" style="text-decoration:none;color:inherit;">
+      <div class="brand-mark">M</div>
+      <div class="brand-title">Mishra Family Portfolio</div>
+    </a>
     <div class="header-actions">
-      <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
-      <button class="back-link" onclick="exportCSV()">📥 Export CSV</button>
-      <button class="back-link" onclick="window.print()">🖨️ Print</button>
+      <a href="dashboard.html" class="btn">← Dashboard</a>
+      <button class="btn" onclick="exportCSV()">Export CSV</button>
+      <button class="btn btn-primary" onclick="window.print()">Print</button>
     </div>
-  </div>
+  </header>
 
-  <div class="container">
-    <!-- Summary Cards -->
-    <div class="summary-grid">
-      <div class="summary-card">
-        <div class="summary-label">Total Invested</div>
-        <div class="summary-value" id="totalInvested">₹0.00</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">Current Value</div>
-        <div class="summary-value" id="currentValue">₹0.00</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">Total Gain</div>
-        <div class="summary-value gain-positive" id="totalGain">₹0.00</div>
-        <div class="summary-subtext" id="gainPercent">+0.00%</div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-label">Overall XIRR</div>
-        <div class="summary-value" id="overallXIRR">0.00%</div>
+  <main class="page">
+    <div class="page-header">
+      <div class="profile-identity">
+        <div class="profile-avatar">A</div>
+        <div>
+          <div class="profile-name">Advait Mishra</div>
+          <div class="profile-meta">Minor account</div>
+        </div>
       </div>
     </div>
 
-    <!-- Mutual Funds Holding -->
-    <div class="tracking-section">
-      <div class="section-title">💼 Mutual Funds Tracker</div>
-      <div style="overflow-x: auto;">
-        <table id="trackingTable">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value" id="totalInvested">—</div></div>
+      <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value" id="currentValue">—</div></div>
+      <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value" id="totalGain">—</div><div class="stat-delta" id="gainPercent">—</div></div>
+      <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value" id="overallXIRR">—</div></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Mutual fund holdings</div></div>
+      <div class="table-wrapper">
+        <table>
           <thead>
             <tr>
               <th>Fund</th>
-              <th style="text-align: center;">Folio</th>
-              <th style="text-align: right;">Units</th>
-              <th style="text-align: right;">Current NAV</th>
-              <th style="text-align: right;">Purchase Value</th>
-              <th style="text-align: right;">Current Value</th>
-              <th style="text-align: right;">Gain/Loss</th>
-              <th style="text-align: right;">XIRR %</th>
+              <th class="text-center">Folio</th>
+              <th class="text-right">Units</th>
+              <th class="text-right">Current NAV</th>
+              <th class="text-right">Purchase value</th>
+              <th class="text-right">Current value</th>
+              <th class="text-right">Gain/loss</th>
+              <th class="text-right">XIRR</th>
             </tr>
           </thead>
-          <tbody id="trackingTableBody">
-          </tbody>
+          <tbody id="trackingTableBody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- Fund Summary -->
-    <div class="tracking-section">
-      <div class="section-title">📊 Portfolio Summary</div>
-      <div id="fundSummary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-      </div>
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Portfolio by fund house</div></div>
+      <div class="chips" id="fundSummary"></div>
     </div>
-  </div>
+  </main>
 
   <script>
+    const MEMBER_ID = 'advait';
+
+    async function loadProfileData() {
+      try {
+        const response = await fetch('tracking-data.json?t=' + Date.now(), {cache: 'no-store'});
+        const data = await response.json();
+        const memberData = data[MEMBER_ID];
+        window.__memberData = memberData;
+
+        const fmt = n => '₹' + Number(n).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const fmtCompact = n => {
+          if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + ' Cr';
+          if (n >= 100000) return '₹' + (n / 100000).toFixed(2) + ' L';
+          return fmt(n);
+        };
+
+        document.getElementById('totalInvested').textContent = fmtCompact(memberData.totalInvested);
+        document.getElementById('currentValue').textContent = fmtCompact(memberData.totalCurrentValue);
+
+        const gainEl = document.getElementById('totalGain');
+        gainEl.textContent = (memberData.totalGain >= 0 ? '' : '−') + fmtCompact(Math.abs(memberData.totalGain));
+        const pctEl = document.getElementById('gainPercent');
+        pctEl.textContent = (memberData.totalGain >= 0 ? '+' : '') + memberData.totalGainPercent.toFixed(2) + '%';
+        pctEl.className = 'stat-delta ' + (memberData.totalGain >= 0 ? 'positive' : 'negative');
+
+        document.getElementById('overallXIRR').textContent = memberData.overallXIRR.toFixed(2) + '%';
+
+        const refDate = new Date('2026-05-12');
+        let tableHtml = '';
+        memberData.transactions.forEach(txn => {
+          const pv = txn.units * txn.purchaseNav;
+          const cv = txn.units * txn.currentNav;
+          const gain = cv - pv;
+          const yrs = (refDate - new Date(txn.purchaseDate)) / (365.25 * 24 * 60 * 60 * 1000);
+          const xirr = yrs > 0 ? (Math.pow(cv / pv, 1 / yrs) - 1) * 100 : 0;
+          const cls = gain >= 0 ? 'pos' : 'neg';
+          tableHtml += `<tr>
+            <td class="fund-name">${txn.fund}</td>
+            <td class="text-center mono">${txn.folio}</td>
+            <td class="text-right">${txn.units.toFixed(2)}</td>
+            <td class="text-right mono">₹${txn.currentNav.toFixed(2)}</td>
+            <td class="text-right">${fmt(pv)}</td>
+            <td class="text-right">${fmt(cv)}</td>
+            <td class="text-right ${cls}">${gain >= 0 ? '+' : ''}${fmt(gain)}</td>
+            <td class="text-right ${cls}">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</td>
+          </tr>`;
+        });
+        document.getElementById('trackingTableBody').innerHTML = tableHtml;
+
+        const fundHouseSummary = {};
+        memberData.transactions.forEach(txn => {
+          if (!fundHouseSummary[txn.fundHouse]) fundHouseSummary[txn.fundHouse] = {count: 0, value: 0};
+          fundHouseSummary[txn.fundHouse].count++;
+          fundHouseSummary[txn.fundHouse].value += txn.units * txn.currentNav;
+        });
+
+        document.getElementById('fundSummary').innerHTML = Object.entries(fundHouseSummary)
+          .sort((a, b) => b[1].value - a[1].value)
+          .map(([house, d]) => `<div class="chip">
+            <div class="chip-label">${house}</div>
+            <div class="chip-count">${d.count} fund${d.count > 1 ? 's' : ''}</div>
+            <div class="chip-value">${fmt(d.value)}</div>
+          </div>`).join('');
+      } catch (err) {
+        console.error('Error loading profile data:', err);
+      }
+    }
+
     function exportCSV() {
       const data = window.__memberData;
       if (!data) { alert('Data not loaded yet'); return; }
-      const referenceDate = new Date('2026-05-11');
-      const rows = data.transactions.map(txn => {
-        const pv = txn.units * txn.purchaseNav;
-        const cv = txn.units * txn.currentNav;
+      const refDate = new Date('2026-05-12');
+      const rows = data.transactions.map(t => {
+        const pv = t.units * t.purchaseNav;
+        const cv = t.units * t.currentNav;
         const gain = cv - pv;
-        const purchaseDate = new Date(txn.purchaseDate);
-        const yrs = (referenceDate - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
+        const yrs = (refDate - new Date(t.purchaseDate)) / (365.25 * 24 * 60 * 60 * 1000);
         const xirr = yrs > 0 ? (Math.pow(cv / pv, 1 / yrs) - 1) * 100 : 0;
-        return [txn.fund, txn.folio, txn.units.toFixed(3), txn.purchaseDate, txn.purchaseNav.toFixed(4), txn.currentNav.toFixed(4), pv.toFixed(2), cv.toFixed(2), gain.toFixed(2), xirr.toFixed(2) + '%'];
+        return [t.fund, t.folio, t.units.toFixed(3), t.purchaseDate, t.purchaseNav.toFixed(4), t.currentNav.toFixed(4), pv.toFixed(2), cv.toFixed(2), gain.toFixed(2), xirr.toFixed(2) + '%'];
       });
       const headers = ['Fund','Folio','Units','Purchase Date','Purchase NAV','Current NAV','Purchase Value','Current Value','Gain/Loss','XIRR %'];
       const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
       const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'advait-holdings-' + new Date().toISOString().slice(0,10) + '.csv';
+      a.download = MEMBER_ID + '-holdings-' + new Date().toISOString().slice(0,10) + '.csv';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(a.href);
-    }
-
-    async function loadProfileData() {
-      try {
-        const response = await fetch('tracking-data.json?t=' + Date.now(), {cache: 'no-store'});
-        const data = await response.json();
-        const memberData = data.advait;
-        window.__memberData = memberData;
-
-        // Update summary cards
-        document.getElementById('totalInvested').textContent = '₹' + memberData.totalInvested.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('currentValue').textContent = '₹' + memberData.totalCurrentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-        const gainColor = memberData.totalGain >= 0 ? '#10b981' : '#ef4444';
-        document.getElementById('totalGain').textContent = (memberData.totalGain >= 0 ? '₹' : '-₹') + Math.abs(memberData.totalGain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('totalGain').style.color = gainColor;
-
-        const percentText = (memberData.totalGainPercent >= 0 ? '+' : '') + memberData.totalGainPercent.toFixed(2) + '%';
-        document.getElementById('gainPercent').textContent = percentText;
-        document.getElementById('gainPercent').style.color = gainColor;
-
-        document.getElementById('overallXIRR').textContent = memberData.overallXIRR.toFixed(2) + '%';
-
-        // Build tracking table
-        let tableHtml = '';
-        const referenceDate = new Date('2026-05-11'); // Reference date for XIRR calculation
-        memberData.transactions.forEach(txn => {
-          const purchaseValue = txn.units * txn.purchaseNav;
-          const currentValue = txn.units * txn.currentNav;
-          const gain = currentValue - purchaseValue;
-
-          // Calculate XIRR: ((currentValue / purchaseValue) ^ (1 / yearsHeld)) - 1) * 100
-          const purchaseDate = new Date(txn.purchaseDate);
-          const yearsHeld = (referenceDate - purchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
-          const xirr = yearsHeld > 0 ? (Math.pow(currentValue / purchaseValue, 1 / yearsHeld) - 1) * 100 : 0;
-
-          tableHtml += `<tr>
-            <td class="fund-name">${txn.fund}</td>
-            <td style="text-align: center; font-family: monospace;">${txn.folio}</td>
-            <td style="text-align: right;">${txn.units.toFixed(2)}</td>
-            <td style="text-align: right;">₹${txn.currentNav.toFixed(2)}</td>
-            <td style="text-align: right;">₹${purchaseValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-            <td style="text-align: right; font-weight: 600;">₹${currentValue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-            <td style="text-align: right;" class="${gain >= 0 ? 'gain-positive' : 'gain-negative'}">₹${Math.abs(gain).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-            <td style="text-align: right;" class="${xirr >= 0 ? 'gain-positive' : 'gain-negative'}">${(xirr >= 0 ? '+' : '')}${xirr.toFixed(2)}%</td>
-          </tr>`;
-        });
-
-        document.getElementById('trackingTableBody').innerHTML = tableHtml;
-
-        // Fund house summary
-        const fundHouseSummary = {};
-        memberData.transactions.forEach(txn => {
-          if (!fundHouseSummary[txn.fundHouse]) {
-            fundHouseSummary[txn.fundHouse] = { count: 0, value: 0 };
-          }
-          fundHouseSummary[txn.fundHouse].count++;
-          fundHouseSummary[txn.fundHouse].value += txn.units * txn.currentNav;
-        });
-
-        let summaryHtml = '';
-        Object.entries(fundHouseSummary).forEach(([house, data]) => {
-          summaryHtml += `
-            <div style="background: var(--primary-lighter); padding: 1rem; border-radius: 8px;">
-              <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">${house}</div>
-              <div style="font-size: 0.875rem; color: var(--neutral-600); margin-bottom: 0.5rem;">${data.count} fund(s)</div>
-              <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">₹${data.value.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-            </div>
-          `;
-        });
-
-        document.getElementById('fundSummary').innerHTML = summaryHtml;
-      } catch (error) {
-        console.error('Error loading profile data:', error);
-      }
     }
 
     document.addEventListener('DOMContentLoaded', loadProfileData);
