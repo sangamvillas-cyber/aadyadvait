@@ -77,7 +77,6 @@
           "accountNo": "021401006099",
           "ifsc": "ICIC0000214",
           "type": "Savings",
-          "accountName": "ARCHANA MISHRA",
           "joint": true,
           "jointWith": "siddharth",
           "chequeImage": "cheques/icici-joint.jpg"
@@ -88,7 +87,6 @@
           "accountNo": "50100453942533",
           "ifsc": "HDFC0001112",
           "type": "Savings",
-          "accountName": "ARCHANA MISHRA",
           "joint": false,
           "chequeImage": "cheques/hdfc-archana.jpg"
         },
@@ -184,7 +182,6 @@
           "accountNo": "237601002331",
           "ifsc": "ICIC0002376",
           "type": "Savings",
-          "accountName": "ADVAIT MISHRA",
           "joint": false,
           "guardian": "archana",
           "chequeImage": "cheques/icici-advait.jpg"
