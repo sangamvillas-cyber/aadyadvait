@@ -714,9 +714,12 @@
       </div>`;
     }
 
-    function renderAadhaarCard(memberId, a) {
+    function renderAadhaarCard(memberId, a, memberData) {
       const masked = a.number;
-      const copyData = `Aadhaar — ${memberName(memberId)}\\nAadhaar No: ${a.number}\\nDOB: ${fmtDateISO(a.dob)}\\nAddress: ${a.address}`;
+      const fullName = memberData?.passport
+        ? [memberData.passport.givenName, memberData.passport.surname].filter(Boolean).join(' ')
+        : memberName(memberId);
+      const copyData = `Aadhaar — ${fullName}\\nAadhaar No: ${a.number}\\nDOB: ${fmtDateISO(a.dob)}\\nSex: ${a.sex}\\nAddress: ${a.address}`;
       const imageActions = `<div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;flex-wrap:wrap;gap:0.375rem;">
             ${a.imageFront ? `<button class="doc-action" onclick="viewPassportScan('${a.imageFront}','${memberName(memberId)} Aadhaar — Front','${memberId}-aadhaar-front.jpg')">View front</button>` : ''}
             ${a.imageBack  ? `<button class="doc-action" onclick="viewPassportScan('${a.imageBack}','${memberName(memberId)} Aadhaar — Back','${memberId}-aadhaar-back.jpg')">View back</button>` : ''}
@@ -735,6 +738,10 @@
           <span class="passport-status valid">Active</span>
         </div>
         <div class="passport-card-body">
+          <div style="grid-column:span 2;">
+            <div class="passport-field-label">Name</div>
+            <div class="passport-field-value">${fullName}</div>
+          </div>
           <div>
             <div class="passport-field-label">Sex · DOB</div>
             <div class="passport-field-value">${a.sex} · ${fmtDateISO(a.dob)}</div>
@@ -758,7 +765,7 @@
         ? INDIVIDUAL_MEMBERS.map(m => m.id)
         : [STATE.currentMember];
       const cards = memberIds.filter(id => identity[id]?.aadhaar)
-        .map(id => renderAadhaarCard(id, identity[id].aadhaar));
+        .map(id => renderAadhaarCard(id, identity[id].aadhaar, identity[id]));
       if (cards.length === 0) return '';
       return `<div class="section-heading" style="margin-top:1.5rem;">Aadhaar</div>
         <div class="passport-grid">${cards.join('')}</div>`;
