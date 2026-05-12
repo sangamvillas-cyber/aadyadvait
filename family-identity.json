@@ -58,6 +58,16 @@
           "type": "Savings",
           "joint": false,
           "chequeImage": "cheques/hdfc-archana.jpg"
+        },
+        {
+          "bank": "HDFC Bank",
+          "branch": "AG 21/23, 4th Avenue, Shanthi Colony, Anna Nagar, Chennai - 600040",
+          "accountNo": "55000004295632",
+          "ifsc": "HDFC0000017",
+          "type": "PPF",
+          "joint": false,
+          "openDate": "2021-08-19",
+          "nomination": "SIDDHARTH MISHRA"
         }
       ],
       "passport": {
@@ -76,6 +86,30 @@
       }
     },
     "aadya": {
+      "bankAccounts": [
+        {
+          "bank": "HDFC Bank",
+          "branch": "5/19, Vishal Khand, Gomti Nagar, Lucknow - 226010",
+          "accountNo": "55000005923075",
+          "ifsc": "HDFC0001112",
+          "type": "PPF",
+          "joint": false,
+          "guardian": "archana",
+          "openDate": "2022-09-23"
+        },
+        {
+          "bank": "HDFC Bank",
+          "branch": "5/19, Vishal Khand, Gomti Nagar, Lucknow - 226010",
+          "accountNo": "50100563080121",
+          "ifsc": "HDFC0001112",
+          "type": "Kids Advantage",
+          "joint": true,
+          "jointWith": "archana",
+          "guardian": "archana",
+          "openDate": "2022-09-23",
+          "nomination": "SIDDHARTH MISHRA"
+        }
+      ],
       "passport": {
         "number": "AB251418",
         "type": "P",
