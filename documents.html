@@ -339,6 +339,96 @@
       margin-top: 1.25rem;
     }
 
+    /* Passport cards */
+    .passport-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+    .passport-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .passport-card-header {
+      padding: 0.75rem 1rem;
+      background: linear-gradient(135deg, #1B3A6B 0%, #2E5494 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .passport-card-owner {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .passport-card-flag {
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+    }
+    .passport-card-number {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .passport-number-label {
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .passport-number-value {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.02em;
+    }
+    .passport-status {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .passport-status.valid { color: var(--success); background: #E3F0E7; }
+    .passport-status.expiring { color: #A1660F; background: #FBF1D9; }
+    .passport-status.expired { color: var(--danger); background: var(--danger-soft); }
+    .passport-card-body {
+      padding: 0.875rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.625rem 1rem;
+    }
+    .passport-field-label {
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.125rem;
+    }
+    .passport-field-value {
+      font-size: 0.8125rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .passport-field-value.mono {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    }
+
     .hidden { display: none !important; }
     .file-input { display: none; }
 
@@ -476,7 +566,92 @@
       currentCategory: 'all',
       pendingFile: null,
       pendingMember: null,
+      identity: null,
     };
+
+    async function loadIdentity() {
+      try {
+        const res = await fetch('family-identity.json?t=' + Date.now(), { cache: 'no-store' });
+        STATE.identity = await res.json();
+      } catch (e) { STATE.identity = { members: {} }; }
+    }
+
+    function passportStatus(expiryISO) {
+      const exp = new Date(expiryISO);
+      const now = new Date();
+      const months = (exp - now) / (1000 * 60 * 60 * 24 * 30.44);
+      if (months < 0) return { label: 'Expired', cls: 'expired' };
+      if (months < 12) return { label: 'Renew soon', cls: 'expiring' };
+      return { label: 'Valid', cls: 'valid' };
+    }
+
+    function fmtDateISO(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function renderPassportCard(memberId, p) {
+      const status = passportStatus(p.dateOfExpiry);
+      const fullName = [p.givenName, p.surname].filter(Boolean).join(' ');
+      return `<div class="passport-card">
+        <div class="passport-card-header">
+          <div class="passport-card-owner">${memberName(memberId)}</div>
+          <div class="passport-card-flag">${p.country || 'IND'} · REPUBLIC OF INDIA</div>
+        </div>
+        <div class="passport-card-number">
+          <div>
+            <div class="passport-number-label">Passport no.</div>
+            <div class="passport-number-value">${p.number}</div>
+          </div>
+          <span class="passport-status ${status.cls}">${status.label}</span>
+        </div>
+        <div class="passport-card-body">
+          <div>
+            <div class="passport-field-label">Full name</div>
+            <div class="passport-field-value">${fullName}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Sex · DOB</div>
+            <div class="passport-field-value">${p.sex} · ${fmtDateISO(p.dob)}</div>
+          </div>
+          <div style="grid-column: span 2;">
+            <div class="passport-field-label">Place of birth</div>
+            <div class="passport-field-value">${p.placeOfBirth}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Issued</div>
+            <div class="passport-field-value">${fmtDateISO(p.dateOfIssue)}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Expires</div>
+            <div class="passport-field-value">${fmtDateISO(p.dateOfExpiry)}</div>
+          </div>
+          <div style="grid-column: span 2;">
+            <div class="passport-field-label">Place of issue</div>
+            <div class="passport-field-value">${p.placeOfIssue}</div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function renderPassportSection() {
+      const identity = STATE.identity?.members || {};
+      const showSection = STATE.currentCategory === 'all' || STATE.currentCategory === 'passport';
+      if (!showSection) return '';
+
+      const memberIds = STATE.currentMember === 'family'
+        ? INDIVIDUAL_MEMBERS.map(m => m.id)
+        : [STATE.currentMember];
+
+      const cards = memberIds
+        .filter(id => identity[id]?.passport)
+        .map(id => renderPassportCard(id, identity[id].passport));
+
+      if (cards.length === 0) return '';
+
+      return `<div class="section-heading" style="margin-top: 0.5rem;">Passport on file</div>
+        <div class="passport-grid">${cards.join('')}</div>`;
+    }
 
     // Storage helpers
     function loadDocs() {
@@ -578,14 +753,21 @@
         : docs.filter(d => d.category === STATE.currentCategory);
       filtered.sort((a, b) => (b.uploadedAt || 0) - (a.uploadedAt || 0));
 
+      const passportSection = renderPassportSection();
+
       const container = document.getElementById('docsContainer');
       if (filtered.length === 0) {
-        container.innerHTML = renderEmptyState();
+        container.innerHTML = passportSection + (passportSection
+          ? `<div class="section-heading" style="margin-top: 1.5rem;">Uploaded files</div>` + renderEmptyState()
+          : renderEmptyState());
         return;
       }
 
       const showOwner = STATE.currentMember === 'family';
-      container.innerHTML = '<div class="docs-grid">' + filtered.map(d => {
+      const filesHeading = passportSection
+        ? `<div class="section-heading" style="margin-top: 1.5rem;">Uploaded files</div>`
+        : '';
+      container.innerHTML = passportSection + filesHeading + '<div class="docs-grid">' + filtered.map(d => {
         const ext = (d.name.split('.').pop() || 'FILE').toUpperCase().slice(0, 4);
         return `<div class="doc-card">
           <div class="doc-card-top">
@@ -782,7 +964,7 @@
         }
       } catch { window.location.href = 'auth.html'; return; }
 
-      renderAll();
+      loadIdentity().then(() => renderAll());
       setupUpload();
     });
   </script>
