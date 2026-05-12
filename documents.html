@@ -3,930 +3,717 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document Management — Mishra Family</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Documents · Mishra Family Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --bg-base: #FAF9F5;
+      --bg-surface: #FFFFFF;
+      --bg-elevated: #F5F4ED;
+      --bg-hover: #EFEEE6;
+      --border-subtle: #E8E5DE;
+      --border-default: #D7D3C7;
+      --text-primary: #1A1817;
+      --text-secondary: #5C5A55;
+      --text-tertiary: #8A8780;
+      --accent: #C96442;
+      --accent-hover: #B5563A;
+      --accent-soft: #F4E4DC;
+      --success: #2E7D4F;
+      --danger: #C53030;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
     }
 
-    html {
-      scroll-behavior: smooth;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f8fafc;
-      color: #1e293b;
-      line-height: 1.6;
-    }
-
-    .app-container {
+    /* Top Bar */
+    .topbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.875rem 2rem;
       display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 280px;
-      background: white;
-      border-right: 1px solid #e2e8f0;
-      padding: 2rem 1.5rem;
-      overflow-y: auto;
-      height: 100vh;
-      position: fixed;
-      left: 0;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
       top: 0;
+      z-index: 10;
     }
+    .topbar-brand { display: flex; align-items: center; gap: 0.625rem; text-decoration: none; color: inherit; }
+    .brand-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 0.875rem;
+    }
+    .brand-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.01em;
+    }
+    .header-actions { display: flex; gap: 0.5rem; }
+    .btn {
+      background: transparent; border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      padding: 0.5rem 0.875rem; border-radius: var(--radius-sm);
+      font-size: 0.875rem; font-weight: 500; cursor: pointer;
+      font-family: inherit; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--text-tertiary); }
+    .btn-primary { background: var(--text-primary); color: white; border-color: var(--text-primary); }
+    .btn-primary:hover { background: #000; color: white; border-color: #000; }
 
-    .sidebar-brand {
+    /* Navigation */
+    .nav-bar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 2rem;
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #0f766e;
+      gap: 0.25rem;
     }
-
-    .main-content {
-      flex: 1;
-      margin-left: 280px;
-      padding: 2rem;
-      overflow-y: auto;
-      height: 100vh;
-    }
-
-    .header {
-      margin-bottom: 2rem;
-    }
-
-    .header-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0f766e;
-      margin-bottom: 0.5rem;
-    }
-
-    .header-subtitle {
-      font-size: 1rem;
-      color: #64748b;
-    }
-
-    /* Member Selector */
-    .member-selector {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .member-button {
-      padding: 1rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      background: white;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-      text-align: center;
-    }
-
-    .member-button:hover {
-      border-color: #0f766e;
-      background: #ccfbf1;
-    }
-
-    .member-button.active {
-      border-color: #0f766e;
-      background: #0f766e;
-      color: white;
-    }
-
-    /* Section */
-    .section {
-      background: white;
-      border-radius: 12px;
-      padding: 2rem;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 2rem;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid #e2e8f0;
-    }
-
-    .section-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #1e293b;
-    }
-
-    /* Upload Area */
-    .upload-area {
-      border: 2px dashed #0f766e;
-      border-radius: 12px;
-      padding: 3rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: #f0fffe;
-    }
-
-    .upload-area:hover {
-      background: #ccfbf1;
-      border-color: #0d5d5a;
-    }
-
-    .upload-area.dragover {
-      background: #ccfbf1;
-      border-color: #0d5d5a;
-      transform: scale(1.02);
-    }
-
-    .upload-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .upload-text {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #0f766e;
-      margin-bottom: 0.5rem;
-    }
-
-    .upload-subtext {
-      font-size: 0.9rem;
-      color: #64748b;
-    }
-
-    #fileInput {
-      display: none;
-    }
-
-    /* Category Filter */
-    .category-filter {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .category-button {
-      padding: 0.5rem 1rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 20px;
-      background: white;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-      color: #64748b;
-    }
-
-    .category-button:hover {
-      border-color: #0f766e;
-      color: #0f766e;
-    }
-
-    .category-button.active {
-      background: #0f766e;
-      color: white;
-      border-color: #0f766e;
-    }
-
-    /* Storage Info */
-    .storage-info {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .storage-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .storage-label {
-      font-weight: 600;
-      color: #1e293b;
-    }
-
-    .storage-amount {
-      font-size: 0.9rem;
-      color: #64748b;
-    }
-
-    .storage-bar {
-      width: 100%;
-      height: 10px;
-      background: #e2e8f0;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-bottom: 0.5rem;
-    }
-
-    .storage-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);
-      transition: width 0.3s;
-    }
-
-    .storage-warning {
-      font-size: 0.85rem;
-      color: #dc2626;
-      display: none;
-    }
-
-    .storage-warning.show {
-      display: block;
-    }
-
-    /* Document Grid */
-    .documents-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .document-card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .document-card:hover {
-      border-color: #0f766e;
-      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.15);
-      transform: translateY(-4px);
-    }
-
-    .document-preview {
-      width: 100%;
-      height: 150px;
-      background: #f8fafc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .document-info {
-      padding: 1rem;
-    }
-
-    .document-name {
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-      word-break: break-word;
-      font-size: 0.9rem;
-      max-height: 2.4em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .document-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-
-    .document-category {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      background: #ccfbf1;
-      color: #0f766e;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-
-    .document-size {
-      font-size: 0.75rem;
-      color: #64748b;
-    }
-
-    .document-date {
-      font-size: 0.75rem;
-      color: #94a3b8;
-      margin-bottom: 0.75rem;
-    }
-
-    .document-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .document-action-btn {
-      flex: 1;
-      padding: 0.5rem;
-      border: 1px solid #e2e8f0;
-      background: white;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #64748b;
-      transition: all 0.2s;
-    }
-
-    .document-action-btn:hover {
-      color: #0f766e;
-      border-color: #0f766e;
-    }
-
-    .document-action-btn.delete:hover {
-      color: #dc2626;
-      border-color: #dc2626;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-    }
-
-    .empty-state-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .empty-state-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-    }
-
-    .empty-state-text {
-      font-size: 0.9rem;
-      color: #64748b;
-    }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 1rem;
-      border-bottom: 2px solid #e2e8f0;
-      margin-bottom: 2rem;
-    }
-
-    .tab-button {
-      padding: 1rem 1.5rem;
-      background: none;
-      border: none;
-      color: #64748b;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.95rem;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .tab-button:hover {
-      color: #1e293b;
-    }
-
-    .tab-button.active {
-      color: #0f766e;
-      border-bottom-color: #0f766e;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Back Button */
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #0f766e;
+    .nav-tab {
+      background: transparent; border: none;
+      padding: 0.875rem 1rem;
+      font-size: 0.875rem; font-weight: 500;
+      color: var(--text-secondary); cursor: pointer; font-family: inherit;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s ease;
       text-decoration: none;
+      display: inline-block;
+      margin-bottom: -1px;
+    }
+    .nav-tab:hover { color: var(--text-primary); }
+    .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Page */
+    .page { max-width: 1280px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+    .page-header { margin-bottom: 2rem; }
+    .page-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 2rem; font-weight: 600; color: var(--text-primary);
+      letter-spacing: -0.02em; margin-bottom: 0.375rem;
+    }
+    .page-subtitle { font-size: 0.9375rem; color: var(--text-secondary); }
+
+    /* Filter pills */
+    .filter-pills {
+      display: flex; gap: 0.375rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .filter-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      padding: 0.5rem 0.875rem;
+      border-radius: 999px;
+      font-size: 0.8125rem; font-weight: 500;
+      color: var(--text-secondary); cursor: pointer; font-family: inherit;
+      transition: all 0.15s ease;
+      display: inline-flex; align-items: center; gap: 0.375rem;
+    }
+    .filter-pill:hover { border-color: var(--accent); color: var(--text-primary); }
+    .filter-pill.active { background: var(--text-primary); border-color: var(--text-primary); color: white; }
+    .filter-pill .count {
+      background: rgba(0,0,0,0.08);
+      padding: 0.0625rem 0.375rem;
+      border-radius: 999px;
+      font-size: 0.6875rem;
       font-weight: 600;
-      margin-bottom: 1rem;
+    }
+    .filter-pill.active .count { background: rgba(255,255,255,0.18); }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.125rem 1.25rem;
+    }
+    .stat-label {
+      font-size: 0.8125rem; color: var(--text-tertiary); font-weight: 500;
+      margin-bottom: 0.375rem;
+    }
+    .stat-value {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.5rem; font-weight: 600; color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .storage-bar {
+      height: 4px; background: var(--bg-elevated); border-radius: 999px;
+      margin-top: 0.625rem; overflow: hidden;
+    }
+    .storage-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; }
+
+    /* Upload */
+    .upload-card {
+      background: var(--bg-surface);
+      border: 1.5px dashed var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      text-align: center;
       cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 1.5rem;
+    }
+    .upload-card:hover, .upload-card.dragover {
+      border-color: var(--accent); background: var(--accent-soft);
+    }
+    .upload-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 0.25rem;
+    }
+    .upload-subtitle { font-size: 0.8125rem; color: var(--text-secondary); }
+
+    /* Categories */
+    .section-heading {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.125rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 1rem;
+      letter-spacing: -0.01em;
     }
 
-    .back-button:hover {
-      color: #0d5d5a;
+    /* Document grid */
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.875rem;
+    }
+    .doc-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.125rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      transition: all 0.15s ease;
+    }
+    .doc-card:hover {
+      border-color: var(--border-default);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(26, 24, 23, 0.06);
+    }
+    .doc-card-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .doc-icon {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6875rem; font-weight: 700;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+    }
+    .doc-menu {
+      background: transparent; border: none;
+      color: var(--text-tertiary); cursor: pointer;
+      padding: 0.25rem; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .doc-menu:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .doc-name {
+      font-size: 0.9375rem; font-weight: 500;
+      color: var(--text-primary);
+      overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .doc-meta {
+      display: flex; gap: 0.5rem;
+      font-size: 0.75rem; color: var(--text-tertiary);
+      align-items: center;
+    }
+    .doc-meta-dot { color: var(--border-default); }
+    .doc-category {
+      display: inline-flex; align-items: center;
+      padding: 0.125rem 0.5rem;
+      background: var(--bg-elevated);
+      border-radius: 999px;
+      font-size: 0.6875rem; font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: capitalize;
+    }
+    .doc-actions {
+      display: flex; gap: 0.375rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 0.25rem;
+    }
+    .doc-action {
+      flex: 1;
+      background: transparent; border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      padding: 0.375rem 0.625rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      text-align: center; text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .doc-action:hover {
+      background: var(--bg-hover); color: var(--text-primary);
+      border-color: var(--text-tertiary);
+    }
+    .doc-action.danger:hover {
+      background: var(--danger); color: white;
+      border-color: var(--danger);
     }
 
-    @media (max-width: 768px) {
-      .app-container {
-        flex-direction: column;
-      }
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 3rem 2rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-tertiary);
+    }
+    .empty-state-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.125rem; font-weight: 600;
+      color: var(--text-secondary); margin-bottom: 0.375rem;
+    }
+    .empty-state-subtitle { font-size: 0.875rem; }
 
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid #e2e8f0;
-      }
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(26, 24, 23, 0.4);
+      align-items: center; justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      max-width: 480px; width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .modal-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.125rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 1rem;
+    }
+    .form-group { margin-bottom: 0.875rem; }
+    .form-label {
+      display: block;
+      font-size: 0.8125rem; font-weight: 500;
+      color: var(--text-secondary); margin-bottom: 0.375rem;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      font-family: inherit;
+      color: var(--text-primary);
+    }
+    .form-input:focus, .form-select:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .modal-actions {
+      display: flex; gap: 0.5rem; justify-content: flex-end;
+      margin-top: 1.25rem;
+    }
 
-      .main-content {
-        margin-left: 0;
-        height: auto;
-        padding: 1rem;
-      }
+    .hidden { display: none !important; }
+    .file-input { display: none; }
 
-      .member-selector {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .documents-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      }
-
-      .upload-area {
-        padding: 2rem 1rem;
-      }
+    @media (max-width: 640px) {
+      .topbar, .nav-bar { padding-left: 1rem; padding-right: 1rem; }
+      .page { padding: 1.5rem 1rem; }
+      .page-title { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-brand">
-        <span>📄</span>
-        <div>Documents</div>
+  <header class="topbar">
+    <a href="dashboard.html" class="topbar-brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-title">Mishra Family Portfolio</div>
+    </a>
+    <div class="header-actions">
+      <a href="dashboard.html" class="btn">Sign out</a>
+    </div>
+  </header>
+
+  <nav class="nav-bar">
+    <a href="dashboard.html" class="nav-tab">Overview</a>
+    <a href="dashboard.html#family" class="nav-tab">Family</a>
+    <a href="dashboard.html#funds" class="nav-tab">Mutual funds</a>
+    <a href="dashboard.html#tracker" class="nav-tab">Tracker</a>
+    <a href="documents.html" class="nav-tab active">Documents</a>
+  </nav>
+
+  <main class="page">
+    <div class="page-header">
+      <h1 class="page-title">Documents</h1>
+      <p class="page-subtitle">Statements, KYC papers and records for each family member.</p>
+    </div>
+
+    <!-- Member filter -->
+    <div class="filter-pills" id="memberPills"></div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Documents</div>
+        <div class="stat-value" id="docCount">0</div>
       </div>
-      <nav>
-        <div class="nav-item" style="padding: 0.75rem 1rem; cursor: pointer; color: #0f766e; font-weight: 600;" onclick="goBack()">← Back to Dashboard</div>
-      </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-      <a class="back-button" onclick="goBack()">← Back to Dashboard</a>
-
-      <div class="header">
-        <div class="header-title">Document Management</div>
-        <div class="header-subtitle">Upload, organize, and manage family documents with secure storage</div>
+      <div class="stat-card">
+        <div class="stat-label">Storage used</div>
+        <div class="stat-value" id="storageUsed">0 MB</div>
+        <div class="storage-bar"><div class="storage-fill" id="storageFill" style="width:0%"></div></div>
       </div>
-
-      <!-- Member Selector -->
-      <div class="member-selector" id="memberSelector">
-        <!-- Populated by JavaScript -->
+      <div class="stat-card">
+        <div class="stat-label">Last uploaded</div>
+        <div class="stat-value" id="lastUpload" style="font-size:1rem; font-family: 'Inter', sans-serif; font-weight: 500;">—</div>
       </div>
+    </div>
 
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab-button active" onclick="switchTab('upload')">📤 Upload</button>
-        <button class="tab-button" onclick="switchTab('gallery')">🖼️ Gallery</button>
-        <button class="tab-button" onclick="switchTab('storage')">💾 Storage</button>
+    <!-- Upload -->
+    <div class="upload-card" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-title">Upload a document</div>
+      <div class="upload-subtitle">Click to browse, or drag a PDF/image here · Max 10 MB per file</div>
+    </div>
+    <input type="file" id="fileInput" class="file-input" accept=".pdf,.png,.jpg,.jpeg" multiple>
+
+    <!-- Category filter -->
+    <div class="section-heading">All files</div>
+    <div class="filter-pills" id="categoryPills"></div>
+
+    <!-- Documents -->
+    <div id="docsContainer"></div>
+  </main>
+
+  <!-- Upload Detail Modal -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal">
+      <div class="modal-title">Save document</div>
+      <div class="form-group">
+        <label class="form-label">File</label>
+        <div id="modalFileName" style="font-size: 0.875rem; color: var(--text-primary); background: var(--bg-elevated); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);">—</div>
       </div>
-
-      <!-- Upload Tab -->
-      <div id="upload" class="tab-content active">
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">Upload Documents</div>
-          </div>
-
-          <!-- Storage Info -->
-          <div class="storage-info" id="storageInfo">
-            <!-- Populated by JavaScript -->
-          </div>
-
-          <!-- Upload Area -->
-          <div class="upload-area" id="uploadArea" onclick="triggerFileInput()">
-            <div class="upload-icon">📄</div>
-            <div class="upload-text">Click to upload or drag and drop</div>
-            <div class="upload-subtext">PNG, JPG, PDF (Max 50MB each)</div>
-          </div>
-          <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.gif">
-
-          <!-- Category Selection -->
-          <div style="margin-top: 2rem; margin-bottom: 2rem;">
-            <div style="margin-bottom: 1rem; font-weight: 600; color: #1e293b;">Document Category</div>
-            <div class="category-filter">
-              <button class="category-button active" onclick="selectCategory('identity')">🆔 Identity</button>
-              <button class="category-button" onclick="selectCategory('education')">🎓 Education</button>
-              <button class="category-button" onclick="selectCategory('insurance')">🛡️ Insurance</button>
-              <button class="category-button" onclick="selectCategory('medical')">⚕️ Medical</button>
-              <button class="category-button" onclick="selectCategory('legal')">⚖️ Legal</button>
-              <button class="category-button" onclick="selectCategory('other')">📋 Other</button>
-            </div>
-          </div>
-
-          <!-- Quick Info -->
-          <div style="background: #f0fffe; padding: 1.5rem; border-radius: 8px; border: 1px solid #ccfbf1;">
-            <div style="font-weight: 600; color: #0f766e; margin-bottom: 0.75rem;">Document Categories:</div>
-            <ul style="color: #64748b; font-size: 0.9rem; line-height: 1.8; margin-left: 1.5rem;">
-              <li><strong>Identity:</strong> PAN, Aadhaar, Passport, Driving License</li>
-              <li><strong>Education:</strong> Marksheets, Certificates, Degrees</li>
-              <li><strong>Insurance:</strong> Policies, Coverage Details, Claims</li>
-              <li><strong>Medical:</strong> Reports, Prescriptions, Records</li>
-              <li><strong>Legal:</strong> Contracts, Deeds, Agreements</li>
-              <li><strong>Other:</strong> Any other important documents</li>
-            </ul>
-          </div>
-        </div>
+      <div class="form-group">
+        <label class="form-label" for="modalCategory">Category</label>
+        <select class="form-select" id="modalCategory">
+          <option value="cas">CAS / Statement</option>
+          <option value="kyc">KYC (PAN, Aadhaar)</option>
+          <option value="folio">Folio statement</option>
+          <option value="tax">Tax document</option>
+          <option value="insurance">Insurance</option>
+          <option value="other">Other</option>
+        </select>
       </div>
-
-      <!-- Gallery Tab -->
-      <div id="gallery" class="tab-content">
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">Document Gallery</div>
-          </div>
-
-          <!-- Category Filter -->
-          <div style="margin-bottom: 2rem;">
-            <div style="margin-bottom: 1rem; font-weight: 600; color: #1e293b;">Filter by Category</div>
-            <div class="category-filter">
-              <button class="category-button active" onclick="filterDocuments('all')">📊 All</button>
-              <button class="category-button" onclick="filterDocuments('identity')">🆔 Identity</button>
-              <button class="category-button" onclick="filterDocuments('education')">🎓 Education</button>
-              <button class="category-button" onclick="filterDocuments('insurance')">🛡️ Insurance</button>
-              <button class="category-button" onclick="filterDocuments('medical')">⚕️ Medical</button>
-              <button class="category-button" onclick="filterDocuments('legal')">⚖️ Legal</button>
-              <button class="category-button" onclick="filterDocuments('other')">📋 Other</button>
-            </div>
-          </div>
-
-          <!-- Documents Grid -->
-          <div class="documents-grid" id="documentsGrid">
-            <div class="empty-state">
-              <div class="empty-state-icon">📄</div>
-              <div class="empty-state-title">No Documents</div>
-              <div class="empty-state-text">No documents uploaded yet for this member. Upload documents in the Upload tab.</div>
-            </div>
-          </div>
-        </div>
+      <div class="form-group">
+        <label class="form-label" for="modalNote">Note (optional)</label>
+        <input class="form-input" id="modalNote" type="text" placeholder="e.g. April CAS, FY 2025-26 returns">
       </div>
-
-      <!-- Storage Tab -->
-      <div id="storage" class="tab-content">
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">Storage Management</div>
-          </div>
-
-          <div id="storageDetails">
-            <!-- Populated by JavaScript -->
-          </div>
-
-          <!-- All Members Storage -->
-          <div style="margin-top: 2rem;">
-            <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 1.5rem;">Family Storage Overview</div>
-            <div id="familyStorageChart">
-              <!-- Populated by JavaScript -->
-            </div>
-          </div>
-        </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="confirmUpload()">Save</button>
       </div>
-    </main>
+    </div>
   </div>
 
   <script>
-    // Family data structure
-    const FAMILY = {
-      members: [
-        {id: 'siddharth', name: 'Siddharth', icon: '👨', documents: [], storageUsed: 0},
-        {id: 'archana', name: 'Archana', icon: '👩', documents: [], storageUsed: 0},
-        {id: 'aadya', name: 'Aadya', icon: '👧', documents: [], storageUsed: 0},
-        {id: 'advait', name: 'Advait', icon: '👦', documents: [], storageUsed: 0},
-        {id: 'sarla', name: 'Sarla Mishra', icon: '👵', documents: [], storageUsed: 0},
-        {id: 'shyam', name: 'Sheo Shyam Mishra', icon: '👴', documents: [], storageUsed: 0}
-      ],
-      storagePerMember: 524288000, // 500MB
-      maxStoragePerMember: 524288000
+    const MEMBERS = [
+      { id: 'siddharth', name: 'Siddharth', avatar: 'S' },
+      { id: 'archana', name: 'Archana', avatar: 'A' },
+      { id: 'aadya', name: 'Aadya', avatar: 'A' },
+      { id: 'advait', name: 'Advait', avatar: 'A' },
+    ];
+
+    const CATEGORIES = [
+      { id: 'all', label: 'All' },
+      { id: 'cas', label: 'CAS / Statement' },
+      { id: 'kyc', label: 'KYC' },
+      { id: 'folio', label: 'Folio' },
+      { id: 'tax', label: 'Tax' },
+      { id: 'insurance', label: 'Insurance' },
+      { id: 'other', label: 'Other' },
+    ];
+
+    const STATE = {
+      currentMember: 'siddharth',
+      currentCategory: 'all',
+      pendingFile: null,
     };
 
-    let currentMemberId = 'siddharth';
-    let selectedCategory = 'identity';
-    let filterCategory = 'all';
-
-    function init() {
-      loadFromStorage();
-      renderMemberSelector();
-      renderStorageInfo();
-      renderDocuments();
-      renderStorageTab();
-      setupUploadArea();
+    // Storage helpers
+    function loadDocs() {
+      try { return JSON.parse(localStorage.getItem('mishraFamilyDocs') || '{}'); }
+      catch { return {}; }
+    }
+    function saveDocs(docs) {
+      localStorage.setItem('mishraFamilyDocs', JSON.stringify(docs));
+    }
+    function getMemberDocs(memberId) {
+      const all = loadDocs();
+      return all[memberId] || [];
+    }
+    function setMemberDocs(memberId, docs) {
+      const all = loadDocs();
+      all[memberId] = docs;
+      saveDocs(all);
     }
 
-    function loadFromStorage() {
-      const stored = localStorage.getItem('mishraFamilyDocs');
-      if (stored) {
-        const data = JSON.parse(stored);
-        FAMILY.members = data.members;
-        FAMILY.storagePerMember = data.storagePerMember || 524288000;
-      }
+    function formatBytes(b) {
+      if (b < 1024) return b + ' B';
+      if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+      if (b < 1073741824) return (b / 1048576).toFixed(1) + ' MB';
+      return (b / 1073741824).toFixed(2) + ' GB';
+    }
+    function formatDate(ts) {
+      const d = new Date(ts);
+      return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
     }
 
-    function saveToStorage() {
-      localStorage.setItem('mishraFamilyDocs', JSON.stringify(FAMILY));
-    }
-
-    function getCurrentMember() {
-      return FAMILY.members.find(m => m.id === currentMemberId);
-    }
-
-    function renderMemberSelector() {
-      const container = document.getElementById('memberSelector');
-      container.innerHTML = FAMILY.members.map(member => `
-        <button class="member-button ${member.id === currentMemberId ? 'active' : ''}" onclick="selectMember('${member.id}')">
-          ${member.icon} ${member.name}
-        </button>
-      `).join('');
-    }
-
-    function selectMember(memberId) {
-      currentMemberId = memberId;
-      renderMemberSelector();
-      renderStorageInfo();
-      renderDocuments();
-      renderStorageTab();
-    }
-
-    function renderStorageInfo() {
-      const member = getCurrentMember();
-      const percentage = (member.storageUsed / FAMILY.storagePerMember) * 100;
-      const usedMB = (member.storageUsed / 1024 / 1024).toFixed(1);
-      const totalMB = 500;
-
-      const html = `
-        <div class="storage-header">
-          <div class="storage-label">${member.name}'s Storage</div>
-          <div class="storage-amount">${usedMB} MB / ${totalMB} MB</div>
-        </div>
-        <div class="storage-bar">
-          <div class="storage-fill" style="width: ${Math.min(percentage, 100)}%"></div>
-        </div>
-        <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem;">${Math.round(percentage)}% used</div>
-        <div class="storage-warning ${percentage > 80 ? 'show' : ''}">
-          ⚠️ Storage is ${percentage > 90 ? 'almost' : 'getting'} full. Consider deleting old documents.
-        </div>
-      `;
-
-      document.getElementById('storageInfo').innerHTML = html;
-    }
-
-    function renderStorageTab() {
-      const member = getCurrentMember();
-      const percentage = (member.storageUsed / FAMILY.storagePerMember) * 100;
-      const usedMB = (member.storageUsed / 1024 / 1024).toFixed(1);
-
-      const html = `
-        <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 8px;">
-          <div style="font-weight: 600; color: #1e293b; margin-bottom: 1rem;">${member.name}'s Storage Details</div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
-            <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-              <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem;">Used</div>
-              <div style="font-size: 1.5rem; font-weight: 700; color: #0f766e;">${usedMB} MB</div>
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-              <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem;">Available</div>
-              <div style="font-size: 1.5rem; font-weight: 700; color: #16a34a;">${(500 - usedMB).toFixed(1)} MB</div>
-            </div>
-            <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-              <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem;">Documents</div>
-              <div style="font-size: 1.5rem; font-weight: 700; color: #0f766e;">${member.documents.length}</div>
-            </div>
-          </div>
-          <div style="margin-top: 1.5rem;">
-            <div style="margin-bottom: 0.5rem; font-weight: 600; color: #1e293b;">Storage Usage</div>
-            <div style="width: 100%; height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden;">
-              <div style="width: ${Math.min(percentage, 100)}%; height: 100%; background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);"></div>
-            </div>
-            <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #64748b;">${Math.round(percentage)}% of 500 MB used</div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('storageDetails').innerHTML = html;
-
-      // Family storage chart
-      const familyHtml = FAMILY.members.map(member => {
-        const pct = (member.storageUsed / FAMILY.storagePerMember) * 100;
-        const usedMB = (member.storageUsed / 1024 / 1024).toFixed(1);
-        return `
-          <div style="margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-              <div style="font-weight: 600; color: #1e293b;">${member.icon} ${member.name}</div>
-              <div style="font-size: 0.85rem; color: #64748b;">${usedMB} MB / 500 MB</div>
-            </div>
-            <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
-              <div style="width: ${Math.min(pct, 100)}%; height: 100%; background: linear-gradient(90deg, #14b8a6 0%, #0f766e 100%);"></div>
-            </div>
-          </div>
-        `;
+    function renderMemberPills() {
+      const pills = document.getElementById('memberPills');
+      pills.innerHTML = MEMBERS.map(m => {
+        const count = getMemberDocs(m.id).length;
+        return `<button class="filter-pill${m.id === STATE.currentMember ? ' active' : ''}" data-member="${m.id}">
+          ${m.name}
+          <span class="count">${count}</span>
+        </button>`;
       }).join('');
-
-      document.getElementById('familyStorageChart').innerHTML = familyHtml;
+      pills.querySelectorAll('.filter-pill').forEach(p => {
+        p.addEventListener('click', () => {
+          STATE.currentMember = p.getAttribute('data-member');
+          STATE.currentCategory = 'all';
+          renderAll();
+        });
+      });
     }
 
-    function renderDocuments() {
-      const member = getCurrentMember();
-      const documentsToShow = filterCategory === 'all'
-        ? member.documents
-        : member.documents.filter(doc => doc.category === filterCategory);
+    function renderCategoryPills() {
+      const docs = getMemberDocs(STATE.currentMember);
+      const pills = document.getElementById('categoryPills');
+      pills.innerHTML = CATEGORIES.map(c => {
+        const count = c.id === 'all' ? docs.length : docs.filter(d => d.category === c.id).length;
+        return `<button class="filter-pill${c.id === STATE.currentCategory ? ' active' : ''}" data-cat="${c.id}">
+          ${c.label}
+          <span class="count">${count}</span>
+        </button>`;
+      }).join('');
+      pills.querySelectorAll('.filter-pill').forEach(p => {
+        p.addEventListener('click', () => {
+          STATE.currentCategory = p.getAttribute('data-cat');
+          renderAll();
+        });
+      });
+    }
 
-      const container = document.getElementById('documentsGrid');
+    function renderStats() {
+      const docs = getMemberDocs(STATE.currentMember);
+      const totalSize = docs.reduce((sum, d) => sum + (d.size || 0), 0);
+      const QUOTA = 50 * 1024 * 1024; // soft 50MB quota indicator
+      document.getElementById('docCount').textContent = docs.length;
+      document.getElementById('storageUsed').textContent = formatBytes(totalSize);
+      document.getElementById('storageFill').style.width = Math.min(100, (totalSize / QUOTA) * 100) + '%';
+      const last = docs.reduce((max, d) => Math.max(max, d.uploadedAt || 0), 0);
+      document.getElementById('lastUpload').textContent = last ? formatDate(last) : '—';
+    }
 
-      if (documentsToShow.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">📄</div>
-            <div class="empty-state-title">No Documents</div>
-            <div class="empty-state-text">No documents found in this category. Upload documents in the Upload tab.</div>
-          </div>
-        `;
+    function renderDocs() {
+      const docs = getMemberDocs(STATE.currentMember);
+      const filtered = STATE.currentCategory === 'all'
+        ? docs
+        : docs.filter(d => d.category === STATE.currentCategory);
+      filtered.sort((a, b) => (b.uploadedAt || 0) - (a.uploadedAt || 0));
+
+      const container = document.getElementById('docsContainer');
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="empty-state">
+          <div class="empty-state-title">No documents yet</div>
+          <div class="empty-state-subtitle">Upload a PDF or image to get started.</div>
+        </div>`;
         return;
       }
 
-      container.innerHTML = documentsToShow.map((doc, idx) => {
-        const categoryEmojis = {
-          'identity': '🆔',
-          'education': '🎓',
-          'insurance': '🛡️',
-          'medical': '⚕️',
-          'legal': '⚖️',
-          'other': '📋'
-        };
-
-        const fileTypeEmojis = {
-          'pdf': '📕',
-          'image': '🖼️',
-          'default': '📄'
-        };
-
-        const fileType = doc.name.toLowerCase().endsWith('.pdf') ? 'pdf' : doc.mimeType.startsWith('image') ? 'image' : 'default';
-        const emoji = fileTypeEmojis[fileType];
-
-        return `
-          <div class="document-card">
-            <div class="document-preview">${emoji}</div>
-            <div class="document-info">
-              <div class="document-name" title="${doc.name}">${doc.name}</div>
-              <div class="document-meta">
-                <span class="document-category">${categoryEmojis[doc.category]} ${doc.category}</span>
-                <span class="document-size">${(doc.size / 1024 / 1024).toFixed(1)} MB</span>
-              </div>
-              <div class="document-date">${new Date(doc.uploadDate).toLocaleDateString()}</div>
-              <div class="document-actions">
-                <button class="document-action-btn" onclick="downloadDocument('${idx}')">📥 Download</button>
-                <button class="document-action-btn delete" onclick="deleteDocument('${idx}')">🗑️ Delete</button>
-              </div>
-            </div>
+      container.innerHTML = '<div class="docs-grid">' + filtered.map(d => {
+        const ext = (d.name.split('.').pop() || 'FILE').toUpperCase().slice(0, 4);
+        return `<div class="doc-card">
+          <div class="doc-card-top">
+            <div class="doc-icon">${ext}</div>
           </div>
-        `;
-      }).join('');
+          <div>
+            <div class="doc-name" title="${escapeHtml(d.name)}">${escapeHtml(d.name)}</div>
+            ${d.note ? `<div class="doc-meta" style="margin-top: 0.25rem;">${escapeHtml(d.note)}</div>` : ''}
+          </div>
+          <div class="doc-meta">
+            <span class="doc-category">${getCategoryLabel(d.category)}</span>
+            <span class="doc-meta-dot">·</span>
+            <span>${formatBytes(d.size)}</span>
+            <span class="doc-meta-dot">·</span>
+            <span>${formatDate(d.uploadedAt)}</span>
+          </div>
+          <div class="doc-actions">
+            <a href="${d.data}" download="${escapeAttr(d.name)}" class="doc-action">Download</a>
+            <button class="doc-action" onclick="openDoc('${d.id}')">View</button>
+            <button class="doc-action danger" onclick="deleteDoc('${d.id}')">Delete</button>
+          </div>
+        </div>`;
+      }).join('') + '</div>';
     }
 
-    function setupUploadArea() {
-      const uploadArea = document.getElementById('uploadArea');
-      const fileInput = document.getElementById('fileInput');
-
-      uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-      });
-
-      uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('dragover');
-      });
-
-      uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        handleFiles(e.dataTransfer.files);
-      });
-
-      fileInput.addEventListener('change', (e) => {
-        handleFiles(e.target.files);
-      });
+    function getCategoryLabel(catId) {
+      const c = CATEGORIES.find(c => c.id === catId);
+      return c ? c.label : catId;
     }
-
-    function triggerFileInput() {
-      document.getElementById('fileInput').click();
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
+    function escapeAttr(s) { return escapeHtml(s); }
 
-    function handleFiles(files) {
-      const member = getCurrentMember();
-      const maxFileSize = 50 * 1024 * 1024; // 50MB
-
-      for (let file of files) {
-        if (file.size > maxFileSize) {
-          alert(`${file.name} is too large (max 50MB)`);
-          continue;
-        }
-
-        if (member.storageUsed + file.size > FAMILY.storagePerMember) {
-          alert(`Not enough storage space for ${file.name}`);
-          continue;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const doc = {
-            name: file.name,
-            size: file.size,
-            mimeType: file.type,
-            category: selectedCategory,
-            uploadDate: new Date().toISOString(),
-            data: e.target.result // Base64 encoded file
-          };
-
-          member.documents.push(doc);
-          member.storageUsed += file.size;
-          saveToStorage();
-
-          renderStorageInfo();
-          renderDocuments();
-          renderStorageTab();
-        };
-        reader.readAsArrayBuffer(file);
+    function openDoc(id) {
+      const docs = getMemberDocs(STATE.currentMember);
+      const d = docs.find(x => x.id === id);
+      if (!d) return;
+      const w = window.open();
+      if (d.data.startsWith('data:application/pdf')) {
+        w.document.write(`<iframe src="${d.data}" style="border:0;width:100%;height:100vh"></iframe>`);
+      } else {
+        w.document.write(`<img src="${d.data}" style="max-width:100%;height:auto">`);
       }
+    }
 
-      // Reset file input
+    function deleteDoc(id) {
+      if (!confirm('Delete this document?')) return;
+      let docs = getMemberDocs(STATE.currentMember);
+      docs = docs.filter(d => d.id !== id);
+      setMemberDocs(STATE.currentMember, docs);
+      renderAll();
+    }
+
+    function renderAll() {
+      renderMemberPills();
+      renderCategoryPills();
+      renderStats();
+      renderDocs();
+    }
+
+    // Upload handling
+    function setupUpload() {
+      const fileInput = document.getElementById('fileInput');
+      const dropArea = document.getElementById('uploadArea');
+
+      fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+      ['dragenter','dragover'].forEach(ev => dropArea.addEventListener(ev, e => {
+        e.preventDefault(); dropArea.classList.add('dragover');
+      }));
+      ['dragleave','drop'].forEach(ev => dropArea.addEventListener(ev, e => {
+        e.preventDefault(); dropArea.classList.remove('dragover');
+      }));
+      dropArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+    }
+
+    async function handleFiles(files) {
+      for (const file of files) {
+        if (file.size > 10 * 1024 * 1024) {
+          alert(`"${file.name}" exceeds 10 MB. Use compressed PDFs for large statements.`);
+          continue;
+        }
+        const dataUrl = await fileToDataUrl(file);
+        STATE.pendingFile = { name: file.name, size: file.size, type: file.type, data: dataUrl };
+        document.getElementById('modalFileName').textContent = file.name + ' · ' + formatBytes(file.size);
+        document.getElementById('modalCategory').value = guessCategory(file.name);
+        document.getElementById('modalNote').value = '';
+        document.getElementById('uploadModal').classList.add('active');
+        // Wait for modal close before showing next
+        await new Promise(resolve => { STATE.pendingResolve = resolve; });
+      }
       document.getElementById('fileInput').value = '';
     }
 
-    function selectCategory(category) {
-      selectedCategory = category;
-      document.querySelectorAll('.category-filter .category-button').forEach((btn, idx) => {
-        btn.classList.remove('active');
+    function guessCategory(name) {
+      const l = name.toLowerCase();
+      if (l.includes('cas') || l.includes('statement')) return 'cas';
+      if (l.includes('pan') || l.includes('aadhaar') || l.includes('kyc')) return 'kyc';
+      if (l.includes('folio')) return 'folio';
+      if (l.includes('tax') || l.includes('form16') || l.includes('itr')) return 'tax';
+      if (l.includes('insur') || l.includes('policy')) return 'insurance';
+      return 'other';
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = e => resolve(e.target.result);
+        r.onerror = reject;
+        r.readAsDataURL(file);
       });
-      event.target.classList.add('active');
     }
 
-    function filterDocuments(category) {
-      filterCategory = category;
-      document.querySelectorAll('.category-filter .category-button').forEach(btn => {
-        btn.classList.remove('active');
+    function confirmUpload() {
+      if (!STATE.pendingFile) return;
+      const category = document.getElementById('modalCategory').value;
+      const note = document.getElementById('modalNote').value.trim();
+      const docs = getMemberDocs(STATE.currentMember);
+      docs.push({
+        id: 'doc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+        name: STATE.pendingFile.name,
+        size: STATE.pendingFile.size,
+        type: STATE.pendingFile.type,
+        data: STATE.pendingFile.data,
+        category,
+        note,
+        uploadedAt: Date.now(),
       });
-      event.target.classList.add('active');
-      renderDocuments();
-    }
-
-    function downloadDocument(index) {
-      const member = getCurrentMember();
-      const doc = member.documents[index];
-      const link = document.createElement('a');
-      link.href = doc.data;
-      link.download = doc.name;
-      link.click();
-    }
-
-    function deleteDocument(index) {
-      if (confirm('Delete this document?')) {
-        const member = getCurrentMember();
-        member.storageUsed -= member.documents[index].size;
-        member.documents.splice(index, 1);
-        saveToStorage();
-        renderStorageInfo();
-        renderDocuments();
-        renderStorageTab();
+      try {
+        setMemberDocs(STATE.currentMember, docs);
+      } catch (err) {
+        alert('Could not save document — storage may be full. Try removing older files first.');
+        return;
       }
+      STATE.pendingFile = null;
+      closeModal();
+      renderAll();
     }
 
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
-      document.getElementById(tab).classList.add('active');
-      event.target.classList.add('active');
+    function closeModal() {
+      document.getElementById('uploadModal').classList.remove('active');
+      if (STATE.pendingResolve) { STATE.pendingResolve(); STATE.pendingResolve = null; }
     }
 
-    function goBack() {
-      window.location.href = '/dashboard.html';
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      // Auth check
+      try {
+        const s = JSON.parse(localStorage.getItem('mishraFamilySession') || 'null');
+        if (!s || !s.expiresAt || new Date(s.expiresAt) <= new Date()) {
+          window.location.href = 'auth.html';
+          return;
+        }
+      } catch { window.location.href = 'auth.html'; return; }
 
-    window.addEventListener('DOMContentLoaded', init);
+      renderAll();
+      setupUpload();
+    });
   </script>
 </body>
 </html>
