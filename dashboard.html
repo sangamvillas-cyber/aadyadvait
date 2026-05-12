@@ -718,6 +718,7 @@
       const gain = d.totalGain;
       const gainPct = d.totalGainPercent;
       const gainClass = gain >= 0 ? 'positive' : 'negative';
+      const miniAlloc = memberAllocBar(m.id, d);
       return `<a class="member-card" href="${m.id}-profile.html">
         <div class="member-card-header">
           <div class="member-avatar">${m.avatar}</div>
@@ -735,6 +736,7 @@
             <div class="member-stat-value ${gainClass}">${gain >= 0 ? '+' : ''}${gainPct.toFixed(2)}%</div>
           </div>
         </div>
+        ${miniAlloc}
       </a>`;
     }
 
@@ -751,6 +753,31 @@
         }
         return memberCard(m, data[m.id]);
       }).join('');
+    }
+
+    function memberAllocBar(memberId, d) {
+      if (!d.transactions) return '';
+      const t = { large: 0, flexi: 0, mid: 0, small: 0, large_mid: 0 };
+      for (const tx of d.transactions) {
+        const cat = CAT_MAP[tx.fund];
+        if (cat && cat !== 'liquid') t[cat] = (t[cat] || 0) + tx.units * tx.currentNav;
+      }
+      t.large += t.large_mid / 2;
+      t.mid   += t.large_mid / 2;
+      const equity = t.large + t.flexi + t.mid + t.small;
+      if (!equity) return '';
+      const segs = [
+        { key: 'large', color: '#1E40AF' },
+        { key: 'flexi', color: '#6D28D9' },
+        { key: 'mid',   color: '#B45309' },
+        { key: 'small', color: '#B91C1C' },
+      ].filter(s => t[s.key] > 0);
+      const bars = segs.map(s => `<div style="flex:${(t[s.key]/equity*100).toFixed(1)};background:${s.color};height:4px;border-radius:999px;"></div>`).join('');
+      const labels = segs.map(s => `<span style="color:${s.color};font-size:0.6875rem;font-weight:600;">${(t[s.key]/equity*100).toFixed(0)}% ${s.key[0].toUpperCase()+s.key.slice(1)}</span>`).join('<span style="color:var(--text-tertiary);padding:0 3px;">·</span>');
+      return `<div style="margin-top:0.875rem;padding-top:0.75rem;border-top:1px solid var(--border);">
+        <div style="display:flex;gap:3px;margin-bottom:0.4rem;">${bars}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.25rem 0.5rem;">${labels}</div>
+      </div>`;
     }
 
     const CAT_MAP = {
