@@ -505,6 +505,9 @@
     <!-- Member filter -->
     <div class="filter-pills" id="memberPills"></div>
 
+    <!-- Section nav pills -->
+    <div class="filter-pills" id="sectionPills"></div>
+
     <!-- Identity + Bank sections -->
     <div id="mainContent"></div>
 
@@ -619,6 +622,7 @@
 
     const STATE = {
       currentMember: 'family',
+      currentSection: 'passport',
       pendingFile: null,
       pendingMember: null,
       identity: null,
@@ -958,13 +962,35 @@
       renderAll();
     }
 
+    const SECTIONS = [
+      { id: 'passport', label: 'Passport' },
+      { id: 'aadhaar', label: 'Aadhaar' },
+      { id: 'bank',    label: 'Bank' },
+      { id: 'files',   label: 'Files' },
+    ];
+
+    function renderSectionPills() {
+      const el = document.getElementById('sectionPills');
+      el.innerHTML = SECTIONS.map(s =>
+        `<button class="filter-pill${s.id === STATE.currentSection ? ' active' : ''}" data-section="${s.id}">${s.label}</button>`
+      ).join('');
+      el.querySelectorAll('.filter-pill').forEach(p => {
+        p.addEventListener('click', () => { STATE.currentSection = p.dataset.section; renderAll(); });
+      });
+    }
+
     function renderAll() {
       renderMemberPills();
+      renderSectionPills();
 
-      const content = renderPassportSection() + renderAadhaarSection() + renderBankSection();
-      document.getElementById('mainContent').innerHTML = content;
-
-      renderFilesSection();
+      const s = STATE.currentSection;
+      let html = '';
+      if (s === 'passport') html = renderPassportSection();
+      else if (s === 'aadhaar') html = renderAadhaarSection();
+      else if (s === 'bank') html = renderBankSection();
+      document.getElementById('mainContent').innerHTML = html;
+      document.getElementById('filesSection').style.display = s === 'files' ? '' : 'none';
+      if (s === 'files') renderFilesSection();
 
       const sub = document.getElementById('pageSubtitle');
       if (sub) sub.textContent = STATE.currentMember === 'family'
