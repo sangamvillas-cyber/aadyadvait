@@ -817,11 +817,11 @@
         ? INDIVIDUAL_MEMBERS.map(m => m.id)
         : [STATE.currentMember];
 
-      // Deduplicate joint accounts — show each account only once
       const seen = new Set();
       const cards = [];
       for (const id of memberIds) {
         for (const acct of (identity[id]?.bankAccounts || [])) {
+          if (acct.type === 'PPF') continue;
           const key = acct.accountNo;
           if (seen.has(key)) continue;
           seen.add(key);
@@ -830,6 +830,28 @@
       }
       if (cards.length === 0) return '';
       return `<div class="section-heading" style="margin-top:1.5rem;">Bank accounts</div>
+        <div class="passport-grid">${cards.join('')}</div>`;
+    }
+
+    function renderPpfSection() {
+      const identity = STATE.identity?.members || {};
+      const memberIds = STATE.currentMember === 'family'
+        ? INDIVIDUAL_MEMBERS.map(m => m.id)
+        : [STATE.currentMember];
+
+      const seen = new Set();
+      const cards = [];
+      for (const id of memberIds) {
+        for (const acct of (identity[id]?.bankAccounts || [])) {
+          if (acct.type !== 'PPF') continue;
+          const key = acct.accountNo;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          cards.push(renderBankCard(id, acct));
+        }
+      }
+      if (cards.length === 0) return '<p style="color:var(--text-secondary);margin-top:2rem;">No PPF accounts on file.</p>';
+      return `<div class="section-heading" style="margin-top:1.5rem;">PPF accounts</div>
         <div class="passport-grid">${cards.join('')}</div>`;
     }
 
@@ -984,6 +1006,7 @@
       { id: 'passport', label: 'Passport' },
       { id: 'aadhaar', label: 'Aadhaar' },
       { id: 'bank',    label: 'Bank' },
+      { id: 'ppf',     label: 'PPF' },
       { id: 'files',   label: 'Files' },
     ];
 
@@ -1006,6 +1029,7 @@
       if (s === 'passport') html = renderPassportSection();
       else if (s === 'aadhaar') html = renderAadhaarSection();
       else if (s === 'bank') html = renderBankSection();
+      else if (s === 'ppf') html = renderPpfSection();
       document.getElementById('mainContent').innerHTML = html;
       document.getElementById('filesSection').style.display = s === 'files' ? '' : 'none';
       if (s === 'files') renderFilesSection();
