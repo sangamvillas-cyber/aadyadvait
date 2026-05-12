@@ -71,27 +71,27 @@ async function extractText(filePath, pwd) {
 function parseCas(text) {
   const holdings = [];
 
-  // Split into folio blocks on "Folio No"
-  const blocks = text.split(/(?=Folio\s+No\s*[:\.])/i);
+  // Split into folio blocks on "FOLIO NO:" (MFCentral CAS format)
+  const blocks = text.split(/(?=FOLIO\s+NO\s*[:\.])/i);
 
   for (const block of blocks) {
-    // Extract folio number (e.g. "10503312 / 01"  →  "10503312")
-    const folioMatch = block.match(/Folio\s+No\s*[:.]\s*([\w\/\-]+)/i);
+    // Extract folio number — "FOLIO NO: 10354395"
+    const folioMatch = block.match(/FOLIO\s+NO\s*[:.]\s*([\w\/\-]+)/i);
     if (!folioMatch) continue;
-    const folio = folioMatch[1].replace(/\s*\/\s*\d+$/, '').trim(); // strip sub-folio suffix
+    const folio = folioMatch[1].replace(/\s*\/\s*\d+$/, '').trim();
 
-    // Closing units
+    // Closing units — same line as Nav: "Closing Unit Balance: 38,100.935Nav as on..."
     const unitsMatch = block.match(/Closing\s+Unit\s+Balance\s*[:\s]+([\d,]+\.?\d*)/i);
     if (!unitsMatch) continue;
     const units = parseFloat(unitsMatch[1].replace(/,/g, ''));
 
-    // NAV and date  — "NAV on 11-May-2026: Rs.91.5245"
-    const navMatch = block.match(/NAV\s+(?:on|as\s+on)\s+([\d]{1,2}[- ][A-Za-z]+[- ][\d]{4})\s*[:\s]+(?:Rs\.?\s*|₹\s*)([\d,]+\.?\d*)/i);
+    // NAV and date — "Nav as on 08-MAY-2026: INR 91.5245" or "NAV on 11-May-2026: Rs.91.5245"
+    const navMatch = block.match(/Nav\s+as\s+on\s+([\d]{1,2}[- ][A-Za-z]+[- ][\d]{4})\s*[:\s]+(?:INR|Rs\.?|₹)\s*([\d,]+\.?\d*)/i);
     if (!navMatch) continue;
     const navDate = normaliseDate(navMatch[1]);
     const nav     = parseFloat(navMatch[2].replace(/,/g, ''));
 
-    // Fund name — appears as the first non-empty line after the folio header line
+    // Fund name — line immediately after FOLIO NO line; strip "(Advisor:...) ISIN:..." suffix
     const fundName = extractFundName(block);
     if (!fundName) continue;
 
@@ -103,12 +103,15 @@ function parseCas(text) {
 
 function extractFundName(block) {
   const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
-  // Skip lines that look like headers (folio, PAN, KYC, ISIN, Registrar, dates, amounts)
-  const skipPattern = /Folio|PAN:|KYC|ISIN|Registrar|NOMINEE|^\d|Opening|Closing|NAV|Valuation|Transaction|Purchase|Redemption|Dividend|Switch|SIP|IDCW|\bRs\b|\bINR\b/i;
+  const skipPattern = /^FOLIO|^PAN:|^KYC|Registrar|NOMINEE|^-+|Opening|Closing|^Nav\s+as|Valuation|Purchase|Redemption|Dividend|Switch|SIP|IDCW|\bRs\b/i;
   for (const line of lines) {
     if (skipPattern.test(line)) continue;
-    if (line.length < 8) continue;  // too short to be a fund name
-    return line;
+    // Lines starting with digits are transaction rows
+    if (/^\d{2}-[A-Z]{3}-\d{4}/.test(line)) continue;
+    if (line.length < 8) continue;
+    // Strip "(Advisor:...) ISIN:..." suffix that MFCentral appends to fund names
+    const name = line.replace(/\s*\(Advisor:.*$/i, '').replace(/\s*ISIN:.*$/i, '').trim();
+    if (name.length >= 8) return name;
   }
   return null;
 }
