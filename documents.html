@@ -593,6 +593,13 @@
     function renderPassportCard(memberId, p) {
       const status = passportStatus(p.dateOfExpiry);
       const fullName = [p.givenName, p.surname].filter(Boolean).join(' ');
+      const downloadName = `${memberId}-passport-${p.number}.jpg`;
+      const imageActions = p.image
+        ? `<div class="doc-actions" style="border-top: 1px solid var(--border-subtle); padding: 0.625rem 1rem;">
+            <a href="${p.image}" target="_blank" rel="noopener" class="doc-action">View scan</a>
+            <a href="${p.image}" download="${downloadName}" class="doc-action">Download</a>
+          </div>`
+        : '';
       return `<div class="passport-card">
         <div class="passport-card-header">
           <div class="passport-card-owner">${memberName(memberId)}</div>
@@ -631,6 +638,7 @@
             <div class="passport-field-value">${p.placeOfIssue}</div>
           </div>
         </div>
+        ${imageActions}
       </div>`;
     }
 

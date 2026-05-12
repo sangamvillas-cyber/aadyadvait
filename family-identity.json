@@ -13,6 +13,7 @@
         "placeOfBirth": "ALLAHABAD, UTTAR PRADESH",
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2018-07-10",
+        "image": "passports/siddharth-passport.jpg",
         "dateOfExpiry": "2028-07-09"
       }
     },
@@ -28,6 +29,7 @@
         "placeOfBirth": "SANT RAVIDAS NAGAR, UTTAR PRADESH",
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2017-12-04",
+        "image": "passports/archana-passport.jpg",
         "dateOfExpiry": "2027-12-03"
       }
     },
@@ -43,6 +45,7 @@
         "placeOfBirth": "LUCKNOW, UTTAR PRADESH",
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2025-05-07",
+        "image": "passports/aadya-passport.jpg",
         "dateOfExpiry": "2030-05-06"
       }
     },
@@ -58,6 +61,7 @@
         "placeOfBirth": "LUCKNOW",
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2025-05-07",
+        "image": "passports/advait-passport.jpg",
         "dateOfExpiry": "2030-05-06"
       }
     }
