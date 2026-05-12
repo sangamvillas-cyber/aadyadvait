@@ -485,12 +485,24 @@
       font-weight: 600;
     }
 
+    /* Category weightage summary */
+    .cat-summary { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.125rem 1.375rem; margin-bottom: 1.5rem; }
+    .cat-summary-title { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
+    .cat-row { display: grid; grid-template-columns: 90px 1fr 44px 76px; gap: 0.75rem; align-items: center; margin-bottom: 0.625rem; }
+    .cat-row:last-child { margin-bottom: 0; }
+    .cat-label { font-size: 0.8125rem; color: var(--text-secondary); font-weight: 500; }
+    .cat-bar-wrap { height: 5px; background: var(--bg-elevated, #f0efe8); border-radius: 999px; overflow: hidden; }
+    .cat-bar { height: 100%; border-radius: 999px; }
+    .cat-pct { font-size: 0.8125rem; font-weight: 700; color: var(--text-primary); text-align: right; }
+    .cat-val { font-size: 0.75rem; color: var(--text-secondary); text-align: right; }
+
     @media (max-width: 640px) {
       .topbar { padding: 0.75rem 1rem; }
       .nav-bar { padding: 0 1rem; }
       .content { padding: 1.5rem 1rem; }
       .page-title { font-size: 1.5rem; }
       .stat-value { font-size: 1.375rem; }
+      .cat-row { grid-template-columns: 80px 1fr 40px 60px; gap: 0.5rem; }
     }
   </style>
 </head>
@@ -558,6 +570,10 @@
         <div class="page-header">
           <h1 class="page-title">Mutual funds</h1>
           <p class="page-subtitle">Every fund holding, grouped by family member.</p>
+        </div>
+        <div class="cat-summary">
+          <div class="cat-summary-title">Allocation by market cap</div>
+          <div id="catSummary"></div>
         </div>
         <div id="fundsContainer"></div>
       </section>
@@ -737,9 +753,61 @@
       }).join('');
     }
 
+    const CAT_MAP = {
+      'Parag Parikh Flexi Cap Fund - Direct Plan Growth': 'flexi',
+      'HDFC Flexi Cap Fund - Direct Plan - Growth Option': 'flexi',
+      'HDFC Nifty 50 Index Fund - Direct Plan': 'large',
+      'SUNDARAM MID CAP FUND DIRECT GROWTH': 'mid',
+      'Mirae Asset Large and Midcap Fund - Direct Plan - Growth': 'large_mid',
+      'Mirae Asset Large Cap Fund - Direct Plan': 'large',
+      'Mirae Asset Large Cap Fund - Direct Plan - Growth': 'large',
+      'Quantum Value Fund - Direct Plan Growth Option': 'large',
+      'Axis ELSS Tax Saver Fund - Direct Growth': 'large',
+      'Axis Liquid Fund - Direct Growth': 'liquid',
+      'ICICI Prudential Nifty 50 Index Fund - Direct Plan Growth': 'large',
+      'Parag Parikh ELSS Tax Saver Fund - Direct Plan': 'flexi',
+      'Mirae Asset Midcap Fund - Direct Plan': 'mid',
+      'Quant Small Cap Fund - Direct Plan - Growth': 'small',
+      'Axis Mid Cap Fund - Direct Growth': 'mid',
+      'HDFC Mid Cap Fund - Direct Plan - Growth Option': 'mid',
+      'SBI Small Cap Fund Direct Growth': 'small',
+      'HSBC Small Cap Fund - Direct Growth': 'small',
+    };
+
+    function renderCatSummary() {
+      const data = APP_STATE.data;
+      const t = { large: 0, flexi: 0, mid: 0, small: 0, large_mid: 0 };
+      for (const [key, mem] of Object.entries(data)) {
+        if (!mem.transactions) continue;
+        for (const tx of mem.transactions) {
+          const cat = CAT_MAP[tx.fund];
+          if (cat && cat !== 'liquid') t[cat] = (t[cat] || 0) + tx.units * tx.currentNav;
+        }
+      }
+      t.large += t.large_mid / 2;
+      t.mid   += t.large_mid / 2;
+      const equity = t.large + t.flexi + t.mid + t.small;
+      const cats = [
+        { key: 'large', label: 'Large cap', color: '#1E40AF' },
+        { key: 'flexi', label: 'Flexi cap', color: '#6D28D9' },
+        { key: 'mid',   label: 'Mid cap',   color: '#B45309' },
+        { key: 'small', label: 'Small cap', color: '#B91C1C' },
+      ];
+      document.getElementById('catSummary').innerHTML = cats.map(c => {
+        const pct = (t[c.key] / equity * 100).toFixed(1);
+        return `<div class="cat-row">
+          <div class="cat-label">${c.label}</div>
+          <div class="cat-bar-wrap"><div class="cat-bar" style="width:${pct}%;background:${c.color}"></div></div>
+          <div class="cat-pct">${pct}%</div>
+          <div class="cat-val">${fmtCompact(t[c.key])}</div>
+        </div>`;
+      }).join('');
+    }
+
     function renderFunds() {
       const data = APP_STATE.data;
       const container = document.getElementById('fundsContainer');
+      renderCatSummary();
       container.innerHTML = MEMBERS.filter(m => m.enabled && data[m.id]).map(m => {
         const d = data[m.id];
         const rows = d.transactions.map(t => {
