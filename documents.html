@@ -769,6 +769,58 @@
         <div class="passport-grid">${cards.join('')}</div>`;
     }
 
+    function renderPanCard(memberId, p) {
+      const minorBadge = p.minor
+        ? `<span style="font-size:0.6875rem;background:#FBF1D9;color:#A1660F;padding:0.125rem 0.5rem;border-radius:999px;font-weight:600;">Minor</span>`
+        : `<span style="font-size:0.6875rem;background:var(--bg-elevated);color:var(--text-secondary);padding:0.125rem 0.5rem;border-radius:999px;font-weight:500;">Individual</span>`;
+      const copyData = `PAN — ${p.name}\\nPAN No: ${p.number}\\nDOB: ${fmtDateISO(p.dob)}\\nFather: ${p.fatherName}`;
+      const imageActions = `<div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;flex-wrap:wrap;gap:0.375rem;">
+            ${p.image ? `<button class="doc-action" onclick="viewPassportScan('${p.image}','${p.name} PAN Card','${memberId}-pan.jpg')">View scan</button>` : ''}
+            ${p.image ? `<a href="${p.image}" download="${memberId}-pan.jpg" class="doc-action">Download</a>` : ''}
+            <button class="doc-action" onclick="copyText(\`${copyData}\`, this)">Copy details</button>
+           </div>`;
+      return `<div class="passport-card">
+        <div class="passport-card-header" style="background:linear-gradient(135deg,#1A3A5C 0%,#2E6DA4 100%);">
+          <div class="passport-card-owner">${memberName(memberId)}</div>
+          <div class="passport-card-flag">PAN · INCOME TAX DEPT</div>
+        </div>
+        <div class="passport-card-number">
+          <div>
+            <div class="passport-number-label">PAN</div>
+            <div class="passport-number-value" style="font-size:1.1rem;letter-spacing:0.12em;">${p.number}</div>
+          </div>
+          ${minorBadge}
+        </div>
+        <div class="passport-card-body">
+          <div style="grid-column:span 2;">
+            <div class="passport-field-label">Name</div>
+            <div class="passport-field-value">${p.name}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">DOB</div>
+            <div class="passport-field-value">${fmtDateISO(p.dob)}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Father's name</div>
+            <div class="passport-field-value">${p.fatherName}</div>
+          </div>
+        </div>
+        ${imageActions}
+      </div>`;
+    }
+
+    function renderPanSection() {
+      const identity = STATE.identity?.members || {};
+      const memberIds = STATE.currentMember === 'family'
+        ? INDIVIDUAL_MEMBERS.map(m => m.id)
+        : [STATE.currentMember];
+      const cards = memberIds.filter(id => identity[id]?.pan)
+        .map(id => renderPanCard(id, identity[id].pan));
+      if (cards.length === 0) return '';
+      return `<div class="section-heading" style="margin-top:1.5rem;">PAN cards</div>
+        <div class="passport-grid">${cards.join('')}</div>`;
+    }
+
     function renderBankCard(memberId, acct) {
       const jointLabel = acct.joint
         ? `<span style="font-size:0.6875rem;background:#E3F0E7;color:#2E7D4F;padding:0.125rem 0.5rem;border-radius:999px;font-weight:600;">Joint · ${memberName(acct.jointWith)}</span>`
@@ -1004,10 +1056,11 @@
 
     const SECTIONS = [
       { id: 'passport', label: 'Passport' },
-      { id: 'aadhaar', label: 'Aadhaar' },
-      { id: 'bank',    label: 'Bank' },
-      { id: 'ppf',     label: 'PPF' },
-      { id: 'files',   label: 'Files' },
+      { id: 'aadhaar',  label: 'Aadhaar' },
+      { id: 'pan',      label: 'PAN' },
+      { id: 'bank',     label: 'Bank' },
+      { id: 'ppf',      label: 'PPF' },
+      { id: 'files',    label: 'Files' },
     ];
 
     function renderSectionPills() {
@@ -1028,6 +1081,7 @@
       let html = '';
       if (s === 'passport') html = renderPassportSection();
       else if (s === 'aadhaar') html = renderAadhaarSection();
+      else if (s === 'pan') html = renderPanSection();
       else if (s === 'bank') html = renderBankSection();
       else if (s === 'ppf') html = renderPpfSection();
       document.getElementById('mainContent').innerHTML = html;

@@ -15,7 +15,8 @@
         "number": "AOMPM8103N",
         "name": "SIDDHARTH MISHRA",
         "fatherName": "SHEO SHYAM MISHRA",
-        "dob": "1986-01-25"
+        "dob": "1986-01-25",
+        "image": "pan/siddharth-pan.jpg"
       },
       "bankAccounts": [
         {
@@ -68,7 +69,8 @@
         "number": "CSHPA3795D",
         "name": "ARCHANA",
         "fatherName": "RADHEY MOHAN CHATURVEDI",
-        "dob": "1991-06-28"
+        "dob": "1991-06-28",
+        "image": "pan/archana-pan.jpg"
       },
       "bankAccounts": [
         {
@@ -123,7 +125,8 @@
         "name": "AADYA MISHRA",
         "fatherName": "SIDDHARTH MISHRA",
         "dob": "2022-08-09",
-        "minor": true
+        "minor": true,
+        "image": "pan/aadya-pan.jpg"
       },
       "bankAccounts": [
         {
@@ -173,7 +176,8 @@
         "name": "ADVAIT MISHRA",
         "fatherName": "SIDDHARTH MISHRA",
         "dob": "2018-12-25",
-        "minor": true
+        "minor": true,
+        "image": "pan/advait-pan.jpg"
       },
       "bankAccounts": [
         {
