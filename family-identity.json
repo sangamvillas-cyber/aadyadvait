@@ -11,6 +11,12 @@
         "imageFront": "aadhaar/siddharth-aadhaar-front.jpg",
         "imageBack": "aadhaar/siddharth-aadhaar-back.jpg"
       },
+      "pan": {
+        "number": "AOMPM8103N",
+        "name": "SIDDHARTH MISHRA",
+        "fatherName": "SHEO SHYAM MISHRA",
+        "dob": "1986-01-25"
+      },
       "bankAccounts": [
         {
           "bank": "ICICI Bank",
@@ -58,6 +64,12 @@
       }
     },
     "archana": {
+      "pan": {
+        "number": "CSHPA3795D",
+        "name": "ARCHANA",
+        "fatherName": "RADHEY MOHAN CHATURVEDI",
+        "dob": "1991-06-28"
+      },
       "bankAccounts": [
         {
           "bank": "ICICI Bank",
@@ -108,6 +120,13 @@
       }
     },
     "aadya": {
+      "pan": {
+        "number": "JBJPM4043J",
+        "name": "AADYA MISHRA",
+        "fatherName": "SIDDHARTH MISHRA",
+        "dob": "2022-08-09",
+        "minor": true
+      },
       "bankAccounts": [
         {
           "bank": "HDFC Bank",
@@ -151,6 +170,13 @@
       }
     },
     "advait": {
+      "pan": {
+        "number": "JBJPM4051C",
+        "name": "ADVAIT MISHRA",
+        "fatherName": "SIDDHARTH MISHRA",
+        "dob": "2018-12-25",
+        "minor": true
+      },
       "bankAccounts": [
         {
           "bank": "ICICI Bank",
