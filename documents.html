@@ -699,6 +699,71 @@
       </div>`;
     }
 
+    function renderBankCard(memberId, acct) {
+      const jointLabel = acct.joint
+        ? `<span style="font-size:0.6875rem;background:#E3F0E7;color:#2E7D4F;padding:0.125rem 0.5rem;border-radius:999px;font-weight:600;">Joint · ${memberName(acct.jointWith)}</span>`
+        : `<span style="font-size:0.6875rem;background:var(--bg-elevated);color:var(--text-secondary);padding:0.125rem 0.5rem;border-radius:999px;font-weight:500;">Individual</span>`;
+      const chequeActions = acct.chequeImage
+        ? `<div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;">
+            <button class="doc-action" onclick="viewPassportScan('${acct.chequeImage}','${acct.bank} cancelled cheque','${memberId}-${acct.bank.replace(/\s/g,'-').toLowerCase()}-cheque.jpg')">View cheque</button>
+            <a href="${acct.chequeImage}" download="${memberId}-cheque.jpg" class="doc-action">Download</a>
+           </div>`
+        : '';
+      return `<div class="passport-card">
+        <div class="passport-card-header" style="background:linear-gradient(135deg,#1A4731 0%,#2E7D4F 100%);">
+          <div class="passport-card-owner">${acct.bank}</div>
+          <div class="passport-card-flag">${acct.type.toUpperCase()} ACCOUNT</div>
+        </div>
+        <div class="passport-card-number">
+          <div>
+            <div class="passport-number-label">Account no.</div>
+            <div class="passport-number-value" style="font-size:1rem;">${acct.accountNo}</div>
+          </div>
+          ${jointLabel}
+        </div>
+        <div class="passport-card-body">
+          <div>
+            <div class="passport-field-label">IFSC</div>
+            <div class="passport-field-value mono">${acct.ifsc}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Holder</div>
+            <div class="passport-field-value">${memberName(memberId)}${acct.joint ? ' + ' + memberName(acct.jointWith) : ''}</div>
+          </div>
+          <div style="grid-column:span 2;">
+            <div class="passport-field-label">Branch</div>
+            <div class="passport-field-value">${acct.branch}</div>
+          </div>
+        </div>
+        ${chequeActions}
+      </div>`;
+    }
+
+    function renderBankSection() {
+      const identity = STATE.identity?.members || {};
+      const showSection = STATE.currentCategory === 'all' || STATE.currentCategory === 'bank';
+      if (!showSection) return '';
+
+      const memberIds = STATE.currentMember === 'family'
+        ? INDIVIDUAL_MEMBERS.map(m => m.id)
+        : [STATE.currentMember];
+
+      // Deduplicate joint accounts — show each account only once
+      const seen = new Set();
+      const cards = [];
+      for (const id of memberIds) {
+        for (const acct of (identity[id]?.bankAccounts || [])) {
+          const key = acct.accountNo;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          cards.push(renderBankCard(id, acct));
+        }
+      }
+      if (cards.length === 0) return '';
+      return `<div class="section-heading" style="margin-top:1.5rem;">Bank accounts</div>
+        <div class="passport-grid">${cards.join('')}</div>`;
+    }
+
     function renderPassportSection() {
       const identity = STATE.identity?.members || {};
       const showSection = STATE.currentCategory === 'all' || STATE.currentCategory === 'passport';
@@ -791,6 +856,16 @@
       if (passportFromIdentity > 0) {
         counts.passport = (counts.passport || 0) + passportFromIdentity;
       }
+      // Count bank accounts (deduplicated by account number)
+      const seenAccts = new Set();
+      for (const id of memberIds) {
+        for (const acct of (identity[id]?.bankAccounts || [])) {
+          if (!seenAccts.has(acct.accountNo)) {
+            seenAccts.add(acct.accountNo);
+            counts.bank = (counts.bank || 0) + 1;
+          }
+        }
+      }
 
       // Only show pills that have at least one item (always include "All" if total > 0)
       const total = Object.values(counts).reduce((a, b) => a + b, 0);
@@ -854,20 +929,20 @@
       filtered.sort((a, b) => (b.uploadedAt || 0) - (a.uploadedAt || 0));
 
       const passportSection = renderPassportSection();
+      const bankSection = renderBankSection();
+      const identitySections = passportSection + bankSection;
       const container = document.getElementById('docsContainer');
 
       if (filtered.length === 0) {
-        // No uploaded files. Only show passport section (if any) — nothing else.
-        container.innerHTML = passportSection;
+        container.innerHTML = identitySections;
         return;
       }
 
       const showOwner = STATE.currentMember === 'family';
-      // If passport cards are also visible, separate uploaded files with a heading
-      const filesHeading = passportSection
+      const filesHeading = identitySections
         ? `<div class="section-heading" style="margin-top: 1.5rem;">Uploaded files</div>`
         : '';
-      container.innerHTML = passportSection + filesHeading + '<div class="docs-grid">' + filtered.map(d => {
+      container.innerHTML = identitySections + filesHeading + '<div class="docs-grid">' + filtered.map(d => {
         const ext = (d.name.split('.').pop() || 'FILE').toUpperCase().slice(0, 4);
         return `<div class="doc-card">
           <div class="doc-card-top">

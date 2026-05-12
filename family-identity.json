@@ -2,6 +2,18 @@
   "lastUpdated": "2026-05-12",
   "members": {
     "siddharth": {
+      "bankAccounts": [
+        {
+          "bank": "ICICI Bank",
+          "branch": "Gomti Nagar Branch, 3/64 Vivek Khand, Gomti Nagar, Lucknow - 226 010",
+          "accountNo": "021401006099",
+          "ifsc": "ICIC0000214",
+          "type": "Savings",
+          "joint": true,
+          "jointWith": "archana",
+          "chequeImage": "cheques/icici-joint.jpg"
+        }
+      ],
       "passport": {
         "number": "Z4176504",
         "type": "P",
@@ -18,6 +30,27 @@
       }
     },
     "archana": {
+      "bankAccounts": [
+        {
+          "bank": "ICICI Bank",
+          "branch": "Gomti Nagar Branch, 3/64 Vivek Khand, Gomti Nagar, Lucknow - 226 010",
+          "accountNo": "021401006099",
+          "ifsc": "ICIC0000214",
+          "type": "Savings",
+          "joint": true,
+          "jointWith": "siddharth",
+          "chequeImage": "cheques/icici-joint.jpg"
+        },
+        {
+          "bank": "HDFC Bank",
+          "branch": "5/19, Vishal Khand, Gomti Nagar, Lucknow - 226010",
+          "accountNo": "50100453942533",
+          "ifsc": "HDFC0001112",
+          "type": "Savings",
+          "joint": false,
+          "chequeImage": "cheques/hdfc-archana.jpg"
+        }
+      ],
       "passport": {
         "number": "Z4168372",
         "type": "P",
