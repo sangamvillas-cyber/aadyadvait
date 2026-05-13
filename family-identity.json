@@ -56,6 +56,20 @@
     }
   ],
   "schoolProfiles": {
+    "aadya": {
+      "name": "Aadya Mishra",
+      "school": "Red Hill School, Lucknow",
+      "currentClass": "Play Group - B",
+      "currentYear": "2025-26",
+      "admissionDate": "2025-04-01",
+      "dob": "2022-08-09",
+      "address": "23, Gokhale Marg, Lucknow",
+      "contact": "+91 7800044406",
+      "bonafide": {
+        "date": "2025-11-03",
+        "image": "school/aadya/red-hill-bonafide-2025.jpg"
+      }
+    },
     "advait": {
       "name": "Advait Mishra",
       "school": "La Martiniere College, Lucknow",
@@ -69,6 +83,33 @@
     }
   },
   "schoolRecords": {
+    "archana": [
+      {
+        "year": "2006-07",
+        "school": "M K A N Singh Higher Secondary School, Ghyanpur, Sant Ravidas Nagar (Bhadohi)",
+        "class": "Class 10 (High School)",
+        "board": "Madhyamik Shiksha Parishad, Uttar Pradesh",
+        "rollNo": "2784721",
+        "centreCode": "88/21311/1050",
+        "certificateNo": "88114507",
+        "examType": "Full Exam",
+        "division": "First",
+        "grandTotal": 392,
+        "maxMarks": 600,
+        "percentage": 65.33,
+        "dateOfResult": "2007-06-05",
+        "subjects": {
+          "Hindi":          { "total": 67 },
+          "English":        { "total": 69 },
+          "Mathematics":    { "total": 71 },
+          "Science":        { "total": 64, "note": "Grade A practical" },
+          "Social Science": { "total": 59 },
+          "Drawing":        { "total": 62 }
+        },
+        "moralSportsPhysical": "A",
+        "image": "school/archana/up-board-class10-2007.jpg"
+      }
+    ],
     "advait": [
       {
         "year": "2024-25",
@@ -139,6 +180,28 @@
           "flamingoBalance": { "date": "2026-04-08", "score": 7, "level": "L4 Moderate" },
           "plateTapping": { "date": "2026-04-11", "time": "37.29 sec", "level": "L0 Inadequate" }
         }
+      }
+    ]
+  },
+  "medicalRecords": {
+    "archana": [
+      {
+        "type": "Discharge Slip",
+        "hospital": "Vatsal Medical Centre",
+        "hospitalRegNo": "010/199",
+        "patient": "Mrs. Archana Mishra",
+        "consultant": "Dr. Samata Pandey",
+        "dateOfAdmission": "2022-08-09",
+        "dateOfDischarge": "2022-08-18",
+        "diagnosis": "G2L1 — 31.2 weeks pregnancy; prolonged labour; Fetal distress; PIH",
+        "procedure": "LSCS under spinal anaesthesia via Pfannenstiel incision at 16:56 on 9/8/2022",
+        "babyDetails": {
+          "weight": "1.5 kg",
+          "liquor": "Nil",
+          "cord": "Twice around neck (tight)"
+        },
+        "note": "Aadya Mishra birth. Baby in NICU. Patient discharged 18/8/2022 with stitches in situ.",
+        "image": "medical/archana-vatsal-discharge-2022.jpg"
       }
     ]
   },
