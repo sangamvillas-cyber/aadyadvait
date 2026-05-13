@@ -827,6 +827,52 @@
         <div class="passport-grid">${cards.join('')}</div>`;
     }
 
+    function renderVoterIdCard(memberId, v) {
+      const dobFmt = fmtDateISO(v.dob);
+      const copyData = `Voter ID (EPIC) — ${v.name}\\nEPIC No: ${v.epicNo}\\nFather: ${v.fatherName}\\nSex: ${v.sex === 'M' ? 'Male' : 'Female'}\\nDOB: ${dobFmt}`;
+      return `<div class="passport-card">
+        <div class="passport-card-header" style="background:linear-gradient(135deg,#1a4731 0%,#2d7a50 100%);">
+          <div class="passport-card-owner">${memberName(memberId)}</div>
+          <div class="passport-card-flag">VOTER ID · ECI</div>
+        </div>
+        <div class="passport-card-number">
+          <div>
+            <div class="passport-number-label">EPIC no.</div>
+            <div class="passport-number-value" style="font-size:1rem;letter-spacing:0.06em;">${v.epicNo}</div>
+          </div>
+        </div>
+        <div class="passport-card-body">
+          <div style="grid-column:span 2;">
+            <div class="passport-field-label">Name</div>
+            <div class="passport-field-value">${v.name}</div>
+          </div>
+          <div style="grid-column:span 2;">
+            <div class="passport-field-label">Father's name</div>
+            <div class="passport-field-value">${v.fatherName}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Sex · DOB</div>
+            <div class="passport-field-value">${v.sex === 'M' ? 'Male' : 'Female'} · ${dobFmt}</div>
+          </div>
+        </div>
+        <div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;">
+          <button class="doc-action" onclick="copyText(\`${copyData}\`, this)">Copy details</button>
+        </div>
+      </div>`;
+    }
+
+    function renderVoterIdSection() {
+      const identity = STATE.identity?.members || {};
+      const memberIds = STATE.currentMember === 'family'
+        ? INDIVIDUAL_MEMBERS.map(m => m.id)
+        : [STATE.currentMember];
+      const cards = memberIds.filter(id => identity[id]?.voterId)
+        .map(id => renderVoterIdCard(id, identity[id].voterId));
+      if (cards.length === 0) return '<p style="color:var(--text-secondary);margin-top:2rem;">No Voter ID on file.</p>';
+      return `<div class="section-heading" style="margin-top:1.5rem;">Voter ID</div>
+        <div class="passport-grid">${cards.join('')}</div>`;
+    }
+
     function renderBankCard(memberId, acct) {
       const jointLabel = acct.joint
         ? `<span style="font-size:0.6875rem;background:#E3F0E7;color:#2E7D4F;padding:0.125rem 0.5rem;border-radius:999px;font-weight:600;">Joint · ${memberName(acct.jointWith)}</span>`
@@ -1064,6 +1110,7 @@
       { id: 'passport', label: 'Passport' },
       { id: 'aadhaar',  label: 'Aadhaar' },
       { id: 'pan',      label: 'PAN' },
+      { id: 'voter',    label: 'Voter ID' },
       { id: 'bank',     label: 'Bank' },
       { id: 'ppf',      label: 'PPF' },
       { id: 'property', label: 'Property' },
@@ -1090,6 +1137,7 @@
       if (s === 'passport') html = renderPassportSection();
       else if (s === 'aadhaar') html = renderAadhaarSection();
       else if (s === 'pan') html = renderPanSection();
+      else if (s === 'voter') html = renderVoterIdSection();
       else if (s === 'bank') html = renderBankSection();
       else if (s === 'ppf') html = renderPpfSection();
       else if (s === 'property') html = renderPropertySection();

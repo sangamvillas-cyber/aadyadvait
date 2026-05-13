@@ -145,6 +145,13 @@
   },
   "members": {
     "siddharth": {
+      "voterId": {
+        "epicNo": "RXM4594388",
+        "name": "Siddharth Mishra",
+        "fatherName": "Shiv Shyam Mishra",
+        "sex": "M",
+        "dob": "1986-01-25"
+      },
       "aadhaar": {
         "number": "6929 2485 6064",
         "dob": "1986-01-25",
