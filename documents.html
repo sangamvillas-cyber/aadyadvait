@@ -1046,20 +1046,73 @@
             ).join('')}
           </div>
         </div>` : ''}
-        ${isVacc && rec.vaccinations?.length ? `<div style="padding:0 1rem 0.75rem;overflow-x:auto;">
-          <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
-            <thead><tr style="color:var(--text-tertiary);text-align:left;">
-              <th style="padding:0.25rem 0.5rem 0.25rem 0;font-weight:500;">Age</th>
-              <th style="padding:0.25rem 0.5rem;font-weight:500;">Vaccine</th>
-              <th style="padding:0.25rem 0 0.25rem 0.5rem;font-weight:500;white-space:nowrap;">Given</th>
-            </tr></thead>
-            <tbody>${rec.vaccinations.map((v,i) => `<tr style="border-top:1px solid var(--border-subtle);">
+        ${isVacc && rec.vaccinations?.length ? (() => {
+          // Full dose table
+          const tableRows = rec.vaccinations.map(v => {
+            if (v.doses) {
+              return v.doses.map(d => `<tr style="border-top:1px solid var(--border-subtle);">
+                <td style="padding:0.25rem 0.5rem 0.25rem 0;color:var(--text-tertiary);white-space:nowrap;">${v.age}</td>
+                <td style="padding:0.25rem 0.5rem;color:var(--text-secondary);">${v.vaccine}${d.weightKg ? ` <span style="color:var(--text-tertiary);">(${d.weightKg}kg)</span>` : ''}</td>
+                <td style="padding:0.25rem 0 0.25rem 0.5rem;white-space:nowrap;">${d.given ? fmtDateISO(d.given) : `<span style="color:#A1660F;font-weight:600;">⚠ Due${d.due ? ' ' + fmtDateISO(d.due) : ''}</span>`}</td>
+              </tr>`).join('');
+            }
+            return `<tr style="border-top:1px solid var(--border-subtle);">
               <td style="padding:0.25rem 0.5rem 0.25rem 0;color:var(--text-tertiary);white-space:nowrap;">${v.age}</td>
               <td style="padding:0.25rem 0.5rem;color:var(--text-secondary);">${v.vaccine}${v.weightKg ? ` <span style="color:var(--text-tertiary);">(${v.weightKg}kg)</span>` : ''}</td>
               <td style="padding:0.25rem 0 0.25rem 0.5rem;white-space:nowrap;">${v.given ? fmtDateISO(v.given) : '—'}</td>
-            </tr>`).join('')}</tbody>
-          </table>
-        </div>` : ''}
+            </tr>`;
+          }).join('');
+
+          // Summary badges — group by vaccine family
+          const FAMILIES = [
+            { key: 'BCG',        match: /^BCG/i },
+            { key: 'OPV',        match: /oral polio/i },
+            { key: 'Hep B',      match: /hepatitis b/i },
+            { key: 'DPT',        match: /dpt/i },
+            { key: 'IPV',        match: /\bipv\b/i },
+            { key: 'Rotateq',    match: /rotateq/i },
+            { key: 'Synflorix',  match: /synflorix/i },
+            { key: 'Measles',    match: /^measles vaccine/i },
+            { key: 'Hep A',      match: /hepatitis a/i },
+            { key: 'Varicella',  match: /varicella|chicken pox/i },
+            { key: 'MMR',        match: /^MMR/i },
+            { key: 'Typhoid',    match: /typhoid/i },
+            { key: 'PCV',        match: /\bpcv\b/i },
+            { key: 'Flu',        match: /flu vaccine/i },
+          ];
+          const badges = FAMILIES.map(f => {
+            const matches = rec.vaccinations.filter(v => f.match.test(v.vaccine));
+            if (!matches.length) return null;
+            // Check for pending doses
+            let hasDue = false;
+            let givenCount = 0;
+            matches.forEach(v => {
+              if (v.doses) { v.doses.forEach(d => { if (d.given) givenCount++; else hasDue = true; }); }
+              else if (v.given) givenCount++;
+            });
+            const total = matches.reduce((s, v) => s + (v.doses ? v.doses.length : 1), 0);
+            const label = givenCount > 1 ? `${f.key} ×${givenCount}` : f.key;
+            const bg = hasDue ? '#FBF1D9' : '#E3F0E7';
+            const color = hasDue ? '#A1660F' : '#2E7D4F';
+            const icon = hasDue ? '⚠' : '✓';
+            return `<span style="font-size:0.7rem;padding:0.1875rem 0.5rem;border-radius:999px;background:${bg};color:${color};font-weight:600;white-space:nowrap;">${icon} ${label}</span>`;
+          }).filter(Boolean).join('');
+
+          return `<div style="padding:0 1rem 0.75rem;overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+              <thead><tr style="color:var(--text-tertiary);text-align:left;">
+                <th style="padding:0.25rem 0.5rem 0.25rem 0;font-weight:500;">Age</th>
+                <th style="padding:0.25rem 0.5rem;font-weight:500;">Vaccine</th>
+                <th style="padding:0.25rem 0 0.25rem 0.5rem;font-weight:500;white-space:nowrap;">Given</th>
+              </tr></thead>
+              <tbody>${tableRows}</tbody>
+            </table>
+          </div>
+          <div style="padding:0.5rem 1rem 0.875rem;border-top:1px solid var(--border-subtle);margin-top:0.25rem;">
+            <div class="passport-field-label" style="margin-bottom:0.5rem;">Vaccine summary</div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${badges}</div>
+          </div>`;
+        })() : ''}
         ${rec.note ? `<div style="padding:0 1rem 0.75rem;">
           <div style="font-size:0.78rem;color:var(--text-tertiary);font-style:italic;">${rec.note}</div>
         </div>` : ''}
