@@ -321,6 +321,21 @@
       }
     },
     "advait": {
+      "birthCertificate": {
+        "name": "ADVAIT MISHRA",
+        "sex": "M",
+        "dob": "2018-12-25",
+        "placeOfBirth": "Shriram Memorial Hospital, Indira Nagar, Lucknow, Uttar Pradesh",
+        "mother": "ARCHANA",
+        "father": "SIDDHARTH MISHRA",
+        "registrationNo": "B-2019: 9-91812-001466",
+        "dateOfRegistration": "2019-11-18",
+        "dateOfIssue": "2019-11-18",
+        "issuingAuthority": "Registrar (Birth & Death), Nagar Nigam Lucknow Zone 7",
+        "addressAtBirth": "342 Eldeco Green, Gomti Nagar, Lucknow, Uttar Pradesh",
+        "form": "Form-5",
+        "pdf": "birth-certificates/advait-birth-certificate.pdf"
+      },
       "pan": {
         "number": "JBJPM4051C",
         "name": "ADVAIT MISHRA",
