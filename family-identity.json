@@ -55,6 +55,88 @@
       ]
     }
   ],
+  "schoolRecords": {
+    "advait": [
+      {
+        "year": "2024-25",
+        "school": "La Martiniere College, Lucknow",
+        "class": "Prep-G",
+        "personalNo": "23273",
+        "overallGrade": "B",
+        "attendance": { "present": 74, "total": 96 },
+        "subjects": {
+          "Arithmetic": { "grade": "B" },
+          "Art": { "grade": "B" },
+          "English": { "grade": "B" },
+          "Hindi": { "grade": "B" },
+          "Scientific Awareness": { "grade": "B" },
+          "Value Education": { "grade": "A" }
+        },
+        "teacherEval": {
+          "Alert And Attentive": "A",
+          "Displays Multiple Motor Skills": "A",
+          "Enjoys Playing Group Games": "A",
+          "Follows Instructions": "A",
+          "Gets Along Well With Others": "A",
+          "Participates In And Enjoys Choral Singing": "B",
+          "Shows Interest In CraftWork": "A",
+          "Smartly Turned Out": "A"
+        },
+        "activities": ["Fancy Dress (IC)", "Art Competition (IC)", "Diya Decoration (IC)", "Elocution Hindi (IC)", "Elocution English (IC)"],
+        "pages": []
+      },
+      {
+        "year": "2025-26",
+        "school": "La Martiniere College, Lucknow",
+        "class": "Class 1-E",
+        "rollNo": 3,
+        "personalNo": "23273",
+        "cisceCode": "UP047",
+        "marksObtained": 642,
+        "maxMarks": 700,
+        "percentage": 91.71,
+        "rank": 21,
+        "halfYearly": { "marks": 628, "maxMarks": 700, "percentage": 89.71, "rank": 25 },
+        "finalExam": { "marks": 650, "maxMarks": 700, "percentage": 92.86, "rank": 18 },
+        "promoted": true,
+        "attendance": { "present": 181, "total": 199 },
+        "physicalStats": { "heightCm": 120, "weightKg": 25 },
+        "subjects": {
+          "English": { "halfYearly": 95, "final": 84, "total": 92, "grade": "A" },
+          "English Language": { "halfYearly": 95, "final": 84, "total": 89, "grade": "B" },
+          "English Literature": { "final": 94, "total": 94, "grade": "B" },
+          "Hindi Language": { "halfYearly": 54, "total": 67, "grade": "B" },
+          "Hindi Literature": { "halfYearly": 41, "total": 78, "grade": "B" },
+          "Mathematics": { "halfYearly": 95, "final": 90, "total": 97, "grade": "A" },
+          "Nature Studies": { "halfYearly": 95, "final": 68, "total": 57, "grade": "B" },
+          "Computer Studies": { "halfYearly": 96, "final": 97, "total": 98, "grade": "B" },
+          "General Knowledge": { "halfYearly": 100, "final": 87, "total": 96, "grade": "A" },
+          "Value Education": { "halfYearly": 98, "total": 91, "grade": "B" }
+        },
+        "coCurricular": {
+          "Art & Craft": "A",
+          "Artificial Intelligence & Robotics": "B",
+          "Dance": "B",
+          "Music": "B",
+          "Sports": "B",
+          "S.U.P.W.": "A"
+        },
+        "activities": ["Quiz", "Dance", "Robotics", "Swimming", "Athletics", "Art Competition", "Music - Singing", "Elocution English (IC)"],
+        "fitnessAssessment": {
+          "date": "2026-04",
+          "flamingoBalance": { "date": "2026-04-08", "score": 7, "level": "L4 Moderate" },
+          "plateTapping": { "date": "2026-04-11", "time": "37.29 sec", "level": "L0 Inadequate" }
+        },
+        "pages": [
+          "school/advait/class1e-2526-annual-report.jpg",
+          "school/advait/class1e-2526-final-marksheet.jpg",
+          "school/advait/class1e-2526-activities.jpg",
+          "school/advait/class1e-2526-fitness-profile.jpg",
+          "school/advait/class1e-2526-fitness-assessment.jpg"
+        ]
+      }
+    ]
+  },
   "members": {
     "siddharth": {
       "aadhaar": {
