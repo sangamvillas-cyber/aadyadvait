@@ -1327,7 +1327,7 @@
             <div class="passport-field-value">${inr(prop.consideration)}</div>
           </div>
           <div>
-            <div class="passport-field-label">Valuation</div>
+            <div class="passport-field-label">Valuation (deed)</div>
             <div class="passport-field-value">${inr(prop.valuation)}</div>
           </div>
           <div>
@@ -1338,6 +1338,20 @@
             <div class="passport-field-label">Seller</div>
             <div class="passport-field-value">${prop.seller}</div>
           </div>
+          ${prop.marketEstimate ? `<div style="grid-column:span 3;background:var(--bg-elevated);border-radius:var(--radius-sm);padding:0.625rem 0.75rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;">
+            <div>
+              <div class="passport-field-label" style="color:var(--accent);">Est. market value <span style="font-weight:400;color:var(--text-tertiary);">· tentative median · as of ${prop.marketEstimate.asOf}</span></div>
+              <div style="font-size:1.25rem;font-weight:700;color:var(--accent);">${inr(prop.marketEstimate.value)}</div>
+            </div>
+            <div>
+              <div class="passport-field-label">Range</div>
+              <div class="passport-field-value">${inr(prop.marketEstimate.low)} – ${inr(prop.marketEstimate.high)}</div>
+            </div>
+            <div>
+              <div class="passport-field-label">Rate used</div>
+              <div class="passport-field-value">₹${prop.marketEstimate.ratePerSqft.toLocaleString('en-IN')}/sqft</div>
+            </div>
+          </div>` : ''}
           <div>
             <div class="passport-field-label">Boundaries — N / S / E / W</div>
             <div class="passport-field-value" style="grid-column:span 3;">${prop.boundaries.north} · ${prop.boundaries.south} · ${prop.boundaries.east} · ${prop.boundaries.west}</div>

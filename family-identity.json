@@ -25,6 +25,14 @@
       },
       "eStampCertNo": "IN-UP01928387914440",
       "docReference": "SUBIN-UPUPPNBBK020241564219642925921O",
+      "marketEstimate": {
+        "value": 9950000,
+        "ratePerSqft": 25000,
+        "low": 8700000,
+        "high": 10900000,
+        "asOf": "2026-05-13",
+        "basis": "Comparable listings Vibhuti Khand (Eldeco Elegante ₹27,536/sqft; ~10% discount for 10yr age)"
+      },
       "pages": [
         "property/IMG_1790.JPG",
         "property/IMG_1792.JPG",
