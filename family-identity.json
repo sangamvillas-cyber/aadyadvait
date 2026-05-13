@@ -272,7 +272,8 @@
         "name": "Siddharth Mishra",
         "fatherName": "Shiv Shyam Mishra",
         "sex": "M",
-        "dob": "1986-01-25"
+        "dob": "1986-01-25",
+        "image": "voter/siddharth/siddharth-voter-id.jpg"
       },
       "aadhaar": {
         "number": "6929 2485 6064",

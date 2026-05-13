@@ -856,6 +856,8 @@
           </div>
         </div>
         <div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;">
+          ${v.image ? `<a class="doc-action" href="${v.image}" target="_blank">View scan</a>
+          <a class="doc-action" href="${v.image}" download>Download</a>` : ''}
           <button class="doc-action" onclick="copyText(\`${copyData}\`, this)">Copy details</button>
         </div>
       </div>`;
