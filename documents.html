@@ -105,31 +105,60 @@
     }
     .page-subtitle { font-size: 0.9375rem; color: var(--text-secondary); }
 
+    /* Sticky filter bar */
+    .filter-bar {
+      position: sticky;
+      top: 57px;
+      z-index: 9;
+      background: var(--bg-base);
+      margin: -0.5rem -2rem 1.5rem;
+      padding: 0.75rem 2rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
     /* Filter pills */
     .filter-pills {
       display: flex; gap: 0.375rem; flex-wrap: wrap;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
     }
+    .filter-pills.section-pills {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 0.75rem;
+      margin-bottom: 0;
+      gap: 0.25rem;
+    }
+    .filter-pills.section-pills::-webkit-scrollbar { display: none; }
+
     .filter-pill {
       background: var(--bg-surface);
       border: 1px solid var(--border-default);
-      padding: 0.5rem 0.875rem;
+      padding: 0.4375rem 0.8125rem;
       border-radius: 999px;
       font-size: 0.8125rem; font-weight: 500;
       color: var(--text-secondary); cursor: pointer; font-family: inherit;
       transition: all 0.15s ease;
       display: inline-flex; align-items: center; gap: 0.375rem;
+      white-space: nowrap; flex-shrink: 0;
     }
-    .filter-pill:hover { border-color: var(--accent); color: var(--text-primary); }
-    .filter-pill.active { background: var(--text-primary); border-color: var(--text-primary); color: white; }
+    .filter-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .filter-pill .pill-icon { font-size: 0.875rem; line-height: 1; }
+    .filter-pill .pill-avatar {
+      width: 16px; height: 16px; border-radius: 999px;
+      background: rgba(0,0,0,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.5625rem; font-weight: 700; letter-spacing: 0;
+    }
+    .filter-pill.active .pill-avatar { background: rgba(255,255,255,0.25); }
     .filter-pill .count {
       background: rgba(0,0,0,0.08);
       padding: 0.0625rem 0.375rem;
       border-radius: 999px;
-      font-size: 0.6875rem;
-      font-weight: 600;
+      font-size: 0.6875rem; font-weight: 600;
     }
-    .filter-pill.active .count { background: rgba(255,255,255,0.18); }
+    .filter-pill.active .count { background: rgba(255,255,255,0.22); }
 
     /* Stats */
     .stats-grid {
@@ -186,6 +215,15 @@
       font-size: 1.125rem; font-weight: 600;
       color: var(--text-primary); margin-bottom: 1rem;
       letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: 0.625rem;
+    }
+    .section-heading::before {
+      content: '';
+      display: block;
+      width: 3px; height: 1.1em;
+      background: var(--accent);
+      border-radius: 999px;
+      flex-shrink: 0;
     }
 
     /* Document grid */
@@ -272,6 +310,14 @@
       background: var(--bg-hover); color: var(--text-primary);
       border-color: var(--text-tertiary);
     }
+    .doc-action:first-child {
+      background: var(--accent-soft);
+      border-color: rgba(201,100,66,0.25);
+      color: var(--accent);
+    }
+    .doc-action:first-child:hover {
+      background: var(--accent); border-color: var(--accent); color: white;
+    }
     .doc-action.danger:hover {
       background: var(--danger); color: white;
       border-color: var(--danger);
@@ -349,8 +395,13 @@
     .passport-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-lg);
       overflow: hidden;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .passport-card:hover {
+      box-shadow: 0 6px 20px rgba(26,24,23,0.09);
+      transform: translateY(-2px);
     }
     .passport-card-header {
       padding: 0.75rem 1rem;
@@ -500,11 +551,11 @@
       <p class="page-subtitle" id="pageSubtitle">Shared identity, banking and property papers — pooled across the household.</p>
     </div>
 
-    <!-- Member filter -->
-    <div class="filter-pills" id="memberPills"></div>
-
-    <!-- Section nav pills -->
-    <div class="filter-pills" id="sectionPills"></div>
+    <!-- Sticky filter bar -->
+    <div class="filter-bar">
+      <div class="filter-pills" id="memberPills"></div>
+      <div class="filter-pills section-pills" id="sectionPills"></div>
+    </div>
 
     <!-- Identity + Bank sections -->
     <div id="mainContent"></div>
@@ -1253,12 +1304,30 @@
       return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
     }
 
+    function countMemberRecords(memberId) {
+      const identity = STATE.identity;
+      if (!identity) return 0;
+      if (memberId === 'family') return INDIVIDUAL_MEMBERS.reduce((s, m) => s + countMemberRecords(m.id), 0);
+      let n = 0;
+      const m = identity.members?.[memberId] || {};
+      if (m.passport) n++;
+      if (m.aadhaar) n++;
+      if (m.pan) n++;
+      if (m.voterId) n++;
+      if (m.birthCertificate) n++;
+      n += (identity.bankAccounts || []).filter(b => b.owner === memberId || b.jointWith === memberId).length;
+      n += (identity.medicalRecords?.[memberId] || []).length;
+      n += (identity.schoolRecords?.[memberId] || []).length;
+      if (identity.schoolProfiles?.[memberId]) n++;
+      return n;
+    }
+
     function renderMemberPills() {
       const pills = document.getElementById('memberPills');
       pills.innerHTML = MEMBERS.map(m => {
-        const count = getMemberDocs(m.id).length;
+        const count = countMemberRecords(m.id);
         return `<button class="filter-pill${m.id === STATE.currentMember ? ' active' : ''}" data-member="${m.id}">
-          ${m.name}<span class="count">${count}</span>
+          <span class="pill-avatar">${m.avatar}</span>${m.name}${count > 0 ? `<span class="count">${count}</span>` : ''}
         </button>`;
       }).join('');
       pills.querySelectorAll('.filter-pill').forEach(p => {
@@ -1346,24 +1415,24 @@
     }
 
     const SECTIONS = [
-      { id: 'passport', label: 'Passport' },
-      { id: 'aadhaar',  label: 'Aadhaar' },
-      { id: 'pan',      label: 'PAN' },
-      { id: 'voter',    label: 'Voter ID' },
-      { id: 'birth',    label: 'Birth Cert.' },
-      { id: 'bank',     label: 'Bank' },
-      { id: 'ppf',      label: 'PPF' },
-      { id: 'property', label: 'Property' },
-      { id: 'school',   label: 'School' },
-      { id: 'medical',    label: 'Medical' },
-      { id: 'utilities',  label: 'Utilities' },
-      { id: 'files',      label: 'Files' },
+      { id: 'passport',  label: 'Passport',    icon: '🛂' },
+      { id: 'aadhaar',   label: 'Aadhaar',     icon: '🪪' },
+      { id: 'pan',       label: 'PAN',         icon: '💳' },
+      { id: 'voter',     label: 'Voter ID',    icon: '🗳️' },
+      { id: 'birth',     label: 'Birth Cert.', icon: '📜' },
+      { id: 'bank',      label: 'Bank',        icon: '🏦' },
+      { id: 'ppf',       label: 'PPF',         icon: '📈' },
+      { id: 'property',  label: 'Property',    icon: '🏠' },
+      { id: 'school',    label: 'School',      icon: '🎓' },
+      { id: 'medical',   label: 'Medical',     icon: '🏥' },
+      { id: 'utilities', label: 'Utilities',   icon: '⚡' },
+      { id: 'files',     label: 'Files',       icon: '📁' },
     ];
 
     function renderSectionPills() {
       const el = document.getElementById('sectionPills');
       el.innerHTML = SECTIONS.map(s =>
-        `<button class="filter-pill${s.id === STATE.currentSection ? ' active' : ''}" data-section="${s.id}">${s.label}</button>`
+        `<button class="filter-pill${s.id === STATE.currentSection ? ' active' : ''}" data-section="${s.id}"><span class="pill-icon">${s.icon}</span>${s.label}</button>`
       ).join('');
       el.querySelectorAll('.filter-pill').forEach(p => {
         p.addEventListener('click', () => { STATE.currentSection = p.dataset.section; renderAll(); });
