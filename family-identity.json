@@ -1,5 +1,41 @@
 {
   "lastUpdated": "2026-05-13",
+  "utilities": [
+    {
+      "id": "mvvnl-sarla-2s87",
+      "type": "Electricity",
+      "provider": "Madhyanchal Vidyut Vitran Nigam Limited (MVVNL)",
+      "accountNo": "2S87-180-000",
+      "accountHolder": "Smt. Sarla Mishra",
+      "address": "Dream Vila-342, Eldeco Green, Gomti Nagar, Lucknow",
+      "division": "EUDD, GOMTINAGAR (DIV372622)",
+      "subdivision": "VIBHUTI KHAND (SDO3726221)",
+      "connectionDate": "2003-01-13",
+      "tariff": "LMV1 MV Residential / Domestic",
+      "sanctionedLoad": "5 kW",
+      "securityDeposit": 900,
+      "meterNo": "SS21296182",
+      "meterType": "Net Meter",
+      "bills": [
+        {
+          "billNo": "258-727-790-699",
+          "billDate": "2026-03-17",
+          "dueDate": "2026-03-31",
+          "discDate": "2026-04-07",
+          "billType": "MRI",
+          "netBilledUnits": 0,
+          "amount": 568,
+          "payableByDueDate": 563,
+          "dueDateRebate": 5.39,
+          "prevReading": { "date": "2026-02-20", "kwh": 41186.28, "kwhe": 42867.03 },
+          "currReading": { "date": "2026-03-17", "kwh": 41809.0, "kwhe": 43504.0 },
+          "diffKwh": 622.72,
+          "diffKwhe": 636.97,
+          "image": "utilities/electricity/sarla-mishra-mvvnl-mar2026.jpg"
+        }
+      ]
+    }
+  ],
   "properties": [
     {
       "id": "eldeco-chambers-124",
