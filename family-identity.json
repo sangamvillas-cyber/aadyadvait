@@ -1,5 +1,52 @@
 {
-  "lastUpdated": "2026-05-12",
+  "lastUpdated": "2026-05-13",
+  "properties": [
+    {
+      "id": "eldeco-chambers-124",
+      "name": "Eldeco Corporate Chambers",
+      "unitNo": "124",
+      "floor": "First Floor",
+      "type": "Commercial",
+      "complex": "Eldeco Corporate Chambers-I (Eldeco Shopee)",
+      "address": "Unit 124, First Floor, Eldeco Corporate Chambers-I, Vibhuti Khand, Gomti Nagar, Lucknow - 226010",
+      "owner": "siddharth",
+      "seller": "Surya Season Food Pvt. Ltd.",
+      "deedDate": "2016-07-20",
+      "eStampDate": "2016-05-24",
+      "consideration": 579050,
+      "valuation": 2930400,
+      "stampDuty": 206000,
+      "carpetAreaSqm": 37.00,
+      "boundaries": {
+        "north": "Corridor / Lift",
+        "south": "Unit No. 125",
+        "east": "Corridor",
+        "west": "Open Space"
+      },
+      "eStampCertNo": "IN-UP01928387914440",
+      "docReference": "SUBIN-UPUPPNBBK020241564219642925921O",
+      "pages": [
+        "property/IMG_1790.JPG",
+        "property/IMG_1792.JPG",
+        "property/IMG_1793.JPG",
+        "property/IMG_1794.JPG",
+        "property/IMG_1795.JPG",
+        "property/IMG_1796.JPG",
+        "property/IMG_1797.JPG",
+        "property/IMG_1798.JPG",
+        "property/IMG_1799.JPG",
+        "property/IMG_1800.JPG",
+        "property/IMG_1801.JPG",
+        "property/IMG_1802.JPG",
+        "property/IMG_1803.JPG",
+        "property/IMG_1804.JPG",
+        "property/IMG_1805.JPG",
+        "property/IMG_1806.JPG",
+        "property/IMG_1807.JPG",
+        "property/IMG_1808.JPG"
+      ]
+    }
+  ],
   "members": {
     "siddharth": {
       "aadhaar": {
