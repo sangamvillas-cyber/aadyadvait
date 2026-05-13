@@ -1488,8 +1488,9 @@
     }
 
     function renderSchoolProfileCard(memberId, p) {
-      const age = new Date().getFullYear() - new Date(p.dob).getFullYear() -
-        (new Date() < new Date(new Date().getFullYear() + p.dob.slice(4)) ? 1 : 0);
+      const dob = new Date(p.dob), now = new Date();
+      const age = now.getFullYear() - dob.getFullYear() -
+        (now < new Date(now.getFullYear(), dob.getMonth(), dob.getDate()) ? 1 : 0);
       const dobFmt = new Date(p.dob).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
       return `<div class="passport-card" style="grid-column:span 2;">
         <div class="passport-card-header" style="background:linear-gradient(135deg,#1a2f4a 0%,#2c5282 100%);">
