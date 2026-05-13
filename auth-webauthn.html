@@ -314,11 +314,6 @@
       ⚠️ WebAuthn not supported. Use Chrome, Safari, Edge, or Firefox.
     </div>
 
-    <div class="tabs">
-      <button class="tab-btn active" onclick="WA.tab('tabAuth')">🔑 Sign In</button>
-      <button class="tab-btn" onclick="WA.tab('tabRegister')">➕ Register Key</button>
-    </div>
-
     <!-- Authenticate tab -->
     <div id="tabAuth" class="section active">
       <div class="key-area">
@@ -329,36 +324,8 @@
 
       <div id="keysList"></div>
 
-      <div class="trust-row" onclick="WA.toggleTrust()" id="trustRow">
-        <div>
-          <div class="trust-row-label">Trust this device</div>
-          <div class="trust-row-sub">Skip key for 30 days on this device</div>
-        </div>
-        <div class="toggle" id="trustToggle"></div>
-      </div>
-
       <button class="btn btn-primary" id="btnAuth" onclick="WA.authenticate()">
         <span class="btn-label">Authenticate</span>
-        <div class="spinner"></div>
-      </button>
-
-      <div class="divider">or</div>
-      <button class="btn btn-secondary" onclick="WA.guestLogin()">👁 View as guest</button>
-    </div>
-
-    <!-- Register tab -->
-    <div id="tabRegister" class="section">
-      <div class="key-area" style="padding-top:0.5rem;">
-        <div class="key-icon-wrap">➕</div>
-        <div class="key-title">Register New Key</div>
-        <div class="key-sub">YubiKey, Touch ID, Windows Hello,<br>or any FIDO2 authenticator</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Key name</label>
-        <input class="form-input" id="keyName" type="text" placeholder="e.g. YubiKey 5, MacBook Touch ID" maxlength="50">
-      </div>
-      <button class="btn btn-primary" id="btnRegister" onclick="WA.register()">
-        <span class="btn-label">Register Key</span>
         <div class="spinner"></div>
       </button>
     </div>
@@ -396,9 +363,8 @@ const WA = {
   SESSION_KEY: 'mishraFamilySession',
   CREDS_KEY:   'mishraWebAuthnCredentials',
   TRUST_KEY:   'mishraDeviceTrust',
-  SESSION_TTL:  24 * 60 * 60 * 1000,        // 24 h
-  TRUST_TTL:    30 * 24 * 60 * 60 * 1000,   // 30 days
-  _trustEnabled: true,
+  SESSION_TTL:  10 * 365 * 24 * 60 * 60 * 1000,  // permanent (until logout)
+  TRUST_TTL:    10 * 365 * 24 * 60 * 60 * 1000,  // permanent (until logout)
   _challenge: null,
 
   /* ── Init ── */
@@ -420,16 +386,14 @@ const WA = {
     // Trusted device?
     const trust = this.getTrust();
     if (trust && this.trustValid(trust)) {
-      const days = Math.ceil((new Date(trust.expiresAt) - Date.now()) / 86400000);
       document.getElementById('trustedExpiry').textContent =
-        `Trusted · ${days} day${days !== 1 ? 's' : ''} remaining`;
+        `${trust.credentialName || 'Hardware Key'} · stays signed in until logout`;
       this.showSection('sectionTrusted');
       return;
     }
 
     this.showSection('sectionAuth');
     this.renderKeys();
-    this.updateToggle();
   },
 
   /* ── Section / tab navigation ── */
@@ -443,15 +407,6 @@ const WA = {
     document.querySelectorAll('[id^="tab"]').forEach(t => t.classList.remove('active'));
     document.getElementById(id)?.classList.add('active');
     event.currentTarget.classList.add('active');
-  },
-
-  /* ── Trust toggle ── */
-  toggleTrust() {
-    this._trustEnabled = !this._trustEnabled;
-    this.updateToggle();
-  },
-  updateToggle() {
-    document.getElementById('trustToggle').className = 'toggle' + (this._trustEnabled ? ' on' : '');
   },
 
   /* ── WebAuthn: Register ── */
@@ -553,10 +508,8 @@ const WA = {
       // Success — create session
       const sess = this.createSession('webauthn', matched.name);
 
-      // Trust this device?
-      if (this._trustEnabled) {
-        this.saveTrust(credId);
-      }
+      // Always trust this device (permanent until logout)
+      this.saveTrust(credId);
 
       this.alert('✅ Authenticated — redirecting…', 'success');
       this.showSessionUI(sess);
@@ -581,16 +534,6 @@ const WA = {
     const sess = this.createSession('trusted-device', trust?.credentialName || 'Trusted device');
     this.showSessionUI(sess);
     setTimeout(() => this.redirect(), 800);
-  },
-
-  /* ── Guest login ── */
-  guestLogin() {
-    const sess = this.createSession('guest', 'Guest');
-    sess.accessLevel = 'viewer';
-    localStorage.setItem(this.SESSION_KEY, JSON.stringify(sess));
-    sessionStorage.setItem('mishraFamilyViewMode', 'read-only');
-    this.alert('✅ Signing in as viewer…', 'success');
-    setTimeout(() => this.redirect(), 1000);
   },
 
   /* ── Session ── */
