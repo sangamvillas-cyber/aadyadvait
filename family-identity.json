@@ -82,8 +82,7 @@
           "Shows Interest In CraftWork": "A",
           "Smartly Turned Out": "A"
         },
-        "activities": ["Fancy Dress (IC)", "Art Competition (IC)", "Diya Decoration (IC)", "Elocution Hindi (IC)", "Elocution English (IC)"],
-        "pages": []
+        "activities": ["Fancy Dress (IC)", "Art Competition (IC)", "Diya Decoration (IC)", "Elocution Hindi (IC)", "Elocution English (IC)"]
       },
       {
         "year": "2025-26",
@@ -126,14 +125,7 @@
           "date": "2026-04",
           "flamingoBalance": { "date": "2026-04-08", "score": 7, "level": "L4 Moderate" },
           "plateTapping": { "date": "2026-04-11", "time": "37.29 sec", "level": "L0 Inadequate" }
-        },
-        "pages": [
-          "school/advait/class1e-2526-annual-report.jpg",
-          "school/advait/class1e-2526-final-marksheet.jpg",
-          "school/advait/class1e-2526-activities.jpg",
-          "school/advait/class1e-2526-fitness-profile.jpg",
-          "school/advait/class1e-2526-fitness-assessment.jpg"
-        ]
+        }
       }
     ]
   },
