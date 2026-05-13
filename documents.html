@@ -941,6 +941,72 @@
         <div class="passport-grid">${cards.join('')}</div>`;
     }
 
+    function renderMedicalCard(memberId, rec) {
+      const admitFmt  = rec.dateOfAdmission  ? fmtDateISO(rec.dateOfAdmission)  : '—';
+      const dischFmt  = rec.dateOfDischarge  ? fmtDateISO(rec.dateOfDischarge)  : '—';
+      const copyData  = `${rec.type} — ${rec.patient || memberName(memberId)}\\nHospital: ${rec.hospital}\\nAdmitted: ${admitFmt}  Discharged: ${dischFmt}\\nDiagnosis: ${rec.diagnosis || ''}\\nProcedure: ${rec.procedure || ''}`;
+      return `<div class="passport-card" style="grid-column:span 2;">
+        <div class="passport-card-header" style="background:linear-gradient(135deg,#4a1a2f 0%,#8b3a5a 100%);">
+          <div>
+            <div class="passport-card-owner">${rec.patient || memberName(memberId)}</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:0.125rem;">${rec.hospital}${rec.hospitalRegNo ? ' · Reg. ' + rec.hospitalRegNo : ''}</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="passport-card-flag">${rec.type.toUpperCase()}</div>
+            ${rec.consultant ? `<div style="font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:0.25rem;">${rec.consultant}</div>` : ''}
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(9rem,1fr));gap:0.75rem 1.5rem;padding:1rem 1rem 0.75rem;">
+          <div>
+            <div class="passport-field-label">Admitted</div>
+            <div style="font-size:0.875rem;font-weight:600;">${admitFmt}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Discharged</div>
+            <div style="font-size:0.875rem;font-weight:600;">${dischFmt}</div>
+          </div>
+          ${rec.procedure ? `<div style="grid-column:span 2;">
+            <div class="passport-field-label">Procedure</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary);">${rec.procedure}</div>
+          </div>` : ''}
+        </div>
+        ${rec.diagnosis ? `<div style="padding:0 1rem 0.75rem;">
+          <div class="passport-field-label" style="margin-bottom:0.25rem;">Diagnosis</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);">${rec.diagnosis}</div>
+        </div>` : ''}
+        ${rec.babyDetails ? `<div style="padding:0 1rem 0.75rem;">
+          <div class="passport-field-label" style="margin-bottom:0.375rem;">Baby details</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+            ${Object.entries(rec.babyDetails).map(([k,v]) =>
+              `<span style="font-size:0.75rem;padding:0.125rem 0.5rem;border-radius:999px;background:var(--bg-elevated);color:var(--text-secondary);">${k}: <strong>${v}</strong></span>`
+            ).join('')}
+          </div>
+        </div>` : ''}
+        ${rec.note ? `<div style="padding:0 1rem 0.75rem;">
+          <div style="font-size:0.78rem;color:var(--text-tertiary);font-style:italic;">${rec.note}</div>
+        </div>` : ''}
+        <div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;gap:0.375rem;">
+          ${rec.image ? `<button class="doc-action" onclick="viewPassportScan('${rec.image}','${rec.type} — ${rec.patient || memberName(memberId)}','${memberId}-medical.jpg')">View scan</button>
+          <a class="doc-action" href="${rec.image}" download="${memberId}-${rec.dateOfAdmission || 'medical'}.jpg">Download</a>` : ''}
+          <button class="doc-action" onclick="copyText(\`${copyData}\`, this)">Copy details</button>
+        </div>
+      </div>`;
+    }
+
+    function renderMedicalSection() {
+      const records = STATE.identity?.medicalRecords || {};
+      const memberIds = STATE.currentMember === 'family'
+        ? INDIVIDUAL_MEMBERS.map(m => m.id)
+        : [STATE.currentMember];
+      const cards = [];
+      for (const id of memberIds) {
+        for (const rec of (records[id] || [])) cards.push(renderMedicalCard(id, rec));
+      }
+      if (cards.length === 0) return '<p style="color:var(--text-secondary);margin-top:2rem;">No medical records on file.</p>';
+      return `<div class="section-heading" style="margin-top:1.5rem;">Medical Records</div>
+        <div class="passport-grid">${cards.join('')}</div>`;
+    }
+
     function renderBankCard(memberId, acct) {
       const jointLabel = acct.joint
         ? `<span style="font-size:0.6875rem;background:#E3F0E7;color:#2E7D4F;padding:0.125rem 0.5rem;border-radius:999px;font-weight:600;">Joint · ${memberName(acct.jointWith)}</span>`
@@ -1184,6 +1250,7 @@
       { id: 'ppf',      label: 'PPF' },
       { id: 'property', label: 'Property' },
       { id: 'school',   label: 'School' },
+      { id: 'medical',  label: 'Medical' },
       { id: 'files',    label: 'Files' },
     ];
 
@@ -1208,6 +1275,7 @@
       else if (s === 'pan') html = renderPanSection();
       else if (s === 'voter') html = renderVoterIdSection();
       else if (s === 'birth') html = renderBirthCertSection();
+      else if (s === 'medical') html = renderMedicalSection();
       else if (s === 'bank') html = renderBankSection();
       else if (s === 'ppf') html = renderPpfSection();
       else if (s === 'property') html = renderPropertySection();
@@ -1536,10 +1604,10 @@
             <div class="passport-number-label">Final exam</div>
             <div style="font-size:0.9375rem;font-weight:600;">${rec.finalExam.percentage}% · Rank ${rec.finalExam.rank}</div>
           </div>` : ''}
-          <div>
+          ${rec.attendance ? `<div>
             <div class="passport-number-label">Attendance</div>
             <div style="font-size:0.9375rem;font-weight:600;">${rec.attendance.present}/${rec.attendance.total} <span style="font-size:0.8125rem;font-weight:400;color:var(--text-secondary);">(${Math.round(rec.attendance.present/rec.attendance.total*100)}%)</span></div>
-          </div>
+          </div>` : ''}
           ${rec.promoted != null ? `<span style="font-size:0.75rem;padding:0.25rem 0.75rem;border-radius:999px;font-weight:600;background:#E3F0E7;color:#2E7D4F;align-self:center;">Promoted ✓</span>` : ''}
         </div>
 
@@ -1618,7 +1686,7 @@
           </div>
           <div style="text-align:right;">
             <div class="passport-card-flag">STUDENT PROFILE</div>
-            <div style="font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:0.25rem;">CISCE · ${p.cisceCode}</div>
+            ${p.cisceCode ? `<div style="font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:0.25rem;">CISCE · ${p.cisceCode}</div>` : ''}
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(9rem,1fr));gap:0.75rem 1.5rem;padding:1rem 1rem 0.75rem;">
@@ -1627,28 +1695,32 @@
             <div style="font-size:0.9rem;font-weight:600;">${p.currentClass}</div>
             <div style="font-size:0.75rem;color:var(--text-tertiary);">${p.currentYear}</div>
           </div>
-          <div>
+          ${p.rollNo != null ? `<div>
             <div class="passport-field-label">Roll No.</div>
             <div style="font-size:0.9rem;font-weight:600;">${p.rollNo}</div>
-          </div>
-          <div>
+          </div>` : ''}
+          ${p.personalNo ? `<div>
             <div class="passport-field-label">Personal No.</div>
             <div style="font-size:0.9rem;font-weight:600;">${p.personalNo}</div>
-          </div>
+          </div>` : ''}
           <div>
             <div class="passport-field-label">Date of birth</div>
             <div style="font-size:0.9rem;font-weight:600;">${dobFmt}</div>
             <div style="font-size:0.75rem;color:var(--text-tertiary);">${age} yrs</div>
           </div>
-          <div>
-            <div class="passport-field-label">Admission year</div>
-            <div style="font-size:0.9rem;font-weight:600;">${p.admissionYear}</div>
-          </div>
+          ${p.admissionYear || p.admissionDate ? `<div>
+            <div class="passport-field-label">Admission</div>
+            <div style="font-size:0.9rem;font-weight:600;">${p.admissionYear || fmtDateISO(p.admissionDate)}</div>
+          </div>` : ''}
         </div>
-        <div style="padding:0 1rem 1rem;">
+        ${p.address ? `<div style="padding:0 1rem 0.75rem;">
           <div class="passport-field-label" style="margin-bottom:0.25rem;">School address</div>
           <div style="font-size:0.8rem;color:var(--text-secondary);">${p.address}</div>
-        </div>
+        </div>` : ''}
+        ${p.bonafide?.image ? `<div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;">
+          <a class="doc-action" href="${p.bonafide.image}" download="${memberId}-bonafide.jpg">Download bonafide</a>
+          <button class="doc-action" onclick="viewPassportScan('${p.bonafide.image}','${p.name} — Bonafide · ${p.bonafide.date}','${memberId}-bonafide.jpg')">View</button>
+        </div>` : ''}
       </div>`;
     }
 
