@@ -65,12 +65,12 @@
         "overallGrade": "B",
         "attendance": { "present": 74, "total": 96 },
         "subjects": {
-          "Arithmetic": { "grade": "B" },
-          "Art": { "grade": "B" },
-          "English": { "grade": "B" },
-          "Hindi": { "grade": "B" },
-          "Scientific Awareness": { "grade": "B" },
-          "Value Education": { "grade": "A" }
+          "Arithmetic":           { "grade": "B", "components": { "Written": "B", "Project": "A", "Dodging": "C", "Number Counting": "A", "Number Names": "A", "After/Before/Between": "A" } },
+          "Art":                  { "grade": "B", "components": { "Written": "B", "Project": "A", "Assessed Worksheet": "B" } },
+          "English":              { "grade": "B", "components": { "Written": "B", "Dictation & Spelling": "A", "Project": "E", "Story": "A", "Recitation": "D", "Picture Talk": "B" } },
+          "Hindi":                { "grade": "B", "components": { "Written": "A", "Dictation & Spelling": "A", "Project": "A", "Story": "B", "Recitation": "C", "Picture Talk": "C" } },
+          "Scientific Awareness": { "grade": "B", "components": { "Written": "B", "Dictation & Spelling": "A", "Project": "A", "Picture Talk": "A" } },
+          "Value Education":      { "grade": "A" }
         },
         "teacherEval": {
           "Alert And Attentive": "A",

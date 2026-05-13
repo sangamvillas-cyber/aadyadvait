@@ -1373,8 +1373,9 @@
     function renderSchoolCard(memberId, rec) {
       const gradeColor = g => g === 'A' ? '#2E7D4F' : g === 'B' ? '#1A5276' : g === 'C' ? '#A1660F' : '#C53030';
       const gradeBadge = g => `<span style="display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:4px;font-weight:700;font-size:0.75rem;background:${gradeColor(g)}22;color:${gradeColor(g)};">${g}</span>`;
-      const pagesJson = JSON.stringify(rec.pages).replace(/'/g, "\\'");
-      const subjectRows = rec.subjects ? Object.entries(rec.subjects).map(([name, s]) =>
+      const pagesJson = JSON.stringify(rec.pages || []).replace(/'/g, "\\'");
+      const hasMarks = rec.subjects && Object.values(rec.subjects).some(s => s.halfYearly != null || s.final != null || s.total != null);
+      const subjectRows = hasMarks ? Object.entries(rec.subjects).map(([name, s]) =>
         `<tr>
           <td style="padding:0.25rem 0.5rem;font-size:0.8rem;color:var(--text-secondary);">${name}</td>
           ${s.halfYearly != null ? `<td style="padding:0.25rem 0.5rem;text-align:center;font-size:0.8rem;">${s.halfYearly}</td>` : `<td style="padding:0.25rem 0.5rem;text-align:center;color:var(--text-tertiary);font-size:0.8rem;">—</td>`}
@@ -1383,6 +1384,7 @@
           <td style="padding:0.25rem 0.5rem;text-align:center;">${s.grade ? gradeBadge(s.grade) : ''}</td>
         </tr>`
       ).join('') : '';
+      const gradeOnlySubjects = !hasMarks && rec.subjects ? Object.entries(rec.subjects) : [];
       const coCurricularBadges = rec.coCurricular ? Object.entries(rec.coCurricular).map(([name, g]) =>
         `<span style="font-size:0.75rem;padding:0.125rem 0.5rem;border-radius:999px;background:var(--bg-elevated);color:var(--text-secondary);">${name} <strong style="color:${gradeColor(g)};">${g}</strong></span>`
       ).join('') : '';
@@ -1436,6 +1438,23 @@
             </thead>
             <tbody>${subjectRows}</tbody>
           </table>
+        </div>` : ''}
+
+        ${gradeOnlySubjects.length ? `<div style="padding:0 1rem 0.75rem;">
+          <div class="passport-field-label" style="margin-bottom:0.5rem;">Subjects</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;">
+            ${gradeOnlySubjects.map(([name, s]) =>
+              `<div style="display:flex;align-items:flex-start;gap:0.5rem;flex-wrap:wrap;">
+                <div style="min-width:9.5rem;font-size:0.8rem;color:var(--text-secondary);padding-top:0.15rem;">${name}</div>
+                <div style="display:flex;align-items:center;gap:0.3rem;flex-wrap:wrap;">
+                  ${s.grade ? gradeBadge(s.grade) : ''}
+                  ${s.components ? Object.entries(s.components).map(([k,g]) =>
+                    `<span style="font-size:0.7rem;padding:0.1rem 0.375rem;border-radius:999px;background:var(--bg-elevated);color:var(--text-secondary);">${k} <strong style="color:${gradeColor(g)};">${g}</strong></span>`
+                  ).join('') : ''}
+                </div>
+              </div>`
+            ).join('')}
+          </div>
         </div>` : ''}
 
         ${rec.teacherEval ? `<div style="padding:0 1rem 0.75rem;">
