@@ -184,6 +184,66 @@
     ]
   },
   "medicalRecords": {
+    "advait": [
+      {
+        "type": "Birth Certificate (Hospital)",
+        "hospital": "A Multi-Speciality Medical & Surgical Centre (SMH)",
+        "doctor": "Dr. Pushpa Jaiswal (Gynaecologist & Obstetrician)",
+        "certNo": "SMH/BC-97/252018",
+        "patient": "Advait Mishra (B/o Archana Mishra)",
+        "mother": "Archana Mishra",
+        "father": "Siddharth Mishra",
+        "address": "342 Eldeco Greens, Gomti Nagar, Lucknow — 226010",
+        "dob": "2018-12-25",
+        "timeOfBirth": "17:06:30",
+        "remarks": "Nil",
+        "image": "medical/advait/smh-birth-certificate.jpg"
+      },
+      {
+        "type": "Vaccination Chart",
+        "hospital": "A Multi-Speciality Medical & Surgical Centre (SMH)",
+        "patient": "Advait Mishra (B/o Archana Mishra)",
+        "dob": "2018-12-25",
+        "weightAtBirth": "2.4 kg",
+        "images": [
+          "medical/advait/vaccination-chart-p1.jpg",
+          "medical/advait/vaccination-chart-p2.jpg"
+        ],
+        "vaccinations": [
+          { "age": "Birth",     "vaccine": "BCG",                              "given": "2018-12-28" },
+          { "age": "Birth",     "vaccine": "Oral Polio Vaccine - 1st dose",    "given": "2018-12-28" },
+          { "age": "Birth",     "vaccine": "Hepatitis B - 1st dose",           "given": "2018-12-28" },
+          { "age": "6 weeks",   "vaccine": "DPT + HIB 1st dose (Hexaxim)",     "given": "2019-02-10", "weightKg": 4.0 },
+          { "age": "6 weeks",   "vaccine": "Oral Polio - 2nd dose",            "given": "2019-02-10" },
+          { "age": "6 weeks",   "vaccine": "Hepatitis B - 2nd dose",           "given": "2019-02-10" },
+          { "age": "6 weeks",   "vaccine": "IPV + Rotateq + Synflorix 1st dose", "given": "2019-02-17", "weightKg": 4.46 },
+          { "age": "10-12 wks", "vaccine": "DPT + HIB 2nd dose",              "given": "2019-03-10", "weightKg": 5.5 },
+          { "age": "10-12 wks", "vaccine": "Oral Polio - 3rd dose",           "given": "2019-03-10" },
+          { "age": "10-12 wks", "vaccine": "Hepatitis B - 3rd dose",          "given": "2019-03-10" },
+          { "age": "10-12 wks", "vaccine": "IPV + Rotateq + Synflorix 2nd dose", "given": "2019-03-10" },
+          { "age": "16-18 wks", "vaccine": "DPT + HIB + IPV + Rotateq + Synflorix 3rd dose", "given": "2019-04-30", "weightKg": 6.2 },
+          { "age": "6 months",  "vaccine": "Oral Polio - 4th dose",           "given": "2019-06-24", "weightKg": 6.6 },
+          { "age": "9 months",  "vaccine": "Measles Vaccine",                 "given": "2019-09-23", "weightKg": 7.7 },
+          { "age": "12 months", "vaccine": "Hepatitis A - 1st dose",          "given": "2021-11-10", "weightKg": 10.9 },
+          { "age": "12 months", "vaccine": "Chicken Pox (Varicella)",         "given": "2021-04-02" },
+          { "age": "15 months", "vaccine": "MMR (Measles, Mumps, Rubella)",   "given": "2020-12-10" },
+          { "age": "18 months", "vaccine": "DPT - 1st Booster",              "given": "2020-12-10", "weightKg": 11.5 },
+          { "age": "18 months", "vaccine": "Hepatitis A - 2nd dose",          "given": "2021-03-05", "weightKg": 12.0 },
+          { "age": "18 months", "vaccine": "Oral Polio - 6th dose + PCV",     "given": "2021-02-02", "weightKg": 11.8 },
+          { "age": "24 months", "vaccine": "Typhoid - 1st dose",              "given": "2020-10-09", "weightKg": 10.3 },
+          { "age": "24 months", "vaccine": "Typhoid - Booster",               "given": "2021-10-20", "weightKg": 14.2 },
+          { "age": "5 years",   "vaccine": "DPT - 2nd Booster",              "given": "2024-05-03" },
+          { "age": "5 years",   "vaccine": "MMR-3",                            "given": "2024-08-05" },
+          { "age": "Yearly",    "vaccine": "Flu Vaccine", "doses": [
+            { "due": "2021-03-02", "given": "2021-06-02", "weightKg": 12.5 },
+            { "due": "2022-06-02", "given": "2022-07-24", "weightKg": 15.5 },
+            { "due": "2023-07",   "given": "2023-08-12", "weightKg": 20.4 },
+            { "due": "2024",      "given": "2024-08-03", "weightKg": 21.0 },
+            { "due": "2025-08-03", "given": null, "note": "Due" }
+          ]}
+        ]
+      }
+    ],
     "archana": [
       {
         "type": "Discharge Slip",
