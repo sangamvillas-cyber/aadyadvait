@@ -108,6 +108,38 @@
       color: var(--text-primary);
     }
 
+    /* Privacy toggle */
+    .privacy-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      padding: 0.4375rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex; align-items: center; gap: 0.375rem;
+      transition: all 0.15s ease;
+    }
+    .privacy-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .privacy-btn.active {
+      background: var(--bg-elevated);
+      border-color: var(--border-default);
+      color: var(--text-primary);
+    }
+
+    /* Privacy mode — blur all sensitive numbers */
+    .sensitive {
+      transition: filter 0.25s ease, opacity 0.25s ease;
+    }
+    body.privacy .sensitive {
+      filter: blur(7px);
+      opacity: 0.6;
+      user-select: none;
+      pointer-events: none;
+    }
+
     /* Navigation */
     .nav-bar {
       background: var(--bg-surface);
@@ -525,6 +557,10 @@
         <div class="brand-title">Mishra Family Portfolio</div>
       </div>
       <div class="topbar-actions">
+        <button class="privacy-btn" id="privacyBtn" onclick="togglePrivacy()">
+          <span id="privacyIcon">👁</span>
+          <span id="privacyLabel">Hide</span>
+        </button>
         <button class="icon-button" id="logoutBtn">Sign out</button>
       </div>
     </header>
@@ -546,10 +582,10 @@
         </div>
 
         <div class="stats-grid" id="householdStats">
-          <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value" id="hhInvested">—</div></div>
-          <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value" id="hhCurrent">—</div></div>
-          <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value" id="hhGain">—</div><div class="stat-delta" id="hhGainPct">—</div></div>
-          <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value" id="hhXirr">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value sensitive" id="hhInvested">—</div></div>
+          <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value sensitive" id="hhCurrent">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value sensitive" id="hhGain">—</div><div class="stat-delta sensitive" id="hhGainPct">—</div></div>
+          <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value sensitive" id="hhXirr">—</div></div>
         </div>
 
         <h2 class="section-heading">Members</h2>
@@ -595,10 +631,10 @@
         <div class="filter-pills" id="trackerPills"></div>
 
         <div class="stats-grid">
-          <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value" id="tInvested">—</div></div>
-          <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value" id="tCurrent">—</div></div>
-          <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value" id="tGain">—</div><div class="stat-delta" id="tGainPct">—</div></div>
-          <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value" id="tXirr">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value sensitive" id="tInvested">—</div></div>
+          <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value sensitive" id="tCurrent">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value sensitive" id="tGain">—</div><div class="stat-delta sensitive" id="tGainPct">—</div></div>
+          <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value sensitive" id="tXirr">—</div></div>
         </div>
 
         <div class="table-card">
@@ -655,6 +691,10 @@
     function showApp() {
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('appLayout').classList.add('active');
+      // Restore privacy state
+      const privacyOn = localStorage.getItem('mishraPrivacy') === '1';
+      if (privacyOn) document.body.classList.add('privacy');
+      updatePrivacyBtn(privacyOn);
     }
 
     function handleLogout() {
@@ -782,7 +822,7 @@
       gainEl.textContent = (gain >= 0 ? '' : '−') + fmtCompact(Math.abs(gain)).replace('₹', '₹');
       const pctEl = document.getElementById('hhGainPct');
       pctEl.textContent = (gain >= 0 ? '+' : '') + gainPct.toFixed(2) + '%';
-      pctEl.className = 'stat-delta ' + (gain >= 0 ? 'positive' : 'negative');
+      pctEl.className = 'stat-delta sensitive ' + (gain >= 0 ? 'positive' : 'negative');
       document.getElementById('hhXirr').textContent = xirr.toFixed(2) + '%';
 
       const container = document.getElementById('overviewMembers');
@@ -804,11 +844,11 @@
         <div class="member-stats">
           <div class="member-stat">
             <div class="member-stat-label">Current value</div>
-            <div class="member-stat-value">${fmtCompact(d.totalCurrentValue)}</div>
+            <div class="member-stat-value sensitive">${fmtCompact(d.totalCurrentValue)}</div>
           </div>
           <div class="member-stat">
             <div class="member-stat-label">Gain</div>
-            <div class="member-stat-value ${gainClass}">${gain >= 0 ? '+' : ''}${gainPct.toFixed(2)}%</div>
+            <div class="member-stat-value ${gainClass} sensitive">${gain >= 0 ? '+' : ''}${gainPct.toFixed(2)}%</div>
           </div>
         </div>
         ${miniAlloc}
@@ -914,18 +954,18 @@
         const d = data[m.id];
         const rows = d.transactions.map(t => {
           const cv = t.units * t.currentNav;
-          return `<tr>
+          return `<tr class="fund-row">
             <td class="fund-name">${t.fund}</td>
             <td class="text-center mono">${t.folio}</td>
-            <td class="text-right">${t.units.toFixed(2)}</td>
-            <td class="text-right mono">₹${t.currentNav.toFixed(2)}<br><span style="font-size:0.7rem;color:var(--text-secondary);font-weight:400;">${t.lastNavUpdate || ''}</span></td>
-            <td class="text-right">${fmt(cv)}</td>
+            <td class="text-right sensitive">${t.units.toFixed(2)}</td>
+            <td class="text-right mono sensitive">₹${t.currentNav.toFixed(2)}<br><span style="font-size:0.7rem;color:var(--text-secondary);font-weight:400;">${t.lastNavUpdate || ''}</span></td>
+            <td class="text-right sensitive">${fmt(cv)}</td>
           </tr>`;
         }).join('');
         return `<div class="fund-group">
           <div class="fund-group-header">
             <div class="fund-group-title">${m.name}</div>
-            <div class="fund-group-total">Total: <strong>${fmt(d.totalCurrentValue)}</strong></div>
+            <div class="fund-group-total sensitive">Total: <strong>${fmt(d.totalCurrentValue)}</strong></div>
           </div>
           <div class="table-wrapper">
             <table>
@@ -965,7 +1005,7 @@
       gainEl.textContent = (d.totalGain >= 0 ? '' : '−') + fmtCompact(Math.abs(d.totalGain));
       const pctEl = document.getElementById('tGainPct');
       pctEl.textContent = (d.totalGain >= 0 ? '+' : '') + d.totalGainPercent.toFixed(2) + '%';
-      pctEl.className = 'stat-delta ' + (d.totalGain >= 0 ? 'positive' : 'negative');
+      pctEl.className = 'stat-delta sensitive ' + (d.totalGain >= 0 ? 'positive' : 'negative');
       document.getElementById('tXirr').textContent = d.overallXIRR.toFixed(2) + '%';
 
       const refDate = new Date('2026-05-12');
@@ -979,15 +1019,37 @@
         return `<tr>
           <td class="fund-name">${t.fund}</td>
           <td class="text-center mono">${t.folio}</td>
-          <td class="text-right">${t.units.toFixed(2)}</td>
-          <td class="text-right">${fmt(pv)}</td>
-          <td class="text-right">${fmt(cv)}</td>
-          <td class="text-right ${gainCls}">${gain >= 0 ? '+' : ''}${fmt(gain)}</td>
-          <td class="text-right ${gainCls}">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</td>
+          <td class="text-right sensitive">${t.units.toFixed(2)}</td>
+          <td class="text-right sensitive">${fmt(pv)}</td>
+          <td class="text-right sensitive">${fmt(cv)}</td>
+          <td class="text-right ${gainCls} sensitive">${gain >= 0 ? '+' : ''}${fmt(gain)}</td>
+          <td class="text-right ${gainCls} sensitive">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</td>
         </tr>`;
       }).join('');
       document.getElementById('trackerBody').innerHTML = rows;
     }
+
+    /* ── Privacy toggle ── */
+    function togglePrivacy() {
+      const on = document.body.classList.toggle('privacy');
+      localStorage.setItem('mishraPrivacy', on ? '1' : '0');
+      updatePrivacyBtn(on);
+    }
+
+    function updatePrivacyBtn(on) {
+      const btn = document.getElementById('privacyBtn');
+      document.getElementById('privacyIcon').textContent = on ? '🙈' : '👁';
+      document.getElementById('privacyLabel').textContent = on ? 'Show' : 'Hide';
+      btn.classList.toggle('active', on);
+    }
+
+    // Restore privacy state on load
+    (function () {
+      if (localStorage.getItem('mishraPrivacy') === '1') {
+        document.body.classList.add('privacy');
+        // Button updates after DOM ready — handled in DOMContentLoaded
+      }
+    })();
   </script>
 </body>
 </html>
