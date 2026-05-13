@@ -55,6 +55,20 @@
       ]
     }
   ],
+  "schoolProfiles": {
+    "advait": {
+      "name": "Advait Mishra",
+      "school": "La Martiniere College, Lucknow",
+      "cisceCode": "UP047",
+      "personalNo": "23273",
+      "currentClass": "Class 1-E",
+      "currentYear": "2025-26",
+      "rollNo": 3,
+      "dob": "2018-12-25",
+      "admissionYear": "2024-25",
+      "address": "La Martiniere College, La Martiniere Road, Lucknow - 226001"
+    }
+  },
   "schoolRecords": {
     "advait": [
       {

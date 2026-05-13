@@ -1487,19 +1487,69 @@
       </div>`;
     }
 
+    function renderSchoolProfileCard(memberId, p) {
+      const age = new Date().getFullYear() - new Date(p.dob).getFullYear() -
+        (new Date() < new Date(new Date().getFullYear() + p.dob.slice(4)) ? 1 : 0);
+      const dobFmt = new Date(p.dob).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      return `<div class="passport-card" style="grid-column:span 2;">
+        <div class="passport-card-header" style="background:linear-gradient(135deg,#1a2f4a 0%,#2c5282 100%);">
+          <div>
+            <div class="passport-card-owner">${p.name}</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:0.125rem;">${p.school}</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="passport-card-flag">STUDENT PROFILE</div>
+            <div style="font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:0.25rem;">CISCE · ${p.cisceCode}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(9rem,1fr));gap:0.75rem 1.5rem;padding:1rem 1rem 0.75rem;">
+          <div>
+            <div class="passport-field-label">Current class</div>
+            <div style="font-size:0.9rem;font-weight:600;">${p.currentClass}</div>
+            <div style="font-size:0.75rem;color:var(--text-tertiary);">${p.currentYear}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Roll No.</div>
+            <div style="font-size:0.9rem;font-weight:600;">${p.rollNo}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Personal No.</div>
+            <div style="font-size:0.9rem;font-weight:600;">${p.personalNo}</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Date of birth</div>
+            <div style="font-size:0.9rem;font-weight:600;">${dobFmt}</div>
+            <div style="font-size:0.75rem;color:var(--text-tertiary);">${age} yrs</div>
+          </div>
+          <div>
+            <div class="passport-field-label">Admission year</div>
+            <div style="font-size:0.9rem;font-weight:600;">${p.admissionYear}</div>
+          </div>
+        </div>
+        <div style="padding:0 1rem 1rem;">
+          <div class="passport-field-label" style="margin-bottom:0.25rem;">School address</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);">${p.address}</div>
+        </div>
+      </div>`;
+    }
+
     function renderSchoolSection() {
       const records = STATE.identity?.schoolRecords || {};
+      const profiles = STATE.identity?.schoolProfiles || {};
       const memberIds = STATE.currentMember === 'family'
         ? INDIVIDUAL_MEMBERS.map(m => m.id)
         : [STATE.currentMember];
-      const cards = [];
+      const profileCards = [];
+      const reportCards = [];
       for (const id of memberIds) {
+        if (profiles[id]) profileCards.push(renderSchoolProfileCard(id, profiles[id]));
         const recs = records[id] || [];
-        for (const rec of [...recs].reverse()) cards.push(renderSchoolCard(id, rec));
+        for (const rec of [...recs].reverse()) reportCards.push(renderSchoolCard(id, rec));
       }
-      if (cards.length === 0) return '<p style="color:var(--text-secondary);margin-top:2rem;">No school records on file.</p>';
+      const allCards = [...profileCards, ...reportCards];
+      if (allCards.length === 0) return '<p style="color:var(--text-secondary);margin-top:2rem;">No school records on file.</p>';
       return `<div class="section-heading" style="margin-top:1.5rem;">School Records</div>
-        <div class="passport-grid">${cards.join('')}</div>`;
+        <div class="passport-grid">${allCards.join('')}</div>`;
     }
 
     function renderPropertySection() {
