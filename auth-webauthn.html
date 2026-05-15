@@ -401,22 +401,14 @@ const WA = {
       return;
     }
 
-    // No keys registered yet → first-time setup
-    const creds = this.getCreds();
-    if (!creds.length) {
-      this.showSection('sectionSetup');
-      return;
-    }
-
-    // Trusted device?
+    // Trusted device? Auto-redirect (silent, no extra screen)
     const trust = this.getTrust();
     if (trust && this.trustValid(trust)) {
-      document.getElementById('trustedExpiry').textContent =
-        `${trust.credentialName || 'Hardware Key'} · stays signed in until logout`;
-      this.showSection('sectionTrusted');
+      this.loginTrusted();
       return;
     }
 
+    // Always land on hardware key authenticate screen
     this.showSection('sectionAuth');
     this.renderKeys();
   },
@@ -484,12 +476,6 @@ const WA = {
 
   /* ── WebAuthn: Authenticate ── */
   async authenticate() {
-    const creds = this.getCreds();
-    if (!creds.length) {
-      this.alert('No keys registered. Go to Register Key first.', 'error');
-      return;
-    }
-
     this.setLoading('btnAuth', true);
     document.getElementById('keyIconWrap').classList.add('pulse');
     document.getElementById('keySubtitle').textContent = 'Touch your key or use biometrics…';
@@ -497,16 +483,17 @@ const WA = {
     try {
       // Fresh random challenge — prevents replay attacks
       this._challenge = this.randomBytes(32);
-      sessionStorage.setItem('mishraChallenge', this.toB64(this._challenge));
+
+      const creds = this.getCreds();
+      // If creds in localStorage use them; else discoverable mode (key presents itself)
+      const allowCredentials = creds.length
+        ? creds.map(c => ({ id: this.fromB64(c.id), type: 'public-key', transports: ['usb', 'nfc', 'ble', 'internal', 'hybrid'] }))
+        : [];
 
       const assertion = await navigator.credentials.get({
         publicKey: {
           challenge: this._challenge,
-          allowCredentials: creds.map(c => ({
-            id: this.fromB64(c.id),
-            type: 'public-key',
-            transports: ['usb', 'nfc', 'ble', 'internal', 'hybrid']
-          })),
+          allowCredentials,
           userVerification: 'preferred',
           timeout: 60000
         }
@@ -514,31 +501,30 @@ const WA = {
 
       // Verify challenge in clientDataJSON
       const clientData = JSON.parse(new TextDecoder().decode(assertion.response.clientDataJSON));
-      const returnedChallenge = clientData.challenge; // base64url
-      const expectedChallenge = this.toB64url(this._challenge);
-      if (returnedChallenge !== expectedChallenge) {
+      if (clientData.challenge !== this.toB64url(this._challenge)) {
         throw new Error('Challenge mismatch — possible replay attack');
       }
-
-      // Verify origin
       if (clientData.origin !== location.origin) {
         throw new Error('Origin mismatch');
       }
 
-      // Verify credential ID is registered
+      // Match or auto-save credential
       const credId = this.toB64(assertion.rawId);
-      const matched = creds.find(c => c.id === credId);
-      if (!matched) throw new Error('Key not registered');
+      let matched = creds.find(c => c.id === credId);
+      if (!matched) {
+        // Discoverable mode: key authenticated itself — save it for next time
+        matched = { id: credId, name: 'Hardware Key', registeredAt: new Date().toISOString() };
+        creds.push(matched);
+        this.saveCreds(creds);
+      }
 
-      // Success — create session
+      // Success — create session + trust
       const sess = this.createSession('webauthn', matched.name);
-
-      // Always trust this device (permanent until logout)
       this.saveTrust(credId);
 
       this.alert('✅ Authenticated — redirecting…', 'success');
       this.showSessionUI(sess);
-      setTimeout(() => this.redirect(), 1200);
+      setTimeout(() => this.redirect(), 1000);
 
     } catch (e) {
       const msg = e.name === 'NotAllowedError'
