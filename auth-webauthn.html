@@ -291,6 +291,26 @@
 
   <div id="alertBox" class="alert"></div>
 
+  <!-- SECTION: First-time setup — register key (only shown when 0 keys stored) -->
+  <div class="section" id="sectionSetup">
+    <div id="supportWarnSetup" class="support-warn" style="display:none;">
+      ⚠️ WebAuthn not supported. Use Chrome, Safari, Edge, or Firefox.
+    </div>
+    <div class="key-area">
+      <div class="key-icon-wrap" id="setupIconWrap">🔐</div>
+      <div class="key-title">First-Time Setup</div>
+      <div class="key-sub">Register your hardware key to secure this site.<br>Insert your key now.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="keyName">Key nickname</label>
+      <input class="form-input" id="keyName" type="text" placeholder="e.g. YubiKey 5C" maxlength="40" autocomplete="off">
+    </div>
+    <button class="btn btn-primary" id="btnRegister" onclick="WA.register()">
+      <span class="btn-label">Register Hardware Key</span>
+      <div class="spinner"></div>
+    </button>
+  </div>
+
   <!-- SECTION: Trusted device auto-login -->
   <div class="section" id="sectionTrusted">
     <div class="trusted-banner">
@@ -305,30 +325,26 @@
       <div class="spinner"></div>
     </button>
     <div class="divider">or</div>
-    <button class="btn btn-secondary" onclick="WA.showSection('sectionAuth')">Use hardware key</button>
+    <button class="btn btn-secondary" onclick="WA.showSection('sectionAuth')">Use hardware key instead</button>
   </div>
 
   <!-- SECTION: Authenticate -->
-  <div class="section active" id="sectionAuth">
+  <div class="section" id="sectionAuth">
     <div id="supportWarn" class="support-warn" style="display:none;">
       ⚠️ WebAuthn not supported. Use Chrome, Safari, Edge, or Firefox.
     </div>
-
-    <!-- Authenticate tab -->
-    <div id="tabAuth" class="section active">
-      <div class="key-area">
-        <div class="key-icon-wrap" id="keyIconWrap">🗝️</div>
-        <div class="key-title">Hardware Key</div>
-        <div class="key-sub" id="keySubtitle">Touch your security key or use<br>biometrics when prompted</div>
-      </div>
-
-      <div id="keysList"></div>
-
-      <button class="btn btn-primary" id="btnAuth" onclick="WA.authenticate()">
-        <span class="btn-label">Authenticate</span>
-        <div class="spinner"></div>
-      </button>
+    <div class="key-area">
+      <div class="key-icon-wrap" id="keyIconWrap">🗝️</div>
+      <div class="key-title">Hardware Key</div>
+      <div class="key-sub" id="keySubtitle">Touch your security key or use<br>biometrics when prompted</div>
     </div>
+
+    <div id="keysList"></div>
+
+    <button class="btn btn-primary" id="btnAuth" onclick="WA.authenticate()">
+      <span class="btn-label">Authenticate</span>
+      <div class="spinner"></div>
+    </button>
   </div>
 
   <!-- SECTION: Authenticated -->
@@ -369,9 +385,12 @@ const WA = {
 
   /* ── Init ── */
   init() {
-    if (!window.PublicKeyCredential) {
+    const noWebAuthn = !window.PublicKeyCredential;
+    if (noWebAuthn) {
       document.getElementById('supportWarn').style.display = 'block';
+      document.getElementById('supportWarnSetup').style.display = 'block';
       document.getElementById('btnAuth').disabled = true;
+      document.getElementById('btnRegister').disabled = true;
     }
 
     // Already have a valid session?
@@ -379,6 +398,13 @@ const WA = {
     if (sess && this.sessionValid(sess)) {
       this.showSessionUI(sess);
       setTimeout(() => this.redirect(), 800);
+      return;
+    }
+
+    // No keys registered yet → first-time setup
+    const creds = this.getCreds();
+    if (!creds.length) {
+      this.showSection('sectionSetup');
       return;
     }
 
@@ -448,7 +474,7 @@ const WA = {
 
       this.alert(`✅ "${name}" registered — you can now sign in`, 'success');
       document.getElementById('keyName').value = '';
-      setTimeout(() => { this.tab('tabAuth'); this.renderKeys(); }, 1200);
+      setTimeout(() => { this.showSection('sectionAuth'); this.renderKeys(); }, 1200);
     } catch (e) {
       this.alert('Registration failed: ' + e.message, 'error');
     } finally {
