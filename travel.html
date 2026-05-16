@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel — Mishra Family Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #FAF9F5;
+      --bg-surface: #FFFFFF;
+      --bg-elevated: #F5F4ED;
+      --bg-hover: #EFEEE6;
+      --border-subtle: #E8E5DE;
+      --border-default: #D7D3C7;
+      --text-primary: #1A1817;
+      --text-secondary: #5C5A55;
+      --text-tertiary: #8A8780;
+      --accent: #C96442;
+      --accent-hover: #B5563A;
+      --accent-soft: #F4E4DC;
+      --success: #2E7D4F;
+      --success-soft: #E3F0E7;
+      --danger: #C53030;
+      --danger-soft: #FBE5E5;
+      --warning: #B7791F;
+      --warning-soft: #FEFCBF;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px rgba(26, 24, 23, 0.04);
+      --shadow-md: 0 4px 12px rgba(26, 24, 23, 0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .serif { font-family: 'Source Serif 4', Georgia, serif; }
+
+    .app-layout { display: none; min-height: 100vh; flex-direction: column; }
+    .app-layout.active { display: flex; }
+
+    /* Top Bar */
+    .topbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.875rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.875rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .topbar-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+    .icon-button {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 0.5rem 0.875rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .icon-button:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    /* Navigation */
+    .nav-bar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 2rem;
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: none;
+      padding: 0.875rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: inherit;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      margin-bottom: -1px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .nav-tab:hover { color: var(--text-primary); }
+    .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Content */
+    .content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+      width: 100%;
+    }
+
+    .page-header { margin-bottom: 2rem; }
+
+    .page-title {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.375rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+
+    /* Trip Banner */
+    .trip-banner {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .trip-banner-icon {
+      width: 72px; height: 72px;
+      background: var(--accent-soft);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .trip-banner-info { flex: 1; }
+    .trip-banner-dest {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .trip-banner-dates {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+    .trip-banner-meta {
+      display: flex; gap: 0.75rem; margin-top: 0.75rem; flex-wrap: wrap;
+    }
+    .trip-badge {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    /* Section Heading */
+    .section-heading {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.875rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Travelers */
+    .traveler-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+
+    .traveler-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .traveler-avatar {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+    .traveler-avatar.adult { background: var(--accent-soft); color: var(--accent); }
+    .traveler-avatar.child { background: #E0F2FE; color: #0369A1; }
+
+    .traveler-name {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .traveler-role {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+    }
+
+    .traveler-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .traveler-detail {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+    }
+
+    .traveler-detail .label { color: var(--text-tertiary); }
+    .traveler-detail .value { font-weight: 500; color: var(--text-primary); }
+    .traveler-detail .value.mono { font-family: 'SF Mono', 'Menlo', monospace; font-size: 0.78rem; letter-spacing: 0.3px; }
+
+    /* Flight card */
+    .flight-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 0.875rem;
+    }
+
+    .flight-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      margin-bottom: 1rem;
+    }
+
+    .flight-route {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .flight-endpoint { text-align: center; min-width: 80px; }
+    .flight-code {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .flight-city { font-size: 0.78rem; color: var(--text-tertiary); }
+    .flight-time { font-size: 0.9375rem; font-weight: 600; margin-top: 0.375rem; }
+    .flight-date { font-size: 0.75rem; color: var(--text-tertiary); }
+
+    .flight-middle {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      padding: 0 0.5rem;
+    }
+
+    .flight-no {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.375rem;
+    }
+
+    .flight-line {
+      height: 2px;
+      background: linear-gradient(90deg, var(--border-default), var(--accent), var(--border-default));
+      border-radius: 1px;
+      position: relative;
+    }
+    .flight-line::after {
+      content: '';
+      position: absolute;
+      right: -2px; top: -4px;
+      border-left: 7px solid var(--accent);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+
+    .flight-airline {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 0.375rem;
+    }
+
+    /* Hotel */
+    .hotel-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    .hotel-icon {
+      width: 56px; height: 56px;
+      background: #FEF3C7;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .hotel-name {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .hotel-address {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+      line-height: 1.5;
+    }
+
+    .hotel-meta {
+      display: flex; gap: 0.625rem; margin-top: 0.75rem; flex-wrap: wrap;
+    }
+
+    .hotel-meta-tag {
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: var(--bg-elevated);
+      padding: 0.25rem 0.625rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 1.75rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem; top: 0.5rem; bottom: 0.5rem;
+      width: 2px;
+      background: var(--border-default);
+      border-radius: 1px;
+    }
+
+    .tl-item { position: relative; padding-bottom: 1.25rem; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -1.375rem; top: 0.375rem;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--accent-soft);
+    }
+
+    .tl-date {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .tl-title { font-weight: 600; font-size: 0.9375rem; margin-top: 0.125rem; }
+    .tl-desc { font-size: 0.8125rem; color: var(--text-tertiary); margin-top: 0.125rem; }
+
+    /* Checklist */
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--bg-elevated);
+      font-size: 0.875rem;
+    }
+    .checklist-item:last-child { border-bottom: none; }
+
+    .check-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+    .check-icon.done { background: var(--success-soft); color: var(--success); }
+    .check-icon.pending { background: var(--warning-soft); color: var(--warning); }
+
+    .check-text { flex: 1; }
+
+    .check-badge {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      padding: 0.1875rem 0.5rem;
+      border-radius: 4px;
+    }
+    .check-badge.done { background: var(--success-soft); color: var(--success); }
+    .check-badge.pending { background: var(--warning-soft); color: var(--warning); }
+
+    /* Contact grid */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .contact-card {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1rem;
+    }
+
+    .contact-label {
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+
+    .contact-value {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      margin-top: 0.25rem;
+    }
+
+    /* Two-col layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Auth screen */
+    .auth-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .auth-screen p { color: var(--text-secondary); font-size: 0.9375rem; }
+    .auth-screen a {
+      display: inline-block;
+      margin-top: 1rem;
+      background: var(--accent);
+      color: white;
+      padding: 0.625rem 1.5rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      .topbar { padding: 0.75rem 1rem; }
+      .nav-bar { padding: 0 1rem; }
+      .content { padding: 1.5rem 1rem; }
+      .trip-banner { flex-direction: column; gap: 1rem; text-align: center; }
+      .trip-banner-meta { justify-content: center; }
+      .flight-route { flex-direction: column; gap: 0.5rem; }
+      .flight-line { display: none; }
+      .hotel-card { flex-direction: column; }
+      .two-col { grid-template-columns: 1fr; }
+      .card-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Auth redirect screen -->
+  <div class="auth-screen" id="authScreen">
+    <div>
+      <p>Authenticating...</p>
+      <a href="auth.html">Sign in</a>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div class="app-layout" id="appLayout">
+    <header class="topbar">
+      <a class="topbar-brand" href="dashboard.html">
+        <div class="brand-mark">M</div>
+        <div class="brand-title">Mishra Family</div>
+      </a>
+      <div class="topbar-actions">
+        <a href="dashboard.html" class="icon-button">Dashboard</a>
+        <button class="icon-button" id="logoutBtn">Sign out</button>
+      </div>
+    </header>
+
+    <nav class="nav-bar">
+      <a href="dashboard.html" class="nav-tab">Overview</a>
+      <a href="documents.html" class="nav-tab">Documents</a>
+      <a href="vault.html" class="nav-tab">Vault</a>
+      <a href="travel.html" class="nav-tab active">Travel</a>
+    </nav>
+
+    <main class="content">
+      <div class="page-header">
+        <h1 class="page-title">Travel</h1>
+        <p class="page-subtitle">Upcoming trips, bookings, and travel documents.</p>
+      </div>
+
+      <!-- Trip Banner -->
+      <div class="trip-banner">
+        <div class="trip-banner-icon">&#x1F1F9;&#x1F1ED;</div>
+        <div class="trip-banner-info">
+          <div class="trip-banner-dest">Bangkok, Thailand</div>
+          <div class="trip-banner-dates">19 May 2026 &mdash; 25 May 2026</div>
+          <div class="trip-banner-meta">
+            <span class="trip-badge">7 Nights</span>
+            <span class="trip-badge">4 Travelers</span>
+            <span class="trip-badge">Thai AirAsia</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Travelers -->
+      <h2 class="section-heading">Travelers</h2>
+      <div class="card-grid">
+        <div class="traveler-card">
+          <div class="traveler-header">
+            <div class="traveler-avatar adult">SM</div>
+            <div>
+              <div class="traveler-name">Siddhartha Mishra</div>
+              <div class="traveler-role">Adult &middot; Male</div>
+            </div>
+          </div>
+          <div class="traveler-details">
+            <div class="traveler-detail"><span class="label">DOB</span><span class="value">25 Jan 1986</span></div>
+            <div class="traveler-detail"><span class="label">Occupation</span><span class="value">Business</span></div>
+            <div class="traveler-detail"><span class="label">Passport</span><span class="value mono sensitive">Z4176504</span></div>
+          </div>
+        </div>
+        <div class="traveler-card">
+          <div class="traveler-header">
+            <div class="traveler-avatar adult">A</div>
+            <div>
+              <div class="traveler-name">Archana</div>
+              <div class="traveler-role">Adult &middot; Female</div>
+            </div>
+          </div>
+          <div class="traveler-details">
+            <div class="traveler-detail"><span class="label">DOB</span><span class="value">28 Jun 1991</span></div>
+            <div class="traveler-detail"><span class="label">Occupation</span><span class="value">Housewife</span></div>
+            <div class="traveler-detail"><span class="label">Passport</span><span class="value mono sensitive">Z4168372</span></div>
+          </div>
+        </div>
+        <div class="traveler-card">
+          <div class="traveler-header">
+            <div class="traveler-avatar child">AD</div>
+            <div>
+              <div class="traveler-name">Advait Mishra</div>
+              <div class="traveler-role">Child &middot; Male &middot; 7 yrs</div>
+            </div>
+          </div>
+          <div class="traveler-details">
+            <div class="traveler-detail"><span class="label">DOB</span><span class="value">25 Dec 2018</span></div>
+            <div class="traveler-detail"><span class="label">Passport</span><span class="value mono sensitive">&mdash;</span></div>
+          </div>
+        </div>
+        <div class="traveler-card">
+          <div class="traveler-header">
+            <div class="traveler-avatar child">AA</div>
+            <div>
+              <div class="traveler-name">Aadya Mishra</div>
+              <div class="traveler-role">Child &middot; Female &middot; 3 yrs</div>
+            </div>
+          </div>
+          <div class="traveler-details">
+            <div class="traveler-detail"><span class="label">DOB</span><span class="value">09 Aug 2022</span></div>
+            <div class="traveler-detail"><span class="label">Passport</span><span class="value mono sensitive">AB251418</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flights -->
+      <h2 class="section-heading">Flights</h2>
+      <div class="flight-card">
+        <div class="flight-label">Outbound &mdash; Sun, 18 May 2026</div>
+        <div class="flight-route">
+          <div class="flight-endpoint">
+            <div class="flight-code">LKO</div>
+            <div class="flight-city">Lucknow</div>
+            <div class="flight-time">23:05</div>
+            <div class="flight-date">Sun, 18 May</div>
+          </div>
+          <div class="flight-middle">
+            <div class="flight-no">FD 147</div>
+            <div class="flight-line"></div>
+            <div class="flight-airline">Thai AirAsia</div>
+          </div>
+          <div class="flight-endpoint">
+            <div class="flight-code">DMK</div>
+            <div class="flight-city">Bangkok (Don Mueang)</div>
+            <div class="flight-time">04:10</div>
+            <div class="flight-date">Mon, 19 May</div>
+          </div>
+        </div>
+      </div>
+      <div class="flight-card" style="margin-bottom: 2rem;">
+        <div class="flight-label">Return &mdash; Sun, 25 May 2026</div>
+        <div class="flight-route">
+          <div class="flight-endpoint">
+            <div class="flight-code">DMK</div>
+            <div class="flight-city">Bangkok (Don Mueang)</div>
+            <div class="flight-time">20:25</div>
+            <div class="flight-date">Sun, 25 May</div>
+          </div>
+          <div class="flight-middle">
+            <div class="flight-no">FD 146</div>
+            <div class="flight-line"></div>
+            <div class="flight-airline">Thai AirAsia</div>
+          </div>
+          <div class="flight-endpoint">
+            <div class="flight-code">LKO</div>
+            <div class="flight-city">Lucknow</div>
+            <div class="flight-time">22:35</div>
+            <div class="flight-date">Sun, 25 May</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accommodation -->
+      <h2 class="section-heading">Accommodation</h2>
+      <div class="hotel-card">
+        <div class="hotel-icon">&#x1F3E8;</div>
+        <div>
+          <div class="hotel-name">THEA Private Suites by TH District</div>
+          <div class="hotel-address">37 Soi Ekamai 10, Sukhumvit 63, Klongton Nue, Wattana, Bangkok 10110</div>
+          <div class="hotel-meta">
+            <span class="hotel-meta-tag">Check-in: Mon, 19 May</span>
+            <span class="hotel-meta-tag">Check-out: Sun, 25 May</span>
+            <span class="hotel-meta-tag">6 Nights</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline + Checklist side by side -->
+      <div class="two-col">
+        <div>
+          <h2 class="section-heading">Trip timeline</h2>
+          <div class="card">
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-date">Sun, 18 May &middot; 23:05</div>
+                <div class="tl-title">Depart Lucknow (LKO)</div>
+                <div class="tl-desc">Thai AirAsia FD 147 &middot; Night flight</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-date">Mon, 19 May &middot; 04:10</div>
+                <div class="tl-title">Arrive Bangkok (DMK)</div>
+                <div class="tl-desc">Don Mueang Airport &middot; Transfer to hotel</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-date">Mon, 19 May</div>
+                <div class="tl-title">Check in &mdash; THEA Private Suites</div>
+                <div class="tl-desc">Sukhumvit 63, Ekamai area</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-date">Tue 20 &ndash; Sat 24 May</div>
+                <div class="tl-title">Explore Bangkok</div>
+                <div class="tl-desc">5 full days in the city</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-date">Sun, 25 May &middot; 20:25</div>
+                <div class="tl-title">Check out &amp; depart DMK</div>
+                <div class="tl-desc">FD 146 &middot; Arrive LKO 22:35</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="section-heading">Pre-travel checklist</h2>
+          <div class="card">
+            <div class="checklist-item">
+              <span class="check-icon done">&#x2713;</span>
+              <span class="check-text">Flights booked (FD 147 / FD 146)</span>
+              <span class="check-badge done">Done</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon done">&#x2713;</span>
+              <span class="check-text">Hotel booked</span>
+              <span class="check-badge done">Done</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon done">&#x2713;</span>
+              <span class="check-text">TDAC &mdash; Siddhartha</span>
+              <span class="check-badge done">Done</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon done">&#x2713;</span>
+              <span class="check-text">TDAC &mdash; Archana</span>
+              <span class="check-badge done">Done</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon done">&#x2713;</span>
+              <span class="check-text">TDAC &mdash; Advait</span>
+              <span class="check-badge done">Done</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon done">&#x2713;</span>
+              <span class="check-text">TDAC &mdash; Aadya</span>
+              <span class="check-badge done">Done</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending">!</span>
+              <span class="check-text">TDAC &mdash; Final submit</span>
+              <span class="check-badge pending">Pending</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending">!</span>
+              <span class="check-text">Passport validity (6+ months)</span>
+              <span class="check-badge pending">Verify</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending">!</span>
+              <span class="check-text">Travel insurance</span>
+              <span class="check-badge pending">Pending</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending">!</span>
+              <span class="check-text">Currency exchange (THB)</span>
+              <span class="check-badge pending">Pending</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending">!</span>
+              <span class="check-text">Airport transfer</span>
+              <span class="check-badge pending">Pending</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending">!</span>
+              <span class="check-text">Boarding passes</span>
+              <span class="check-badge pending">Pending</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emergency contacts -->
+      <h2 class="section-heading">Emergency contacts</h2>
+      <div class="contact-grid" style="margin-bottom: 2rem;">
+        <div class="contact-card">
+          <div class="contact-label">Phone</div>
+          <div class="contact-value">+91 9910447268</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-label">Email</div>
+          <div class="contact-value">seeksiddharth@gmail.com</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-label">Indian Embassy, Bangkok</div>
+          <div class="contact-value">+66 2 258 0300</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-label">Thailand Tourist Police</div>
+          <div class="contact-value">1155</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const APP_STATE = { isAuthenticated: false };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const session = getSessionFromStorage();
+      if (session && isSessionValid(session)) {
+        APP_STATE.isAuthenticated = true;
+        showApp();
+      } else {
+        window.location.href = 'auth.html';
+      }
+
+      document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    });
+
+    function getSessionFromStorage() {
+      try { return JSON.parse(localStorage.getItem('mishraFamilySession') || 'null'); } catch { return null; }
+    }
+    function isSessionValid(s) { return s && s.expiresAt && new Date(s.expiresAt) > new Date(); }
+
+    function showApp() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('appLayout').classList.add('active');
+    }
+
+    function handleLogout() {
+      if (confirm('Sign out?')) {
+        localStorage.removeItem('mishraFamilySession');
+        window.location.href = 'auth.html';
+      }
+    }
+  </script>
+</body>
+</html>
