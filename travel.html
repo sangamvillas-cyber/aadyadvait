@@ -300,20 +300,32 @@
     .bp-mini-row:last-child { margin-bottom: 0; }
     .bp-mini-row .bp-label { color: var(--text-tertiary); }
     .bp-mini-row .bp-value { font-weight: 600; color: var(--text-primary); }
-    .bp-download {
-      display: inline-block;
+    .bp-btn-row {
+      display: flex;
+      gap: 0.5rem;
       margin-top: 0.5rem;
-      background: var(--accent);
-      color: #fff;
+    }
+    .bp-download, .bp-view {
+      display: inline-block;
       padding: 0.3rem 0.75rem;
       border-radius: 4px;
       font-size: 0.75rem;
       font-weight: 500;
       text-decoration: none;
-      width: 100%;
       text-align: center;
+      flex: 1;
+    }
+    .bp-download {
+      background: var(--accent);
+      color: #fff;
     }
     .bp-download:hover { background: var(--accent-hover); }
+    .bp-view {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+    }
+    .bp-view:hover { background: var(--bg-hover); }
 
     .traveler-avatar {
       width: 36px; height: 36px;
@@ -701,7 +713,10 @@
               <div class="bp-mini-row"><span class="bp-label">Seq</span><span class="bp-value">6</span></div>
               <div class="bp-mini-row"><span class="bp-label">Baggage</span><span class="bp-value">Carry-on 7 kg</span></div>
             </div>
-            <a href="travel-docs/boarding-pass-siddhartha-19F.pdf" target="_blank" class="bp-download">Download Boarding Pass</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/boarding-pass-siddhartha-19F.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/boarding-pass-siddhartha-19F.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
           <div class="traveler-tab-panel" data-panel="tdac">
             <div class="bp-mini">
@@ -713,7 +728,10 @@
               <div class="bp-mini-row"><span class="bp-label">Accommodation</span><span class="bp-value">Hotel</span></div>
               <div class="bp-mini-row"><span class="bp-label">Status</span><span class="bp-value" style="color:var(--success)">Submitted</span></div>
             </div>
-            <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-download">Download TDAC</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/TDAC-all-members.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
         </div>
 
@@ -751,7 +769,10 @@
               <div class="bp-mini-row"><span class="bp-label">Seq</span><span class="bp-value">7</span></div>
               <div class="bp-mini-row"><span class="bp-label">Baggage</span><span class="bp-value">Carry-on 7 kg</span></div>
             </div>
-            <a href="travel-docs/boarding-pass-archana-19C.pdf" target="_blank" class="bp-download">Download Boarding Pass</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/boarding-pass-archana-19C.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/boarding-pass-archana-19C.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
           <div class="traveler-tab-panel" data-panel="tdac">
             <div class="bp-mini">
@@ -763,7 +784,10 @@
               <div class="bp-mini-row"><span class="bp-label">Accommodation</span><span class="bp-value">Hotel</span></div>
               <div class="bp-mini-row"><span class="bp-label">Status</span><span class="bp-value" style="color:var(--success)">Submitted</span></div>
             </div>
-            <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-download">Download TDAC</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/TDAC-all-members.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
         </div>
 
@@ -801,7 +825,10 @@
               <div class="bp-mini-row"><span class="bp-label">Seq</span><span class="bp-value">9</span></div>
               <div class="bp-mini-row"><span class="bp-label">Baggage</span><span class="bp-value">Carry-on 7 kg</span></div>
             </div>
-            <a href="travel-docs/boarding-pass-advait-19D.pdf" target="_blank" class="bp-download">Download Boarding Pass</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/boarding-pass-advait-19D.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/boarding-pass-advait-19D.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
           <div class="traveler-tab-panel" data-panel="tdac">
             <div class="bp-mini">
@@ -813,7 +840,10 @@
               <div class="bp-mini-row"><span class="bp-label">Accommodation</span><span class="bp-value">Hotel</span></div>
               <div class="bp-mini-row"><span class="bp-label">Status</span><span class="bp-value" style="color:var(--success)">Submitted</span></div>
             </div>
-            <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-download">Download TDAC</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/TDAC-all-members.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
         </div>
 
@@ -851,7 +881,10 @@
               <div class="bp-mini-row"><span class="bp-label">Seq</span><span class="bp-value">8</span></div>
               <div class="bp-mini-row"><span class="bp-label">Baggage</span><span class="bp-value">Carry-on 7 kg</span></div>
             </div>
-            <a href="travel-docs/boarding-pass-aadya-19E.pdf" target="_blank" class="bp-download">Download Boarding Pass</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/boarding-pass-aadya-19E.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/boarding-pass-aadya-19E.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
           <div class="traveler-tab-panel" data-panel="tdac">
             <div class="bp-mini">
@@ -863,7 +896,10 @@
               <div class="bp-mini-row"><span class="bp-label">Accommodation</span><span class="bp-value">Hotel</span></div>
               <div class="bp-mini-row"><span class="bp-label">Status</span><span class="bp-value" style="color:var(--success)">Submitted</span></div>
             </div>
-            <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-download">Download TDAC</a>
+            <div class="bp-btn-row">
+              <a href="travel-docs/TDAC-all-members.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/TDAC-all-members.pdf" download class="bp-download">Download</a>
+            </div>
           </div>
         </div>
       </div>
