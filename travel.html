@@ -285,6 +285,42 @@
     .traveler-tab-panel { display: none; }
     .traveler-tab-panel.active { display: block; }
 
+    .page-tabs {
+      display: flex;
+      gap: 0;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .page-tab-btn {
+      flex: 1;
+      min-width: 0;
+      padding: 0.6rem 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      background: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-radius: calc(var(--radius-lg) - 4px);
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-align: center;
+    }
+    .page-tab-btn:hover { color: var(--text-primary); }
+    .page-tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 1px 4px rgba(201,100,66,0.25);
+    }
+    .page-tab-panel { display: none; }
+    .page-tab-panel.active { display: block; }
+
     .bp-mini {
       background: var(--bg-elevated);
       border-radius: var(--radius-sm);
@@ -904,339 +940,354 @@
         </div>
       </div>
 
-      <!-- Flights -->
-      <h2 class="section-heading">Flights</h2>
-      <div class="flight-card">
-        <div class="flight-label">Outbound &mdash; Sun, 18 May 2026</div>
-        <div class="flight-route">
-          <div class="flight-endpoint">
-            <div class="flight-code">LKO</div>
-            <div class="flight-city">Lucknow</div>
-            <div class="flight-time">23:05</div>
-            <div class="flight-date">Sun, 18 May</div>
-          </div>
-          <div class="flight-middle">
-            <div class="flight-no">FD 147</div>
-            <div class="flight-line"></div>
-            <div class="flight-airline">Thai AirAsia</div>
-          </div>
-          <div class="flight-endpoint">
-            <div class="flight-code">DMK</div>
-            <div class="flight-city">Bangkok (Don Mueang)</div>
-            <div class="flight-time">04:10</div>
-            <div class="flight-date">Mon, 19 May</div>
-          </div>
-        </div>
-        <div class="bp-btn-row" style="margin-top:0.75rem;">
-          <a class="bp-view" href="travel-docs/flight-ticket-NE9IYW.pdf" target="_blank">View Ticket</a>
-          <a class="bp-download" href="travel-docs/flight-ticket-NE9IYW.pdf" download>Download</a>
-        </div>
-      </div>
-      <div class="flight-card" style="margin-bottom: 2rem;">
-        <div class="flight-label">Return &mdash; Sun, 25 May 2026</div>
-        <div class="flight-route">
-          <div class="flight-endpoint">
-            <div class="flight-code">DMK</div>
-            <div class="flight-city">Bangkok (Don Mueang)</div>
-            <div class="flight-time">20:25</div>
-            <div class="flight-date">Sun, 25 May</div>
-          </div>
-          <div class="flight-middle">
-            <div class="flight-no">FD 146</div>
-            <div class="flight-line"></div>
-            <div class="flight-airline">Thai AirAsia</div>
-          </div>
-          <div class="flight-endpoint">
-            <div class="flight-code">LKO</div>
-            <div class="flight-city">Lucknow</div>
-            <div class="flight-time">22:35</div>
-            <div class="flight-date">Sun, 25 May</div>
-          </div>
-        </div>
-        <div class="bp-btn-row" style="margin-top:0.75rem;">
-          <a class="bp-view" href="travel-docs/flight-ticket-NE9IYW.pdf" target="_blank">View Ticket</a>
-          <a class="bp-download" href="travel-docs/flight-ticket-NE9IYW.pdf" download>Download</a>
-        </div>
+      <!-- Page-level tabs -->
+      <div class="page-tabs" id="pageTabs">
+        <button class="page-tab-btn active" data-ptab="flights">Flights</button>
+        <button class="page-tab-btn" data-ptab="hotels">Hotels</button>
+        <button class="page-tab-btn" data-ptab="food">Food</button>
+        <button class="page-tab-btn" data-ptab="checklist">Checklist</button>
+        <button class="page-tab-btn" data-ptab="emergency">Emergency</button>
       </div>
 
-      <!-- Accommodation -->
-      <h2 class="section-heading">Accommodation</h2>
-      <div class="hotel-card" style="flex-wrap:wrap;">
-        <div class="hotel-icon">&#x1F3E8;</div>
-        <div style="flex:1;min-width:220px;">
-          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-            <div class="hotel-name">THEA Private Suites by TH District</div>
-            <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--success-soft);color:var(--success);">Confirmed</span>
-            <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--danger-soft);color:var(--danger);">Non-refundable</span>
+      <!-- TAB: Flights -->
+      <div class="page-tab-panel active" data-ppanel="flights">
+        <div class="flight-card">
+          <div class="flight-label">Outbound &mdash; Sun, 18 May 2026</div>
+          <div class="flight-route">
+            <div class="flight-endpoint">
+              <div class="flight-code">LKO</div>
+              <div class="flight-city">Lucknow</div>
+              <div class="flight-time">23:05</div>
+              <div class="flight-date">Sun, 18 May</div>
+            </div>
+            <div class="flight-middle">
+              <div class="flight-no">FD 147</div>
+              <div class="flight-line"></div>
+              <div class="flight-airline">Thai AirAsia</div>
+            </div>
+            <div class="flight-endpoint">
+              <div class="flight-code">DMK</div>
+              <div class="flight-city">Bangkok (Don Mueang)</div>
+              <div class="flight-time">04:10</div>
+              <div class="flight-date">Mon, 19 May</div>
+            </div>
           </div>
-          <div class="hotel-address">37 Soi Ekamai 10 (or 12), Sukhumvit 63, Klongton Nue, Wattana, Bangkok 10110</div>
-          <div class="hotel-meta">
-            <span class="hotel-meta-tag">Check-in: Mon, 18 May &middot; 3:00 &ndash; 8:00 PM</span>
-            <span class="hotel-meta-tag">Check-out: Thu, 21 May &middot; 9:00 AM &ndash; 12:00 PM</span>
-            <span class="hotel-meta-tag">3 Nights</span>
-          </div>
-          <div style="margin-top:0.625rem;display:grid;grid-template-columns:1fr 1fr;gap:0.375rem;font-size:0.78rem;">
-            <div><span style="color:var(--text-tertiary);">Room</span> <span style="font-weight:500;">Presidential Suite</span></div>
-            <div><span style="color:var(--text-tertiary);">Guests</span> <span style="font-weight:500;">2 Adults</span></div>
-            <div><span style="color:var(--text-tertiary);">Booking</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">5478.368.170</span></div>
-            <div><span style="color:var(--text-tertiary);">PIN</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">2088</span></div>
-            <div><span style="color:var(--text-tertiary);">Price</span> <span style="font-weight:600;">&#x20B9; 34,069</span></div>
-            <div><span style="color:var(--text-tertiary);">Deposit</span> <span style="font-weight:500;">THB 3,000 cash</span></div>
-          </div>
-          <div style="font-size:0.75rem;color:var(--text-tertiary);margin-top:0.5rem;">Phone: +66 80 564 6999 &middot; Free parking &middot; Free WiFi</div>
-          <div class="bp-btn-row" style="max-width:280px;">
-            <a href="travel-docs/hotel-thea-confirmation.pdf" target="_blank" class="bp-view">View</a>
-            <a href="travel-docs/hotel-thea-confirmation.pdf" download class="bp-download">Download</a>
+          <div class="bp-btn-row" style="margin-top:0.75rem;">
+            <a class="bp-view" href="travel-docs/flight-ticket-NE9IYW.pdf" target="_blank">View Ticket</a>
+            <a class="bp-download" href="travel-docs/flight-ticket-NE9IYW.pdf" download>Download</a>
           </div>
         </div>
-      </div>
-      <div class="hotel-card" style="flex-wrap:wrap;">
-        <div class="hotel-icon">&#x1F3E8;</div>
-        <div style="flex:1;min-width:220px;">
-          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-            <div class="hotel-name">ibis Bangkok Sathorn</div>
-            <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--success-soft);color:var(--success);">Confirmed</span>
-            <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--success-soft);color:var(--success);">Free cancellation till 21 May</span>
+        <div class="flight-card">
+          <div class="flight-label">Return &mdash; Sun, 25 May 2026</div>
+          <div class="flight-route">
+            <div class="flight-endpoint">
+              <div class="flight-code">DMK</div>
+              <div class="flight-city">Bangkok (Don Mueang)</div>
+              <div class="flight-time">20:25</div>
+              <div class="flight-date">Sun, 25 May</div>
+            </div>
+            <div class="flight-middle">
+              <div class="flight-no">FD 146</div>
+              <div class="flight-line"></div>
+              <div class="flight-airline">Thai AirAsia</div>
+            </div>
+            <div class="flight-endpoint">
+              <div class="flight-code">LKO</div>
+              <div class="flight-city">Lucknow</div>
+              <div class="flight-time">22:35</div>
+              <div class="flight-date">Sun, 25 May</div>
+            </div>
           </div>
-          <div class="hotel-address">Soi Ngam Duphli, Rama IV, Sathorn, Bangkok 10120</div>
-          <div class="hotel-meta">
-            <span class="hotel-meta-tag">Check-in: Fri, 22 May &middot; from 2:00 PM</span>
-            <span class="hotel-meta-tag">Check-out: Mon, 25 May &middot; 12:00 PM</span>
-            <span class="hotel-meta-tag">3 Nights</span>
-            <span class="hotel-meta-tag">2 Rooms</span>
-          </div>
-          <div style="margin-top:0.625rem;display:grid;grid-template-columns:1fr 1fr;gap:0.375rem;font-size:0.78rem;">
-            <div><span style="color:var(--text-tertiary);">Room</span> <span style="font-weight:500;">Superior Twin &times; 2</span></div>
-            <div><span style="color:var(--text-tertiary);">Meal</span> <span style="font-weight:500;">Breakfast included</span></div>
-            <div><span style="color:var(--text-tertiary);">Booking</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">6496.315.550</span></div>
-            <div><span style="color:var(--text-tertiary);">PIN</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">1824</span></div>
-            <div><span style="color:var(--text-tertiary);">Price</span> <span style="font-weight:600;">&#x20B9; 28,431</span></div>
-            <div><span style="color:var(--text-tertiary);">Beds</span> <span style="font-weight:500;">2 Twin per room</span></div>
-          </div>
-          <div style="font-size:0.75rem;color:var(--text-tertiary);margin-top:0.5rem;">Phone: +66 2 610 5188 &middot; Free parking &middot; Free WiFi</div>
-          <div class="bp-btn-row" style="max-width:280px;">
-            <a href="travel-docs/hotel-ibis-confirmation.pdf" target="_blank" class="bp-view">View</a>
-            <a href="travel-docs/hotel-ibis-confirmation.pdf" download class="bp-download">Download</a>
+          <div class="bp-btn-row" style="margin-top:0.75rem;">
+            <a class="bp-view" href="travel-docs/flight-ticket-NE9IYW.pdf" target="_blank">View Ticket</a>
+            <a class="bp-download" href="travel-docs/flight-ticket-NE9IYW.pdf" download>Download</a>
           </div>
         </div>
       </div>
 
-      <!-- Timeline + Checklist side by side -->
-      <div class="two-col">
-        <div>
-          <h2 class="section-heading">Trip timeline</h2>
+      <!-- TAB: Hotels -->
+      <div class="page-tab-panel" data-ppanel="hotels">
+        <div class="hotel-card" style="flex-wrap:wrap;">
+          <div class="hotel-icon">&#x1F3E8;</div>
+          <div style="flex:1;min-width:220px;">
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+              <div class="hotel-name">THEA Private Suites by TH District</div>
+              <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--success-soft);color:var(--success);">Confirmed</span>
+              <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--danger-soft);color:var(--danger);">Non-refundable</span>
+            </div>
+            <div class="hotel-address">37 Soi Ekamai 10 (or 12), Sukhumvit 63, Klongton Nue, Wattana, Bangkok 10110</div>
+            <div class="hotel-meta">
+              <span class="hotel-meta-tag">Check-in: Mon, 18 May &middot; 3:00 &ndash; 8:00 PM</span>
+              <span class="hotel-meta-tag">Check-out: Thu, 21 May &middot; 9:00 AM &ndash; 12:00 PM</span>
+              <span class="hotel-meta-tag">3 Nights</span>
+            </div>
+            <div style="margin-top:0.625rem;display:grid;grid-template-columns:1fr 1fr;gap:0.375rem;font-size:0.78rem;">
+              <div><span style="color:var(--text-tertiary);">Room</span> <span style="font-weight:500;">Presidential Suite</span></div>
+              <div><span style="color:var(--text-tertiary);">Guests</span> <span style="font-weight:500;">2 Adults</span></div>
+              <div><span style="color:var(--text-tertiary);">Booking</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">5478.368.170</span></div>
+              <div><span style="color:var(--text-tertiary);">PIN</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">2088</span></div>
+              <div><span style="color:var(--text-tertiary);">Price</span> <span style="font-weight:600;">&#x20B9; 34,069</span></div>
+              <div><span style="color:var(--text-tertiary);">Deposit</span> <span style="font-weight:500;">THB 3,000 cash</span></div>
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-tertiary);margin-top:0.5rem;">Phone: +66 80 564 6999 &middot; Free parking &middot; Free WiFi</div>
+            <div class="bp-btn-row" style="max-width:280px;">
+              <a href="travel-docs/hotel-thea-confirmation.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/hotel-thea-confirmation.pdf" download class="bp-download">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="hotel-card" style="flex-wrap:wrap;">
+          <div class="hotel-icon">&#x1F3E8;</div>
+          <div style="flex:1;min-width:220px;">
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+              <div class="hotel-name">ibis Bangkok Sathorn</div>
+              <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--success-soft);color:var(--success);">Confirmed</span>
+              <span style="font-size:0.6875rem;font-weight:600;padding:0.15rem 0.5rem;border-radius:4px;background:var(--success-soft);color:var(--success);">Free cancellation till 21 May</span>
+            </div>
+            <div class="hotel-address">Soi Ngam Duphli, Rama IV, Sathorn, Bangkok 10120</div>
+            <div class="hotel-meta">
+              <span class="hotel-meta-tag">Check-in: Fri, 22 May &middot; from 2:00 PM</span>
+              <span class="hotel-meta-tag">Check-out: Mon, 25 May &middot; 12:00 PM</span>
+              <span class="hotel-meta-tag">3 Nights</span>
+              <span class="hotel-meta-tag">2 Rooms</span>
+            </div>
+            <div style="margin-top:0.625rem;display:grid;grid-template-columns:1fr 1fr;gap:0.375rem;font-size:0.78rem;">
+              <div><span style="color:var(--text-tertiary);">Room</span> <span style="font-weight:500;">Superior Twin &times; 2</span></div>
+              <div><span style="color:var(--text-tertiary);">Meal</span> <span style="font-weight:500;">Breakfast included</span></div>
+              <div><span style="color:var(--text-tertiary);">Booking</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">6496.315.550</span></div>
+              <div><span style="color:var(--text-tertiary);">PIN</span> <span style="font-weight:500;font-family:'SF Mono','Menlo',monospace;font-size:0.72rem;">1824</span></div>
+              <div><span style="color:var(--text-tertiary);">Price</span> <span style="font-weight:600;">&#x20B9; 28,431</span></div>
+              <div><span style="color:var(--text-tertiary);">Beds</span> <span style="font-weight:500;">2 Twin per room</span></div>
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-tertiary);margin-top:0.5rem;">Phone: +66 2 610 5188 &middot; Free parking &middot; Free WiFi</div>
+            <div class="bp-btn-row" style="max-width:280px;">
+              <a href="travel-docs/hotel-ibis-confirmation.pdf" target="_blank" class="bp-view">View</a>
+              <a href="travel-docs/hotel-ibis-confirmation.pdf" download class="bp-download">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Food -->
+      <div class="page-tab-panel" data-ppanel="food">
+        <h2 class="section-heading">Indian restaurants near THEA</h2>
+        <div class="card" style="margin-bottom:1.5rem;">
+          <div style="font-size:0.78rem;color:var(--text-tertiary);margin-bottom:0.75rem;">Within 1&ndash;2 km of THEA Private Suites, Sukhumvit Soi 26 &middot; Family-friendly</div>
+          <div class="checklist-item" style="padding:0.625rem 0;">
+            <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">1</span>
+            <div class="check-text">
+              <div style="font-weight:600;font-size:0.875rem;">Indus</div>
+              <div style="font-size:0.78rem;color:var(--text-tertiary);">71 Sukhumvit Soi 26 &mdash; same soi as THEA &middot; Mughlai &middot; Michelin Guide listed</div>
+            </div>
+            <a href="tel:+6622584900" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 258 4900</a>
+          </div>
+          <div class="checklist-item" style="padding:0.625rem 0;">
+            <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">2</span>
+            <div class="check-text">
+              <div style="font-weight:600;font-size:0.875rem;">Amritsr Restaurant</div>
+              <div style="font-size:0.78rem;color:var(--text-tertiary);">Sukhumvit Soi 22 &mdash; 500 m from THEA &middot; Punjabi, North Indian &middot; Open till 3 AM</div>
+            </div>
+            <a href="tel:+66830099719" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 83 009 9719</a>
+          </div>
+          <div class="checklist-item" style="padding:0.625rem 0;">
+            <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">3</span>
+            <div class="check-text">
+              <div style="font-weight:600;font-size:0.875rem;">Rang Mahal</div>
+              <div style="font-size:0.78rem;color:var(--text-tertiary);">26F Rembrandt Hotel, Sukhumvit Soi 18 &mdash; 1 km &middot; Fine dining &middot; Award-winning</div>
+            </div>
+            <a href="tel:+6622617100" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 261 7100</a>
+          </div>
+          <div class="checklist-item" style="padding:0.625rem 0;">
+            <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">4</span>
+            <div class="check-text">
+              <div style="font-weight:600;font-size:0.875rem;">Peshwa</div>
+              <div style="font-size:0.78rem;color:var(--text-tertiary);">Novotel, Sukhumvit Soi 20 &mdash; 800 m &middot; Maharashtrian &middot; Authentic thalis</div>
+            </div>
+            <a href="tel:+6620098222" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 009 8222</a>
+          </div>
+          <div class="checklist-item" style="padding:0.625rem 0;">
+            <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">5</span>
+            <div class="check-text">
+              <div style="font-weight:600;font-size:0.875rem;">Masala Art</div>
+              <div style="font-size:0.78rem;color:var(--text-tertiary);">Eight Thonglor, Sukhumvit 55 &mdash; 1.2 km &middot; North Indian &middot; Family-friendly</div>
+            </div>
+            <a href="tel:+6627138357" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 713 8357</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Checklist -->
+      <div class="page-tab-panel" data-ppanel="checklist">
+        <div class="two-col">
+          <div>
+            <h2 class="section-heading">Trip timeline</h2>
+            <div class="card">
+              <div class="timeline">
+                <div class="tl-item">
+                  <div class="tl-date">Sun, 18 May &middot; 23:05</div>
+                  <div class="tl-title">Depart Lucknow (LKO)</div>
+                  <div class="tl-desc">Thai AirAsia FD 147 &middot; Night flight</div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-date">Mon, 19 May &middot; 04:10</div>
+                  <div class="tl-title">Arrive Bangkok (DMK)</div>
+                  <div class="tl-desc">Don Mueang Airport &middot; Transfer to hotel</div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-date">Mon, 19 May &middot; 3:00 PM</div>
+                  <div class="tl-title">Check in &mdash; THEA Private Suites</div>
+                  <div class="tl-desc">Presidential Suite &middot; Ekamai area &middot; 3 nights</div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-date">Thu, 21 May &middot; by 12:00 PM</div>
+                  <div class="tl-title">Check out THEA</div>
+                  <div class="tl-desc">Deposit THB 3,000 refund &middot; Free day</div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-date">Fri, 22 May &middot; 2:00 PM</div>
+                  <div class="tl-title">Check in &mdash; ibis Bangkok Sathorn</div>
+                  <div class="tl-desc">2 Superior Twin rooms &middot; Breakfast included &middot; 3 nights</div>
+                </div>
+                <div class="tl-item">
+                  <div class="tl-date">Sun, 25 May &middot; 12:00 PM</div>
+                  <div class="tl-title">Check out ibis &amp; depart DMK</div>
+                  <div class="tl-desc">FD 146 &middot; 20:25 &rarr; LKO 22:35</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2 class="section-heading">Pre-travel checklist</h2>
+            <div class="card">
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">Flights booked (FD 147 / FD 146)</span>
+                <span class="check-badge done">Done</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">Hotel booked &mdash; THEA Private Suites</span>
+                <span class="check-badge done">Done</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">Passports valid (6+ months)</span>
+                <span class="check-badge done">Verified</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">TDAC &mdash; All 4 members submitted</span>
+                <span class="check-badge done">Done</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">Web check-in (LKO &rarr; DMK)</span>
+                <span class="check-badge done">Done</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">Boarding passes (LKO &rarr; DMK)</span>
+                <span class="check-badge done">Done</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">Currency exchange &mdash; 20,000 THB</span>
+                <span class="check-badge done">Done</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon done">&#x2713;</span>
+                <span class="check-text">Airport transfer (DMK &rarr; Hotel)</span>
+                <span class="check-badge done">Done</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon pending">!</span>
+                <span class="check-text">Check-in &amp; boarding passes (DMK &rarr; LKO)</span>
+                <span class="check-badge pending">Opens 23 May</span>
+              </div>
+              <div class="checklist-item">
+                <span class="check-icon pending">!</span>
+                <span class="check-text">Travel insurance</span>
+                <span class="check-badge pending">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="section-heading" style="margin-top:1.5rem;">Airport checklist &mdash; carry with you</h2>
+        <div class="two-col" style="margin-bottom:2rem;">
           <div class="card">
-            <div class="timeline">
-              <div class="tl-item">
-                <div class="tl-date">Sun, 18 May &middot; 23:05</div>
-                <div class="tl-title">Depart Lucknow (LKO)</div>
-                <div class="tl-desc">Thai AirAsia FD 147 &middot; Night flight</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-date">Mon, 19 May &middot; 04:10</div>
-                <div class="tl-title">Arrive Bangkok (DMK)</div>
-                <div class="tl-desc">Don Mueang Airport &middot; Transfer to hotel</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-date">Mon, 19 May &middot; 3:00 PM</div>
-                <div class="tl-title">Check in &mdash; THEA Private Suites</div>
-                <div class="tl-desc">Presidential Suite &middot; Ekamai area &middot; 3 nights</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-date">Thu, 21 May &middot; by 12:00 PM</div>
-                <div class="tl-title">Check out THEA</div>
-                <div class="tl-desc">Deposit THB 3,000 refund &middot; Free day</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-date">Fri, 22 May &middot; 2:00 PM</div>
-                <div class="tl-title">Check in &mdash; ibis Bangkok Sathorn</div>
-                <div class="tl-desc">2 Superior Twin rooms &middot; Breakfast included &middot; 3 nights</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-date">Sun, 25 May &middot; 12:00 PM</div>
-                <div class="tl-title">Check out ibis &amp; depart DMK</div>
-                <div class="tl-desc">FD 146 &middot; 20:25 &rarr; LKO 22:35</div>
-              </div>
+            <div style="font-weight:600;font-size:0.875rem;margin-bottom:0.75rem;color:var(--accent);">Documents (per person)</div>
+            <div class="checklist-item">
+              <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">1</span>
+              <span class="check-text">Passport (original)</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">2</span>
+              <span class="check-text">Boarding pass (printed PDF)</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">3</span>
+              <span class="check-text">E-ticket / itinerary (phone backup)</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">4</span>
+              <span class="check-text">TDAC confirmation (phone &mdash; not needed printed)</span>
+            </div>
+            <div class="checklist-item">
+              <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">5</span>
+              <span class="check-text">Hotel booking confirmation (phone)</span>
             </div>
           </div>
-        </div>
-
-        <div>
-          <h2 class="section-heading">Pre-travel checklist</h2>
           <div class="card">
+            <div style="font-weight:600;font-size:0.875rem;margin-bottom:0.75rem;color:var(--accent);">Essentials</div>
             <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">Flights booked (FD 147 / FD 146)</span>
-              <span class="check-badge done">Done</span>
+              <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
+              <span class="check-text">THB cash (20,000 THB)</span>
             </div>
             <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">Hotel booked &mdash; THEA Private Suites</span>
-              <span class="check-badge done">Done</span>
+              <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
+              <span class="check-text">INR cash for airport parking / cab</span>
             </div>
             <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">Passports valid (6+ months)</span>
-              <span class="check-badge done">Verified</span>
+              <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
+              <span class="check-text">Phone charger &amp; power bank</span>
             </div>
             <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">TDAC &mdash; All 4 members submitted</span>
-              <span class="check-badge done">Done</span>
+              <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
+              <span class="check-text">Kids snacks, milk, diapers, toys</span>
             </div>
             <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">Web check-in (LKO &rarr; DMK)</span>
-              <span class="check-badge done">Done</span>
+              <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
+              <span class="check-text">Medicines / first-aid basics</span>
             </div>
             <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">Boarding passes (LKO &rarr; DMK)</span>
-              <span class="check-badge done">Done</span>
-            </div>
-            <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">Currency exchange &mdash; 20,000 THB</span>
-              <span class="check-badge done">Done</span>
-            </div>
-            <div class="checklist-item">
-              <span class="check-icon done">&#x2713;</span>
-              <span class="check-text">Airport transfer (DMK &rarr; Hotel)</span>
-              <span class="check-badge done">Done</span>
-            </div>
-            <div class="checklist-item">
-              <span class="check-icon pending">!</span>
-              <span class="check-text">Check-in &amp; boarding passes (DMK &rarr; LKO)</span>
-              <span class="check-badge pending">Opens 23 May</span>
-            </div>
-            <div class="checklist-item">
-              <span class="check-icon pending">!</span>
-              <span class="check-text">Travel insurance</span>
-              <span class="check-badge pending">Pending</span>
+              <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
+              <span class="check-text">Liquids in zip-lock bag (under 100 ml each)</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Indian Restaurants Nearby -->
-      <h2 class="section-heading">Indian restaurants near THEA</h2>
-      <div class="card" style="margin-bottom:1.5rem;">
-        <div style="font-size:0.78rem;color:var(--text-tertiary);margin-bottom:0.75rem;">Within 1&ndash;2 km of THEA Private Suites, Sukhumvit Soi 26 &middot; Family-friendly</div>
-        <div class="checklist-item" style="padding:0.625rem 0;">
-          <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">1</span>
-          <div class="check-text">
-            <div style="font-weight:600;font-size:0.875rem;">Indus</div>
-            <div style="font-size:0.78rem;color:var(--text-tertiary);">71 Sukhumvit Soi 26 &mdash; same soi as THEA &middot; Mughlai &middot; Michelin Guide listed</div>
+      <!-- TAB: Emergency -->
+      <div class="page-tab-panel" data-ppanel="emergency">
+        <h2 class="section-heading">Emergency contacts</h2>
+        <div class="contact-grid" style="margin-bottom: 2rem;">
+          <div class="contact-card">
+            <div class="contact-label">Phone</div>
+            <div class="contact-value">+91 9910447268</div>
           </div>
-          <a href="tel:+6622584900" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 258 4900</a>
-        </div>
-        <div class="checklist-item" style="padding:0.625rem 0;">
-          <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">2</span>
-          <div class="check-text">
-            <div style="font-weight:600;font-size:0.875rem;">Amritsr Restaurant</div>
-            <div style="font-size:0.78rem;color:var(--text-tertiary);">Sukhumvit Soi 22 &mdash; 500 m from THEA &middot; Punjabi, North Indian &middot; Open till 3 AM</div>
+          <div class="contact-card">
+            <div class="contact-label">Email</div>
+            <div class="contact-value">seeksiddharth@gmail.com</div>
           </div>
-          <a href="tel:+66830099719" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 83 009 9719</a>
-        </div>
-        <div class="checklist-item" style="padding:0.625rem 0;">
-          <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">3</span>
-          <div class="check-text">
-            <div style="font-weight:600;font-size:0.875rem;">Rang Mahal</div>
-            <div style="font-size:0.78rem;color:var(--text-tertiary);">26F Rembrandt Hotel, Sukhumvit Soi 18 &mdash; 1 km &middot; Fine dining &middot; Award-winning</div>
+          <div class="contact-card">
+            <div class="contact-label">Indian Embassy, Bangkok</div>
+            <div class="contact-value">+66 2 258 0300</div>
           </div>
-          <a href="tel:+6622617100" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 261 7100</a>
-        </div>
-        <div class="checklist-item" style="padding:0.625rem 0;">
-          <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">4</span>
-          <div class="check-text">
-            <div style="font-weight:600;font-size:0.875rem;">Peshwa</div>
-            <div style="font-size:0.78rem;color:var(--text-tertiary);">Novotel, Sukhumvit Soi 20 &mdash; 800 m &middot; Maharashtrian &middot; Authentic thalis</div>
+          <div class="contact-card">
+            <div class="contact-label">Thailand Tourist Police</div>
+            <div class="contact-value">1155</div>
           </div>
-          <a href="tel:+6620098222" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 009 8222</a>
-        </div>
-        <div class="checklist-item" style="padding:0.625rem 0;">
-          <span class="check-icon" style="background:var(--accent-soft);color:var(--accent);font-size:0.65rem;font-weight:700;">5</span>
-          <div class="check-text">
-            <div style="font-weight:600;font-size:0.875rem;">Masala Art</div>
-            <div style="font-size:0.78rem;color:var(--text-tertiary);">Eight Thonglor, Sukhumvit 55 &mdash; 1.2 km &middot; North Indian &middot; Family-friendly</div>
-          </div>
-          <a href="tel:+6627138357" style="font-size:0.75rem;font-weight:500;color:var(--accent);text-decoration:none;white-space:nowrap;">+66 2 713 8357</a>
-        </div>
-      </div>
-
-      <!-- Airport Checklist -->
-      <h2 class="section-heading">Airport checklist &mdash; carry with you</h2>
-      <div class="two-col" style="margin-bottom:2rem;">
-        <div class="card">
-          <div style="font-weight:600;font-size:0.875rem;margin-bottom:0.75rem;color:var(--accent);">Documents (per person)</div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">1</span>
-            <span class="check-text">Passport (original)</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">2</span>
-            <span class="check-text">Boarding pass (printed PDF)</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">3</span>
-            <span class="check-text">E-ticket / itinerary (phone backup)</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">4</span>
-            <span class="check-text">TDAC confirmation (phone &mdash; not needed printed)</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:var(--accent-soft);color:var(--accent);">5</span>
-            <span class="check-text">Hotel booking confirmation (phone)</span>
-          </div>
-        </div>
-        <div class="card">
-          <div style="font-weight:600;font-size:0.875rem;margin-bottom:0.75rem;color:var(--accent);">Essentials</div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
-            <span class="check-text">THB cash (20,000 THB)</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
-            <span class="check-text">INR cash for airport parking / cab</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
-            <span class="check-text">Phone charger &amp; power bank</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
-            <span class="check-text">Kids snacks, milk, diapers, toys</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
-            <span class="check-text">Medicines / first-aid basics</span>
-          </div>
-          <div class="checklist-item">
-            <span class="check-icon pending" style="background:#E0F2FE;color:#0369A1;">&#x2713;</span>
-            <span class="check-text">Liquids in zip-lock bag (under 100 ml each)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Emergency contacts -->
-      <h2 class="section-heading">Emergency contacts</h2>
-      <div class="contact-grid" style="margin-bottom: 2rem;">
-        <div class="contact-card">
-          <div class="contact-label">Phone</div>
-          <div class="contact-value">+91 9910447268</div>
-        </div>
-        <div class="contact-card">
-          <div class="contact-label">Email</div>
-          <div class="contact-value">seeksiddharth@gmail.com</div>
-        </div>
-        <div class="contact-card">
-          <div class="contact-label">Indian Embassy, Bangkok</div>
-          <div class="contact-value">+66 2 258 0300</div>
-        </div>
-        <div class="contact-card">
-          <div class="contact-label">Thailand Tourist Police</div>
-          <div class="contact-value">1155</div>
         </div>
       </div>
 
@@ -1256,6 +1307,16 @@
       }
 
       document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+      document.querySelectorAll('.page-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.ptab;
+          document.querySelectorAll('.page-tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.page-tab-panel').forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          document.querySelector('[data-ppanel="' + tab + '"]').classList.add('active');
+        });
+      });
 
       document.querySelectorAll('.traveler-card').forEach(card => {
         card.querySelectorAll('.traveler-tab-btn').forEach(btn => {
