@@ -818,7 +818,8 @@
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2025-05-07",
         "image": "passports/advait-passport.jpg",
-        "dateOfExpiry": "2030-05-06"
+        "dateOfExpiry": "2030-05-06",
+        "imageBack": "passports/advait-passport-back.jpg"
       }
     }
   }
