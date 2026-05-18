@@ -716,15 +716,20 @@
     function renderPassportCard(memberId, p) {
       const status = passportStatus(p.dateOfExpiry);
       const fullName = [p.givenName, p.surname].filter(Boolean).join(' ');
-      const downloadName = `${memberId}-passport-${p.number}.jpg`;
+      const downloadFront = `${memberId}-passport-front-${p.number}.jpg`;
+      const downloadBack = `${memberId}-passport-back-${p.number}.jpg`;
       const copyData = `Passport — ${memberName(memberId)}\\nPassport No: ${p.number}\\nName: ${fullName}\\nDOB: ${fmtDateISO(p.dob)}\\nIssued: ${fmtDateISO(p.dateOfIssue)}\\nExpires: ${fmtDateISO(p.dateOfExpiry)}\\nPlace of Issue: ${p.placeOfIssue}`;
-      const imageActions = p.image
-        ? `<div class="doc-actions" style="border-top: 1px solid var(--border-subtle); padding: 0.625rem 1rem;">
-            <button class="doc-action" onclick="viewPassportScan('${p.image}','${memberName(memberId)} passport','${downloadName}')">View scan</button>
-            <a href="${p.image}" download="${downloadName}" class="doc-action">Download</a>
-            <button class="doc-action" onclick="copyText(\`${copyData}\`, this)">Copy details</button>
-          </div>`
-        : `<div class="doc-actions" style="border-top: 1px solid var(--border-subtle); padding: 0.625rem 1rem;">
+      const frontBtns = p.image
+        ? `<button class="doc-action" onclick="viewPassportScan('${p.image}','${memberName(memberId)} passport — Front','${downloadFront}')">View front</button>
+           <a href="${p.image}" download="${downloadFront}" class="doc-action">Download front</a>`
+        : '';
+      const backBtns = p.imageBack
+        ? `<button class="doc-action" onclick="viewPassportScan('${p.imageBack}','${memberName(memberId)} passport — Back','${downloadBack}')">View back</button>
+           <a href="${p.imageBack}" download="${downloadBack}" class="doc-action">Download back</a>`
+        : '';
+      const imageActions = `<div class="doc-actions" style="border-top: 1px solid var(--border-subtle); padding: 0.625rem 1rem; flex-wrap: wrap; gap: 0.375rem;">
+            ${frontBtns}
+            ${backBtns}
             <button class="doc-action" onclick="copyText(\`${copyData}\`, this)">Copy details</button>
           </div>`;
       return `<div class="passport-card">

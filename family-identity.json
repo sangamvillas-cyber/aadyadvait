@@ -27,8 +27,16 @@
           "amount": 568,
           "payableByDueDate": 563,
           "dueDateRebate": 5.39,
-          "prevReading": { "date": "2026-02-20", "kwh": 41186.28, "kwhe": 42867.03 },
-          "currReading": { "date": "2026-03-17", "kwh": 41809.0, "kwhe": 43504.0 },
+          "prevReading": {
+            "date": "2026-02-20",
+            "kwh": 41186.28,
+            "kwhe": 42867.03
+          },
+          "currReading": {
+            "date": "2026-03-17",
+            "kwh": 41809.0,
+            "kwhe": 43504.0
+          },
           "diffKwh": 622.72,
           "diffKwhe": 636.97,
           "image": "utilities/electricity/sarla-mishra-mvvnl-mar2026.jpg"
@@ -52,7 +60,7 @@
       "consideration": 579050,
       "valuation": 2930400,
       "stampDuty": 206000,
-      "carpetAreaSqm": 37.00,
+      "carpetAreaSqm": 37.0,
       "boundaries": {
         "north": "Corridor / Lift",
         "south": "Unit No. 125",
@@ -135,12 +143,25 @@
         "percentage": 65.33,
         "dateOfResult": "2007-06-05",
         "subjects": {
-          "Hindi":          { "total": 67 },
-          "English":        { "total": 69 },
-          "Mathematics":    { "total": 71 },
-          "Science":        { "total": 64, "note": "Grade A practical" },
-          "Social Science": { "total": 59 },
-          "Drawing":        { "total": 62 }
+          "Hindi": {
+            "total": 67
+          },
+          "English": {
+            "total": 69
+          },
+          "Mathematics": {
+            "total": 71
+          },
+          "Science": {
+            "total": 64,
+            "note": "Grade A practical"
+          },
+          "Social Science": {
+            "total": 59
+          },
+          "Drawing": {
+            "total": 62
+          }
         },
         "moralSportsPhysical": "A",
         "image": "school/archana/up-board-class10-2007.jpg"
@@ -153,14 +174,64 @@
         "class": "Prep-G",
         "personalNo": "23273",
         "overallGrade": "B",
-        "attendance": { "present": 74, "total": 96 },
+        "attendance": {
+          "present": 74,
+          "total": 96
+        },
         "subjects": {
-          "Arithmetic":           { "grade": "B", "components": { "Written": "B", "Project": "A", "Dodging": "C", "Number Counting": "A", "Number Names": "A", "After/Before/Between": "A" } },
-          "Art":                  { "grade": "B", "components": { "Written": "B", "Project": "A", "Assessed Worksheet": "B" } },
-          "English":              { "grade": "B", "components": { "Written": "B", "Dictation & Spelling": "A", "Project": "E", "Story": "A", "Recitation": "D", "Picture Talk": "B" } },
-          "Hindi":                { "grade": "B", "components": { "Written": "A", "Dictation & Spelling": "A", "Project": "A", "Story": "B", "Recitation": "C", "Picture Talk": "C" } },
-          "Scientific Awareness": { "grade": "B", "components": { "Written": "B", "Dictation & Spelling": "A", "Project": "A", "Picture Talk": "A" } },
-          "Value Education":      { "grade": "A" }
+          "Arithmetic": {
+            "grade": "B",
+            "components": {
+              "Written": "B",
+              "Project": "A",
+              "Dodging": "C",
+              "Number Counting": "A",
+              "Number Names": "A",
+              "After/Before/Between": "A"
+            }
+          },
+          "Art": {
+            "grade": "B",
+            "components": {
+              "Written": "B",
+              "Project": "A",
+              "Assessed Worksheet": "B"
+            }
+          },
+          "English": {
+            "grade": "B",
+            "components": {
+              "Written": "B",
+              "Dictation & Spelling": "A",
+              "Project": "E",
+              "Story": "A",
+              "Recitation": "D",
+              "Picture Talk": "B"
+            }
+          },
+          "Hindi": {
+            "grade": "B",
+            "components": {
+              "Written": "A",
+              "Dictation & Spelling": "A",
+              "Project": "A",
+              "Story": "B",
+              "Recitation": "C",
+              "Picture Talk": "C"
+            }
+          },
+          "Scientific Awareness": {
+            "grade": "B",
+            "components": {
+              "Written": "B",
+              "Dictation & Spelling": "A",
+              "Project": "A",
+              "Picture Talk": "A"
+            }
+          },
+          "Value Education": {
+            "grade": "A"
+          }
         },
         "teacherEval": {
           "Alert And Attentive": "A",
@@ -172,7 +243,13 @@
           "Shows Interest In CraftWork": "A",
           "Smartly Turned Out": "A"
         },
-        "activities": ["Fancy Dress (IC)", "Art Competition (IC)", "Diya Decoration (IC)", "Elocution Hindi (IC)", "Elocution English (IC)"]
+        "activities": [
+          "Fancy Dress (IC)",
+          "Art Competition (IC)",
+          "Diya Decoration (IC)",
+          "Elocution Hindi (IC)",
+          "Elocution English (IC)"
+        ]
       },
       {
         "year": "2025-26",
@@ -185,22 +262,84 @@
         "maxMarks": 700,
         "percentage": 91.71,
         "rank": 21,
-        "halfYearly": { "marks": 628, "maxMarks": 700, "percentage": 89.71, "rank": 25 },
-        "finalExam": { "marks": 650, "maxMarks": 700, "percentage": 92.86, "rank": 18 },
+        "halfYearly": {
+          "marks": 628,
+          "maxMarks": 700,
+          "percentage": 89.71,
+          "rank": 25
+        },
+        "finalExam": {
+          "marks": 650,
+          "maxMarks": 700,
+          "percentage": 92.86,
+          "rank": 18
+        },
         "promoted": true,
-        "attendance": { "present": 181, "total": 199 },
-        "physicalStats": { "heightCm": 120, "weightKg": 25 },
+        "attendance": {
+          "present": 181,
+          "total": 199
+        },
+        "physicalStats": {
+          "heightCm": 120,
+          "weightKg": 25
+        },
         "subjects": {
-          "English": { "halfYearly": 95, "final": 84, "total": 92, "grade": "A" },
-          "English Language": { "halfYearly": 95, "final": 84, "total": 89, "grade": "B" },
-          "English Literature": { "final": 94, "total": 94, "grade": "B" },
-          "Hindi Language": { "halfYearly": 54, "total": 67, "grade": "B" },
-          "Hindi Literature": { "halfYearly": 41, "total": 78, "grade": "B" },
-          "Mathematics": { "halfYearly": 95, "final": 90, "total": 97, "grade": "A" },
-          "Nature Studies": { "halfYearly": 95, "final": 68, "total": 57, "grade": "B" },
-          "Computer Studies": { "halfYearly": 96, "final": 97, "total": 98, "grade": "B" },
-          "General Knowledge": { "halfYearly": 100, "final": 87, "total": 96, "grade": "A" },
-          "Value Education": { "halfYearly": 98, "total": 91, "grade": "B" }
+          "English": {
+            "halfYearly": 95,
+            "final": 84,
+            "total": 92,
+            "grade": "A"
+          },
+          "English Language": {
+            "halfYearly": 95,
+            "final": 84,
+            "total": 89,
+            "grade": "B"
+          },
+          "English Literature": {
+            "final": 94,
+            "total": 94,
+            "grade": "B"
+          },
+          "Hindi Language": {
+            "halfYearly": 54,
+            "total": 67,
+            "grade": "B"
+          },
+          "Hindi Literature": {
+            "halfYearly": 41,
+            "total": 78,
+            "grade": "B"
+          },
+          "Mathematics": {
+            "halfYearly": 95,
+            "final": 90,
+            "total": 97,
+            "grade": "A"
+          },
+          "Nature Studies": {
+            "halfYearly": 95,
+            "final": 68,
+            "total": 57,
+            "grade": "B"
+          },
+          "Computer Studies": {
+            "halfYearly": 96,
+            "final": 97,
+            "total": 98,
+            "grade": "B"
+          },
+          "General Knowledge": {
+            "halfYearly": 100,
+            "final": 87,
+            "total": 96,
+            "grade": "A"
+          },
+          "Value Education": {
+            "halfYearly": 98,
+            "total": 91,
+            "grade": "B"
+          }
         },
         "coCurricular": {
           "Art & Craft": "A",
@@ -210,11 +349,28 @@
           "Sports": "B",
           "S.U.P.W.": "A"
         },
-        "activities": ["Quiz", "Dance", "Robotics", "Swimming", "Athletics", "Art Competition", "Music - Singing", "Elocution English (IC)"],
+        "activities": [
+          "Quiz",
+          "Dance",
+          "Robotics",
+          "Swimming",
+          "Athletics",
+          "Art Competition",
+          "Music - Singing",
+          "Elocution English (IC)"
+        ],
         "fitnessAssessment": {
           "date": "2026-04",
-          "flamingoBalance": { "date": "2026-04-08", "score": 7, "level": "L4 Moderate" },
-          "plateTapping": { "date": "2026-04-11", "time": "37.29 sec", "level": "L0 Inadequate" }
+          "flamingoBalance": {
+            "date": "2026-04-08",
+            "score": 7,
+            "level": "L4 Moderate"
+          },
+          "plateTapping": {
+            "date": "2026-04-11",
+            "time": "37.29 sec",
+            "level": "L0 Inadequate"
+          }
         }
       }
     ]
@@ -246,37 +402,169 @@
           "medical/advait/vaccination-chart-p2.jpg"
         ],
         "vaccinations": [
-          { "age": "Birth",     "vaccine": "BCG",                              "given": "2018-12-28" },
-          { "age": "Birth",     "vaccine": "Oral Polio Vaccine - 1st dose",    "given": "2018-12-28" },
-          { "age": "Birth",     "vaccine": "Hepatitis B - 1st dose",           "given": "2018-12-28" },
-          { "age": "6 weeks",   "vaccine": "DPT + HIB 1st dose (Hexaxim)",     "given": "2019-02-10", "weightKg": 4.0 },
-          { "age": "6 weeks",   "vaccine": "Oral Polio - 2nd dose",            "given": "2019-02-10" },
-          { "age": "6 weeks",   "vaccine": "Hepatitis B - 2nd dose",           "given": "2019-02-10" },
-          { "age": "6 weeks",   "vaccine": "IPV + Rotateq + Synflorix 1st dose", "given": "2019-02-17", "weightKg": 4.46 },
-          { "age": "10-12 wks", "vaccine": "DPT + HIB 2nd dose",              "given": "2019-03-10", "weightKg": 5.5 },
-          { "age": "10-12 wks", "vaccine": "Oral Polio - 3rd dose",           "given": "2019-03-10" },
-          { "age": "10-12 wks", "vaccine": "Hepatitis B - 3rd dose",          "given": "2019-03-10" },
-          { "age": "10-12 wks", "vaccine": "IPV + Rotateq + Synflorix 2nd dose", "given": "2019-03-10" },
-          { "age": "16-18 wks", "vaccine": "DPT + HIB + IPV + Rotateq + Synflorix 3rd dose", "given": "2019-04-30", "weightKg": 6.2 },
-          { "age": "6 months",  "vaccine": "Oral Polio - 4th dose",           "given": "2019-06-24", "weightKg": 6.6 },
-          { "age": "9 months",  "vaccine": "Measles Vaccine",                 "given": "2019-09-23", "weightKg": 7.7 },
-          { "age": "12 months", "vaccine": "Hepatitis A - 1st dose",          "given": "2021-11-10", "weightKg": 10.9 },
-          { "age": "12 months", "vaccine": "Chicken Pox (Varicella)",         "given": "2021-04-02" },
-          { "age": "15 months", "vaccine": "MMR (Measles, Mumps, Rubella)",   "given": "2020-12-10" },
-          { "age": "18 months", "vaccine": "DPT - 1st Booster",              "given": "2020-12-10", "weightKg": 11.5 },
-          { "age": "18 months", "vaccine": "Hepatitis A - 2nd dose",          "given": "2021-03-05", "weightKg": 12.0 },
-          { "age": "18 months", "vaccine": "Oral Polio - 6th dose + PCV",     "given": "2021-02-02", "weightKg": 11.8 },
-          { "age": "24 months", "vaccine": "Typhoid - 1st dose",              "given": "2020-10-09", "weightKg": 10.3 },
-          { "age": "24 months", "vaccine": "Typhoid - Booster",               "given": "2021-10-20", "weightKg": 14.2 },
-          { "age": "5 years",   "vaccine": "DPT - 2nd Booster",              "given": "2024-05-03" },
-          { "age": "5 years",   "vaccine": "MMR-3",                            "given": "2024-08-05" },
-          { "age": "Yearly",    "vaccine": "Flu Vaccine", "doses": [
-            { "due": "2021-03-02", "given": "2021-06-02", "weightKg": 12.5 },
-            { "due": "2022-06-02", "given": "2022-07-24", "weightKg": 15.5 },
-            { "due": "2023-07",   "given": "2023-08-12", "weightKg": 20.4 },
-            { "due": "2024",      "given": "2024-08-03", "weightKg": 21.0 },
-            { "due": "2025-08-03", "given": null, "note": "Due" }
-          ]}
+          {
+            "age": "Birth",
+            "vaccine": "BCG",
+            "given": "2018-12-28"
+          },
+          {
+            "age": "Birth",
+            "vaccine": "Oral Polio Vaccine - 1st dose",
+            "given": "2018-12-28"
+          },
+          {
+            "age": "Birth",
+            "vaccine": "Hepatitis B - 1st dose",
+            "given": "2018-12-28"
+          },
+          {
+            "age": "6 weeks",
+            "vaccine": "DPT + HIB 1st dose (Hexaxim)",
+            "given": "2019-02-10",
+            "weightKg": 4.0
+          },
+          {
+            "age": "6 weeks",
+            "vaccine": "Oral Polio - 2nd dose",
+            "given": "2019-02-10"
+          },
+          {
+            "age": "6 weeks",
+            "vaccine": "Hepatitis B - 2nd dose",
+            "given": "2019-02-10"
+          },
+          {
+            "age": "6 weeks",
+            "vaccine": "IPV + Rotateq + Synflorix 1st dose",
+            "given": "2019-02-17",
+            "weightKg": 4.46
+          },
+          {
+            "age": "10-12 wks",
+            "vaccine": "DPT + HIB 2nd dose",
+            "given": "2019-03-10",
+            "weightKg": 5.5
+          },
+          {
+            "age": "10-12 wks",
+            "vaccine": "Oral Polio - 3rd dose",
+            "given": "2019-03-10"
+          },
+          {
+            "age": "10-12 wks",
+            "vaccine": "Hepatitis B - 3rd dose",
+            "given": "2019-03-10"
+          },
+          {
+            "age": "10-12 wks",
+            "vaccine": "IPV + Rotateq + Synflorix 2nd dose",
+            "given": "2019-03-10"
+          },
+          {
+            "age": "16-18 wks",
+            "vaccine": "DPT + HIB + IPV + Rotateq + Synflorix 3rd dose",
+            "given": "2019-04-30",
+            "weightKg": 6.2
+          },
+          {
+            "age": "6 months",
+            "vaccine": "Oral Polio - 4th dose",
+            "given": "2019-06-24",
+            "weightKg": 6.6
+          },
+          {
+            "age": "9 months",
+            "vaccine": "Measles Vaccine",
+            "given": "2019-09-23",
+            "weightKg": 7.7
+          },
+          {
+            "age": "12 months",
+            "vaccine": "Hepatitis A - 1st dose",
+            "given": "2021-11-10",
+            "weightKg": 10.9
+          },
+          {
+            "age": "12 months",
+            "vaccine": "Chicken Pox (Varicella)",
+            "given": "2021-04-02"
+          },
+          {
+            "age": "15 months",
+            "vaccine": "MMR (Measles, Mumps, Rubella)",
+            "given": "2020-12-10"
+          },
+          {
+            "age": "18 months",
+            "vaccine": "DPT - 1st Booster",
+            "given": "2020-12-10",
+            "weightKg": 11.5
+          },
+          {
+            "age": "18 months",
+            "vaccine": "Hepatitis A - 2nd dose",
+            "given": "2021-03-05",
+            "weightKg": 12.0
+          },
+          {
+            "age": "18 months",
+            "vaccine": "Oral Polio - 6th dose + PCV",
+            "given": "2021-02-02",
+            "weightKg": 11.8
+          },
+          {
+            "age": "24 months",
+            "vaccine": "Typhoid - 1st dose",
+            "given": "2020-10-09",
+            "weightKg": 10.3
+          },
+          {
+            "age": "24 months",
+            "vaccine": "Typhoid - Booster",
+            "given": "2021-10-20",
+            "weightKg": 14.2
+          },
+          {
+            "age": "5 years",
+            "vaccine": "DPT - 2nd Booster",
+            "given": "2024-05-03"
+          },
+          {
+            "age": "5 years",
+            "vaccine": "MMR-3",
+            "given": "2024-08-05"
+          },
+          {
+            "age": "Yearly",
+            "vaccine": "Flu Vaccine",
+            "doses": [
+              {
+                "due": "2021-03-02",
+                "given": "2021-06-02",
+                "weightKg": 12.5
+              },
+              {
+                "due": "2022-06-02",
+                "given": "2022-07-24",
+                "weightKg": 15.5
+              },
+              {
+                "due": "2023-07",
+                "given": "2023-08-12",
+                "weightKg": 20.4
+              },
+              {
+                "due": "2024",
+                "given": "2024-08-03",
+                "weightKg": 21.0
+              },
+              {
+                "due": "2025-08-03",
+                "given": null,
+                "note": "Due"
+              }
+            ]
+          }
         ]
       }
     ],
@@ -370,7 +658,8 @@
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2018-07-10",
         "image": "passports/siddharth-passport.jpg",
-        "dateOfExpiry": "2028-07-09"
+        "dateOfExpiry": "2028-07-09",
+        "imageBack": "passports/siddharth-passport-back.jpg"
       }
     },
     "archana": {
@@ -425,7 +714,8 @@
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2017-12-04",
         "image": "passports/archana-passport.jpg",
-        "dateOfExpiry": "2027-12-03"
+        "dateOfExpiry": "2027-12-03",
+        "imageBack": "passports/archana-passport-back.jpg"
       }
     },
     "aadya": {
@@ -476,7 +766,8 @@
         "placeOfIssue": "LUCKNOW",
         "dateOfIssue": "2025-05-07",
         "image": "passports/aadya-passport.jpg",
-        "dateOfExpiry": "2030-05-06"
+        "dateOfExpiry": "2030-05-06",
+        "imageBack": "passports/aadya-passport-back.jpg"
       }
     },
     "advait": {
