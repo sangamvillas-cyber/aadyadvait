@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Mishra Family</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #FAF9F5;
+      --surface:   #FFFFFF;
+      --sunken:    #F3F1EC;
+      --border:    #E8E5DE;
+      --text:      #1A1817;
+      --muted:     #5C5A55;
+      --dim:       #8A8780;
+      --accent:    #C96442;
+      --accent-h:  #B5563A;
+      --accent-s:  #F4E4DC;
+      --success:   #2E7D4F;
+      --topbar-h:  57px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Inter',-apple-system,sans-serif;
+      background:var(--bg); color:var(--text);
+      min-height:100vh; -webkit-font-smoothing:antialiased;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      position:sticky; top:0; z-index:100;
+      height:var(--topbar-h);
+      background:var(--surface); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; padding:0 1.5rem; gap:1rem;
+    }
+    .topbar-brand {
+      font-family:'Source Serif 4',Georgia,serif;
+      font-size:1.125rem; font-weight:600; color:var(--text);
+      letter-spacing:-0.02em; text-decoration:none; margin-right:0.5rem;
+    }
+    .nav-tabs { display:flex; gap:0.25rem; }
+    .nav-tab {
+      padding:0.375rem 0.75rem; border-radius:6px;
+      font-size:0.8125rem; font-weight:500; color:var(--muted);
+      background:none; border:none; cursor:pointer; font-family:inherit;
+      text-decoration:none; display:inline-block; transition:all .15s;
+    }
+    .nav-tab:hover { background:var(--sunken); color:var(--text); }
+    .nav-tab.active { background:var(--accent-s); color:var(--accent); }
+    .topbar-right { margin-left:auto; display:flex; align-items:center; gap:0.625rem; }
+    .topbar-search {
+      display:flex; align-items:center; gap:0.5rem;
+      background:var(--sunken); border:1px solid var(--border);
+      border-radius:999px; padding:0.375rem 0.875rem; transition:all .15s;
+    }
+    .topbar-search:focus-within { background:var(--surface); border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-s); }
+    .topbar-search input {
+      border:none; background:none; font-family:inherit;
+      font-size:0.8125rem; color:var(--text); width:180px; outline:none;
+    }
+    .topbar-search input::placeholder { color:var(--dim); }
+    .icon-btn {
+      width:32px; height:32px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      background:none; border:none; cursor:pointer;
+      color:var(--muted); font-size:1rem; transition:all .15s;
+    }
+    .icon-btn:hover { background:var(--sunken); color:var(--text); }
+    .icon-btn.active { color:var(--accent); background:var(--accent-s); }
+
+    /* ── Layout ── */
+    .app-layout { display:flex; min-height:calc(100vh - var(--topbar-h)); }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width:210px; flex-shrink:0;
+      border-right:1px solid var(--border);
+      padding:1.25rem 0;
+      position:sticky; top:var(--topbar-h);
+      height:calc(100vh - var(--topbar-h)); overflow-y:auto;
+    }
+    .sidebar-heading {
+      font-size:0.6875rem; font-weight:600; letter-spacing:.06em;
+      text-transform:uppercase; color:var(--dim);
+      padding:0 1rem; margin-bottom:0.375rem;
+    }
+    .sidebar-section { margin-bottom:1.5rem; }
+    .sidebar-item {
+      display:flex; align-items:center; gap:0.625rem;
+      padding:0.5rem 1rem; cursor:pointer;
+      font-size:0.8125rem; color:var(--muted);
+      border:none; background:none; width:100%;
+      text-align:left; font-family:inherit; transition:all .12s;
+    }
+    .sidebar-item:hover { background:var(--sunken); color:var(--text); }
+    .sidebar-item.active { background:var(--accent-s); color:var(--accent); font-weight:500; }
+    .sidebar-item-icon { font-size:.9375rem; flex-shrink:0; }
+    .sidebar-item-label { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .sidebar-item-count {
+      font-size:.625rem; color:var(--dim);
+      background:var(--sunken); border-radius:999px; padding:.125rem .4375rem;
+    }
+    .sidebar-item.active .sidebar-item-count { background:rgba(201,100,66,.15); color:var(--accent); }
+
+    /* ── Main ── */
+    .main-content { flex:1; min-width:0; padding:1.5rem 2rem; }
+
+    /* ── Empty / Setup ── */
+    .empty-state {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:65vh; text-align:center; padding:2rem;
+    }
+    .empty-icon {
+      font-size:2.25rem; width:80px; height:80px; border-radius:20px;
+      background:var(--accent-s); display:flex; align-items:center; justify-content:center;
+      margin-bottom:1.25rem;
+    }
+    .empty-title { font-size:1.25rem; font-weight:600; margin-bottom:0.5rem; }
+    .empty-sub { font-size:0.875rem; color:var(--muted); line-height:1.6; max-width:360px; margin-bottom:1.5rem; }
+
+    /* ── Buttons ── */
+    .btn {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      padding:.6875rem 1.25rem; border-radius:10px;
+      font-size:.875rem; font-weight:600; cursor:pointer;
+      font-family:inherit; border:none; transition:all .15s;
+    }
+    .btn-primary { background:var(--accent); color:white; }
+    .btn-primary:hover { background:var(--accent-h); transform:translateY(-1px); box-shadow:0 4px 12px rgba(201,100,66,.3); }
+    .btn-primary:disabled { opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
+    .btn-secondary { background:var(--sunken); color:var(--muted); border:1px solid var(--border); }
+    .btn-secondary:hover { background:var(--surface); color:var(--text); }
+    .btn-sm { padding:.4375rem .875rem; font-size:.8125rem; }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display:flex; gap:1.5rem; align-items:center;
+      padding:.625rem 0 .875rem; margin-bottom:1.25rem;
+      border-bottom:1px solid var(--border);
+    }
+    .stat-item { text-align:center; }
+    .stat-val { font-size:1.0625rem; font-weight:700; color:var(--text); }
+    .stat-lbl { font-size:.625rem; color:var(--dim); margin-top:.125rem; text-transform:uppercase; letter-spacing:.04em; }
+
+    /* ── Scan progress ── */
+    .scan-progress {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:10px; padding:1rem 1.25rem; margin-bottom:1.25rem;
+    }
+    .scan-label { font-size:.8125rem; color:var(--muted); }
+    .progress-track { height:4px; background:var(--border); border-radius:999px; margin-top:.625rem; }
+    .progress-fill { height:100%; background:var(--accent); border-radius:999px; width:0; transition:width .2s; animation:indeterminate 1.4s ease infinite; }
+    @keyframes indeterminate { 0%{width:0;margin-left:0} 50%{width:40%;margin-left:30%} 100%{width:0;margin-left:100%} }
+
+    /* ── Date groups ── */
+    .date-group { margin-bottom:2rem; }
+    .date-group-label {
+      font-size:.8125rem; font-weight:600; color:var(--muted);
+      margin-bottom:.625rem; display:flex; align-items:center; gap:.5rem;
+    }
+    .group-count { font-size:.6875rem; color:var(--dim); font-weight:400; }
+
+    /* ── Photo grid ── */
+    .photo-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+      gap:3px;
+    }
+    .photo-thumb {
+      aspect-ratio:1; border-radius:5px;
+      overflow:hidden; cursor:pointer; position:relative;
+      background:var(--sunken);
+    }
+    .photo-thumb img {
+      width:100%; height:100%; object-fit:cover; display:block;
+      transition:transform .2s ease;
+    }
+    .photo-thumb:hover img { transform:scale(1.05); }
+    .photo-thumb:hover .thumb-overlay { opacity:1; }
+    .thumb-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to bottom,rgba(0,0,0,.25) 0%,transparent 40%,transparent 60%,rgba(0,0,0,.15) 100%);
+      opacity:0; transition:opacity .2s;
+      display:flex; align-items:flex-start; justify-content:flex-end; padding:.4375rem;
+    }
+    .thumb-fav {
+      width:26px; height:26px; border-radius:50%;
+      background:rgba(255,255,255,.9); border:none; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.8125rem; transition:all .15s; color:var(--muted);
+    }
+    .thumb-fav:hover { transform:scale(1.15); }
+    .thumb-fav.active { background:var(--accent); color:white; }
+    .photo-thumb.is-fav .thumb-overlay { opacity:1; }
+
+    /* ── Albums grid ── */
+    .albums-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
+      gap:1rem;
+    }
+    .album-card {
+      border-radius:10px; overflow:hidden; cursor:pointer;
+      border:1px solid var(--border); transition:all .15s;
+    }
+    .album-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(26,24,23,.09); }
+    .album-thumb {
+      aspect-ratio:4/3; background:var(--sunken);
+      overflow:hidden; position:relative;
+    }
+    .album-thumb img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .2s; }
+    .album-card:hover .album-thumb img { transform:scale(1.04); }
+    .album-thumb-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; }
+    .album-meta { padding:.625rem .75rem; background:var(--surface); }
+    .album-name { font-size:.875rem; font-weight:500; color:var(--text); }
+    .album-count { font-size:.75rem; color:var(--dim); margin-top:.125rem; }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      position:fixed; inset:0; z-index:1000;
+      background:rgba(8,7,6,.96);
+      display:flex; flex-direction:column;
+      opacity:0; pointer-events:none; transition:opacity .2s ease;
+    }
+    .lightbox.open { opacity:1; pointer-events:all; }
+    .lb-topbar {
+      height:54px; display:flex; align-items:center;
+      padding:0 1rem; gap:.75rem; flex-shrink:0;
+    }
+    .lb-btn {
+      width:36px; height:36px; border-radius:50%;
+      background:rgba(255,255,255,.1); border:none; cursor:pointer;
+      color:white; font-size:1rem;
+      display:flex; align-items:center; justify-content:center; transition:all .15s;
+    }
+    .lb-btn:hover { background:rgba(255,255,255,.2); }
+    .lb-btn.active { background:var(--accent); }
+    .lb-filename { color:rgba(255,255,255,.75); font-size:.875rem; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .lb-actions { display:flex; gap:.375rem; }
+    .lb-wrap {
+      flex:1; display:flex; min-height:0;
+    }
+    .lb-stage {
+      flex:1; display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden; min-width:0;
+    }
+    .lb-img {
+      max-width:100%; max-height:100%; object-fit:contain;
+      border-radius:2px; user-select:none;
+      transition:opacity .15s ease;
+    }
+    .lb-nav {
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:44px; height:44px; border-radius:50%;
+      background:rgba(255,255,255,.1); border:none; cursor:pointer;
+      color:white; font-size:1.375rem;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .15s; z-index:1;
+    }
+    .lb-nav:hover { background:rgba(255,255,255,.25); }
+    .lb-nav.prev { left:1rem; }
+    .lb-nav.next { right:1rem; }
+    .lb-nav:disabled { opacity:.2; cursor:default; pointer-events:none; }
+    .lb-footer {
+      height:48px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .lb-counter { color:rgba(255,255,255,.4); font-size:.8125rem; }
+
+    /* Info panel */
+    .lb-info {
+      width:240px; flex-shrink:0; padding:1.25rem;
+      border-left:1px solid rgba(255,255,255,.1);
+      overflow-y:auto; display:none;
+    }
+    .lb-info.open { display:block; }
+    .lb-info-hd { font-size:.6875rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:.75rem; }
+    .lb-info-row { display:flex; justify-content:space-between; padding:.375rem 0; border-bottom:1px solid rgba(255,255,255,.07); }
+    .lb-info-row:last-child { border-bottom:none; }
+    .lb-info-label { font-size:.75rem; color:rgba(255,255,255,.4); }
+    .lb-info-value { font-size:.75rem; color:rgba(255,255,255,.8); text-align:right; max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    /* Slideshow bar */
+    .ss-bar {
+      position:fixed; top:54px; left:0; right:0; height:2px;
+      background:rgba(255,255,255,.1); z-index:1001; display:none;
+    }
+    .ss-fill { height:100%; background:var(--accent); width:0; }
+    .ss-bar.active { display:block; }
+
+    /* Warning */
+    .warn {
+      background:#FBF1D9; border:1px solid rgba(161,102,15,.2);
+      border-radius:10px; padding:.875rem 1rem;
+      font-size:.8125rem; color:#A1660F; line-height:1.5; margin-bottom:1.25rem;
+    }
+
+    /* ── Scrollbar ── */
+    .sidebar::-webkit-scrollbar { width:4px; }
+    .sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:999px; }
+
+    @media(max-width:680px) {
+      .sidebar { display:none; }
+      .main-content { padding:1rem; }
+      .photo-grid { grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); }
+      .topbar-search { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="dashboard.html" class="topbar-brand">Mishra Family</a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab" style="text-decoration:none">Overview</a>
+    <a href="documents.html" class="nav-tab" style="text-decoration:none">Documents</a>
+    <button class="nav-tab active">📷 Gallery</button>
+    <a href="vault.html" class="nav-tab" style="text-decoration:none">🔒 Vault</a>
+  </nav>
+  <div class="topbar-right">
+    <div class="topbar-search">
+      <span style="color:var(--dim);font-size:.875rem">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search photos…" oninput="G.search(this.value)">
+    </div>
+    <button class="icon-btn" id="btnGrid" title="Grid" onclick="G.setView('grid')">⊞</button>
+    <button class="icon-btn" id="btnTimeline" title="Timeline" onclick="G.setView('timeline')">☰</button>
+    <button class="icon-btn" id="btnAlbums" title="Albums" onclick="G.setView('albums')">🗂</button>
+  </div>
+</header>
+
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Library</div>
+      <button class="sidebar-item" id="sAll" onclick="G.filter('all')">
+        <span class="sidebar-item-icon">🖼</span>
+        <span class="sidebar-item-label">All Photos</span>
+        <span class="sidebar-item-count" id="cntAll">0</span>
+      </button>
+      <button class="sidebar-item" id="sFavs" onclick="G.filter('favs')">
+        <span class="sidebar-item-icon">♥</span>
+        <span class="sidebar-item-label">Favourites</span>
+        <span class="sidebar-item-count" id="cntFavs">0</span>
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Albums</div>
+      <div id="sideAlbums"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Years</div>
+      <div id="sideYears"></div>
+    </div>
+    <div class="sidebar-section" style="padding:0 1rem">
+      <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center" onclick="G.pickFolder()">📁 Change Folder</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content" id="main">
+
+    <!-- Empty state -->
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">📷</div>
+      <div class="empty-title">Family Gallery</div>
+      <div class="empty-sub">Open any folder on your PC or pendrive. Photos are read directly — nothing is uploaded or sent anywhere.</div>
+      <div id="browserWarn"></div>
+      <button class="btn btn-primary" id="openBtn" onclick="G.pickFolder()">
+        📁 Open Photos Folder
+      </button>
+    </div>
+
+    <!-- Gallery content -->
+    <div id="galleryContent" style="display:none">
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-item"><div class="stat-val" id="statP">0</div><div class="stat-lbl">Photos</div></div>
+        <div class="stat-item"><div class="stat-val" id="statA">0</div><div class="stat-lbl">Albums</div></div>
+        <div class="stat-item"><div class="stat-val" id="statS">—</div><div class="stat-lbl">Total Size</div></div>
+        <div style="flex:1"></div>
+        <div style="font-size:.75rem;color:var(--dim);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="folderName"></div>
+        <button class="btn btn-secondary btn-sm" onclick="G.rescan()">↻ Refresh</button>
+        <button class="btn btn-secondary btn-sm" onclick="G.pickFolder()">📁 Change</button>
+      </div>
+
+      <!-- Scan progress -->
+      <div class="scan-progress" id="scanProgress" style="display:none">
+        <div class="scan-label" id="scanLabel">Scanning…</div>
+        <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+      </div>
+
+      <!-- Photos area -->
+      <div id="photoArea"></div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-topbar">
+    <button class="lb-btn" onclick="G.lbClose()" title="Close">✕</button>
+    <span class="lb-filename" id="lbName"></span>
+    <div class="lb-actions">
+      <button class="lb-btn" id="lbFav"   title="Favourite (F)"    onclick="G.lbToggleFav()">♡</button>
+      <button class="lb-btn" id="lbSlide" title="Slideshow (Space)" onclick="G.lbToggleSlide()">▶</button>
+      <button class="lb-btn" id="lbInfo"  title="Info (I)"          onclick="G.lbToggleInfo()">ℹ</button>
+      <button class="lb-btn" title="Download"                        onclick="G.lbDownload()">↓</button>
+    </div>
+  </div>
+  <div class="lb-wrap">
+    <div class="lb-stage">
+      <button class="lb-nav prev" id="lbPrev" onclick="G.lbStep(-1)">‹</button>
+      <img class="lb-img" id="lbImg" src="" alt="">
+      <button class="lb-nav next" id="lbNext" onclick="G.lbStep(1)">›</button>
+    </div>
+    <div class="lb-info" id="lbInfoPanel">
+      <div class="lb-info-hd">Photo Info</div>
+      <div id="lbInfoRows"></div>
+    </div>
+  </div>
+  <div class="lb-footer"><span class="lb-counter" id="lbCounter"></span></div>
+</div>
+<div class="ss-bar" id="ssBar"><div class="ss-fill" id="ssFill"></div></div>
+
+<script>
+/* ── Auth guard ── */
+(()=>{
+  const s = JSON.parse(localStorage.getItem('mishraFamilySession')||'null');
+  if(!s || new Date(s.expiresAt)<=new Date()) location.replace('auth.html');
+})();
+
+/* ── Gallery ── */
+const G = {
+  // data
+  handle:  null,
+  photos:  [],          // {id,name,path,album,date,size,file,fav}
+  albums:  {},          // name→[photo]
+  favs:    new Set(),
+  // ui state
+  filterMode: 'all',    // all|favs|album:X|year:N
+  viewMode:   'timeline',
+  curPhotos:  [],
+  lbIdx:      0,
+  infoOpen:   false,
+  ssTimer:    null,
+  ssDur:      4000,
+  // caches
+  urlCache:   new Map(),
+  _observer:  null,
+  _searchQ:   '',
+  // keys
+  FAVS_KEY:   'mishraGalleryFavs',
+  DB_NAME:    'mishraGallery',
+
+  /* ─ Init ─ */
+  async init(){
+    if(!window.showDirectoryPicker){
+      document.getElementById('browserWarn').innerHTML =
+        '<div class="warn" style="max-width:360px;margin-bottom:1rem">⚠️ Folder access requires <strong>Chrome</strong> or <strong>Edge</strong> on desktop. Safari and Firefox do not support it yet.</div>';
+      document.getElementById('openBtn').disabled = true;
+      return;
+    }
+    try{ this.favs = new Set(JSON.parse(localStorage.getItem(this.FAVS_KEY)||'[]')); }catch{}
+
+    // Restore saved handle
+    const h = await this._loadHandle();
+    if(h){
+      const perm = await h.queryPermission({mode:'read'});
+      if(perm==='granted'){ this.handle=h; this._scan(); return; }
+      // Re-request permission silently
+      const req = await h.requestPermission({mode:'read'});
+      if(req==='granted'){ this.handle=h; this._scan(); return; }
+    }
+    document.getElementById('emptyState').style.display='flex';
+  },
+
+  /* ─ Folder pick ─ */
+  async pickFolder(){
+    try{
+      const h = await window.showDirectoryPicker({mode:'read'});
+      this._revokeAll();
+      this.handle = h;
+      await this._saveHandle(h);
+      this._scan();
+    }catch(e){ if(e.name!=='AbortError') alert('Could not open folder: '+e.message); }
+  },
+
+  async rescan(){
+    if(!this.handle) return;
+    this._revokeAll();
+    this._scan();
+  },
+
+  /* ─ Scan ─ */
+  async _scan(){
+    this.photos=[]; this.albums={};
+    document.getElementById('emptyState').style.display='none';
+    document.getElementById('galleryContent').style.display='block';
+    document.getElementById('scanProgress').style.display='block';
+    document.getElementById('photoArea').innerHTML='<div style="padding:2rem;color:var(--dim);font-size:.875rem">⏳ Scanning folder…</div>';
+
+    let n=0;
+    const walk = async (dir, album)=>{
+      for await(const [name,entry] of dir.entries()){
+        if(entry.kind==='directory'){
+          await walk(entry, name);
+        } else if(/\.(jpe?g|png|gif|webp|heic|heif|avif|bmp|tiff?)$/i.test(name)){
+          const file = await entry.getFile();
+          const id   = `${album}||${name}||${file.size}`;
+          const p    = { id, name, path: album?`${album}/${name}`:name,
+                         album, date:new Date(file.lastModified),
+                         size:file.size, file, fav:this.favs.has(id) };
+          this.photos.push(p);
+          if(album){ if(!this.albums[album]) this.albums[album]=[]; this.albums[album].push(p); }
+          document.getElementById('scanLabel').textContent=`Found ${++n} photos…`;
+        }
+      }
+    };
+
+    try{
+      await walk(this.handle,'');
+      this.photos.sort((a,b)=>b.date-a.date);
+      document.getElementById('scanProgress').style.display='none';
+      document.getElementById('folderName').textContent = '📁 '+this.handle.name;
+      this._updateStats();
+      this._buildSidebar();
+      this.filter('all');
+    }catch(e){
+      document.getElementById('scanProgress').style.display='none';
+      document.getElementById('photoArea').innerHTML=`<div style="padding:2rem;color:#C53030">❌ ${e.message}</div>`;
+    }
+  },
+
+  /* ─ Stats & sidebar ─ */
+  _updateStats(){
+    const sz = this.photos.reduce((s,p)=>s+p.size,0);
+    document.getElementById('statP').textContent = this.photos.length.toLocaleString('en-IN');
+    document.getElementById('statA').textContent = Object.keys(this.albums).length;
+    document.getElementById('statS').textContent = this._fmtSize(sz);
+    document.getElementById('cntAll').textContent = this.photos.length;
+    document.getElementById('cntFavs').textContent = this.favs.size;
+  },
+
+  _buildSidebar(){
+    // albums
+    const ae = document.getElementById('sideAlbums');
+    const names = Object.keys(this.albums).sort();
+    ae.innerHTML = names.length===0
+      ? '<div style="padding:.25rem 1rem;font-size:.75rem;color:var(--dim)">No sub-folders</div>'
+      : names.map(n=>`
+        <button class="sidebar-item" id="sAlb_${this._eid(n)}" onclick="G.filter('album:${this._eid(n)}')">
+          <span class="sidebar-item-icon">📁</span>
+          <span class="sidebar-item-label">${this._esc(n)}</span>
+          <span class="sidebar-item-count">${this.albums[n].length}</span>
+        </button>`).join('');
+
+    // years
+    const ye = document.getElementById('sideYears');
+    const yrs = [...new Set(this.photos.map(p=>p.date.getFullYear()))].sort((a,b)=>b-a);
+    ye.innerHTML = yrs.map(y=>{
+      const c = this.photos.filter(p=>p.date.getFullYear()===y).length;
+      return `<button class="sidebar-item" id="sYr_${y}" onclick="G.filter('year:${y}')">
+        <span class="sidebar-item-icon">📅</span>
+        <span class="sidebar-item-label">${y}</span>
+        <span class="sidebar-item-count">${c}</span>
+      </button>`;
+    }).join('');
+  },
+
+  /* ─ Filter & view ─ */
+  filter(mode){
+    this.filterMode = mode;
+    this._searchQ = '';
+    document.getElementById('searchInput').value='';
+    // sidebar active
+    document.querySelectorAll('.sidebar-item').forEach(el=>el.classList.remove('active'));
+    if(mode==='all')  document.getElementById('sAll')?.classList.add('active');
+    else if(mode==='favs') document.getElementById('sFavs')?.classList.add('active');
+    else if(mode.startsWith('album:')) document.getElementById(`sAlb_${mode.slice(6)}`)?.classList.add('active');
+    else if(mode.startsWith('year:'))  document.getElementById(`sYr_${mode.slice(5)}`)?.classList.add('active');
+    this._render();
+  },
+
+  setView(v){
+    this.viewMode=v;
+    document.getElementById('btnGrid').classList.toggle('active',v==='grid');
+    document.getElementById('btnTimeline').classList.toggle('active',v==='timeline');
+    document.getElementById('btnAlbums').classList.toggle('active',v==='albums');
+    this._render();
+  },
+
+  search(q){
+    clearTimeout(this._st);
+    this._st = setTimeout(()=>{ this._searchQ=q; this._render(); }, 200);
+  },
+
+  _getPhotos(){
+    let ps = [...this.photos];
+    if(this.filterMode==='favs') ps=ps.filter(p=>p.fav);
+    else if(this.filterMode.startsWith('album:')) ps=ps.filter(p=>p.album===decodeURIComponent(this.filterMode.slice(6)));
+    else if(this.filterMode.startsWith('year:')){ const y=+this.filterMode.slice(5); ps=ps.filter(p=>p.date.getFullYear()===y); }
+    if(this._searchQ){ const q=this._searchQ.toLowerCase(); ps=ps.filter(p=>p.name.toLowerCase().includes(q)||p.album.toLowerCase().includes(q)||String(p.date.getFullYear()).includes(q)); }
+    return ps;
+  },
+
+  _render(){
+    if(!this.photos.length){ document.getElementById('photoArea').innerHTML='<div style="padding:2rem;color:var(--dim);font-size:.875rem">No photos found. Open a folder containing images.</div>'; return; }
+    this.curPhotos = this._getPhotos();
+    const el = document.getElementById('photoArea');
+    if(!this.curPhotos.length){ el.innerHTML='<div style="padding:2rem;color:var(--dim);font-size:.875rem">Nothing here.</div>'; return; }
+    if(this.viewMode==='albums') this._renderAlbums(el);
+    else if(this.viewMode==='timeline') this._renderTimeline(el);
+    else this._renderGrid(el, this.curPhotos);
+    this._lazyLoad();
+  },
+
+  _renderGrid(el, photos){
+    el.innerHTML=`<div class="photo-grid">${photos.map((p,i)=>this._thumbHTML(p,i)).join('')}</div>`;
+  },
+
+  _renderTimeline(el){
+    const groups={};
+    this.curPhotos.forEach((p,i)=>{
+      const k=p.date.toLocaleDateString('en-IN',{year:'numeric',month:'long'});
+      if(!groups[k]) groups[k]=[];
+      groups[k].push({p,i});
+    });
+    el.innerHTML=Object.entries(groups).map(([label,items])=>`
+      <div class="date-group">
+        <div class="date-group-label">${label} <span class="group-count">${items.length} photo${items.length>1?'s':''}</span></div>
+        <div class="photo-grid">${items.map(({p,i})=>this._thumbHTML(p,i)).join('')}</div>
+      </div>`).join('');
+  },
+
+  _renderAlbums(el){
+    const names=Object.keys(this.albums).sort();
+    if(!names.length){ el.innerHTML='<div style="padding:2rem;color:var(--dim);font-size:.875rem">No sub-folders (albums) found. Create folders inside your photos folder to organise by album.</div>'; return; }
+    el.innerHTML=`<div class="albums-grid">${names.map(n=>{
+      const ps=this.albums[n];
+      const cov=ps[0];
+      return `<div class="album-card" onclick="G.filter('album:${this._eid(n)}')">
+        <div class="album-thumb" id="at_${this._eid(n)}">
+          ${cov?`<img data-album-cov="${this._esc(cov.id)}" src="" alt="">`:'<div class="album-thumb-placeholder">📁</div>'}
+        </div>
+        <div class="album-meta">
+          <div class="album-name">${this._esc(n)}</div>
+          <div class="album-count">${ps.length} photo${ps.length>1?'s':''}</div>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+    document.querySelectorAll('img[data-album-cov]').forEach(async img=>{
+      const url=await this._url(img.dataset.albumCov);
+      if(url) img.src=url;
+    });
+  },
+
+  _thumbHTML(p,i){
+    return `<div class="photo-thumb${p.fav?' is-fav':''}" onclick="G.lbOpen(${i})" data-pid="${this._esc(p.id)}">
+      <img data-lid="${this._esc(p.id)}" src="" alt="${this._esc(p.name)}">
+      <div class="thumb-overlay">
+        <button class="thumb-fav${p.fav?' active':''}" onclick="event.stopPropagation();G.toggleFav('${this._esc(p.id)}')">${p.fav?'♥':'♡'}</button>
+      </div>
+    </div>`;
+  },
+
+  /* ─ Lazy load ─ */
+  _lazyLoad(){
+    if(!this._observer){
+      this._observer = new IntersectionObserver(async entries=>{
+        for(const e of entries){
+          if(e.isIntersecting){
+            this._observer.unobserve(e.target);
+            const url = await this._url(e.target.dataset.lid);
+            if(url) e.target.src=url;
+          }
+        }
+      },{rootMargin:'300px'});
+    }
+    document.querySelectorAll('img[data-lid]').forEach(img=>this._observer.observe(img));
+  },
+
+  async _url(id){
+    if(this.urlCache.has(id)) return this.urlCache.get(id);
+    const p=this.photos.find(x=>x.id===id);
+    if(!p) return null;
+    try{ const u=URL.createObjectURL(p.file); this.urlCache.set(id,u); return u; }catch{ return null; }
+  },
+
+  _revokeAll(){ this.urlCache.forEach(u=>URL.revokeObjectURL(u)); this.urlCache.clear(); if(this._observer){this._observer.disconnect();this._observer=null;} },
+
+  /* ─ Favourites ─ */
+  toggleFav(id){
+    const p=this.photos.find(x=>x.id===id);
+    if(!p) return;
+    p.fav=!p.fav;
+    p.fav ? this.favs.add(id) : this.favs.delete(id);
+    localStorage.setItem(this.FAVS_KEY,JSON.stringify([...this.favs]));
+    const th=document.querySelector(`[data-pid="${id}"]`);
+    if(th){ th.classList.toggle('is-fav',p.fav); const b=th.querySelector('.thumb-fav'); if(b){b.textContent=p.fav?'♥':'♡'; b.classList.toggle('active',p.fav);} }
+    document.getElementById('cntFavs').textContent=this.favs.size;
+    this._updateStats();
+  },
+
+  /* ─ Lightbox ─ */
+  async lbOpen(idx){
+    this.lbIdx=idx;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow='hidden';
+    await this._lbRender();
+  },
+
+  lbClose(){
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow='';
+    this.lbStopSlide();
+  },
+
+  async _lbRender(){
+    const p=this.curPhotos[this.lbIdx];
+    if(!p) return;
+    const img=document.getElementById('lbImg');
+    img.style.opacity='0';
+    const url=await this._url(p.id);
+    img.src=url||'';
+    img.onload=()=>img.style.opacity='1';
+    document.getElementById('lbName').textContent=p.name;
+    document.getElementById('lbCounter').textContent=`${this.lbIdx+1} / ${this.curPhotos.length}`;
+    document.getElementById('lbPrev').disabled=this.lbIdx===0;
+    document.getElementById('lbNext').disabled=this.lbIdx===this.curPhotos.length-1;
+    const fb=document.getElementById('lbFav');
+    fb.textContent=p.fav?'♥':'♡'; fb.classList.toggle('active',p.fav);
+    if(this.infoOpen) this._lbInfoRender(p);
+  },
+
+  lbStep(d){
+    const n=this.lbIdx+d;
+    if(n<0||n>=this.curPhotos.length) return;
+    this.lbIdx=n; this._lbRender();
+    if(this.ssTimer) this._ssReset();
+  },
+
+  lbToggleFav(){
+    const p=this.curPhotos[this.lbIdx]; if(!p) return;
+    this.toggleFav(p.id);
+    const fb=document.getElementById('lbFav');
+    fb.textContent=p.fav?'♥':'♡'; fb.classList.toggle('active',p.fav);
+  },
+
+  lbToggleInfo(){
+    this.infoOpen=!this.infoOpen;
+    document.getElementById('lbInfoPanel').classList.toggle('open',this.infoOpen);
+    document.getElementById('lbInfo').classList.toggle('active',this.infoOpen);
+    if(this.infoOpen) this._lbInfoRender(this.curPhotos[this.lbIdx]);
+  },
+
+  _lbInfoRender(p){
+    document.getElementById('lbInfoRows').innerHTML=`
+      <div class="lb-info-row"><span class="lb-info-label">File</span><span class="lb-info-value" title="${this._esc(p.name)}">${this._esc(p.name)}</span></div>
+      <div class="lb-info-row"><span class="lb-info-label">Album</span><span class="lb-info-value">${p.album||'—'}</span></div>
+      <div class="lb-info-row"><span class="lb-info-label">Date</span><span class="lb-info-value">${p.date.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span></div>
+      <div class="lb-info-row"><span class="lb-info-label">Time</span><span class="lb-info-value">${p.date.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</span></div>
+      <div class="lb-info-row"><span class="lb-info-label">Size</span><span class="lb-info-value">${this._fmtSize(p.size)}</span></div>
+    `;
+  },
+
+  async lbDownload(){
+    const p=this.curPhotos[this.lbIdx]; if(!p) return;
+    const url=await this._url(p.id);
+    const a=Object.assign(document.createElement('a'),{href:url,download:p.name});
+    a.click();
+  },
+
+  /* ─ Slideshow ─ */
+  lbToggleSlide(){ this.ssTimer ? this.lbStopSlide() : this._ssStart(); },
+
+  _ssStart(){
+    document.getElementById('lbSlide').classList.add('active');
+    document.getElementById('ssBar').classList.add('active');
+    this._ssReset();
+  },
+
+  lbStopSlide(){
+    clearTimeout(this.ssTimer); this.ssTimer=null;
+    document.getElementById('lbSlide').classList.remove('active');
+    document.getElementById('ssBar').classList.remove('active');
+  },
+
+  _ssReset(){
+    clearTimeout(this.ssTimer);
+    const f=document.getElementById('ssFill');
+    f.style.transition='none'; f.style.width='0';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      f.style.transition=`width ${this.ssDur}ms linear`; f.style.width='100%';
+    }));
+    this.ssTimer=setTimeout(()=>{
+      if(this.lbIdx<this.curPhotos.length-1){ this.lbStep(1); }
+      else{ this.lbIdx=0; this._lbRender(); this._ssReset(); }
+    },this.ssDur);
+  },
+
+  /* ─ Keyboard ─ */
+  onKey(e){
+    if(!document.getElementById('lightbox').classList.contains('open')) return;
+    if(e.key==='ArrowLeft')  this.lbStep(-1);
+    else if(e.key==='ArrowRight') this.lbStep(1);
+    else if(e.key==='Escape') this.lbClose();
+    else if(e.key==='f'||e.key==='F') this.lbToggleFav();
+    else if(e.key==='i'||e.key==='I') this.lbToggleInfo();
+    else if(e.key===' '){ e.preventDefault(); this.lbToggleSlide(); }
+  },
+
+  /* ─ IndexedDB handle persistence ─ */
+  async _db(){
+    return new Promise((res,rej)=>{
+      const r=indexedDB.open(this.DB_NAME,1);
+      r.onupgradeneeded=e=>e.target.result.createObjectStore('h');
+      r.onsuccess=e=>res(e.target.result);
+      r.onerror=()=>rej(r.error);
+    });
+  },
+  async _saveHandle(h){ try{ const db=await this._db(); await new Promise((res,rej)=>{ const tx=db.transaction('h','readwrite'); tx.objectStore('h').put(h,'dir'); tx.oncomplete=res; tx.onerror=()=>rej(tx.error); }); }catch{} },
+  async _loadHandle(){ try{ const db=await this._db(); return new Promise(res=>{ const r=db.transaction('h','readonly').objectStore('h').get('dir'); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); }); }catch{ return null; } },
+
+  /* ─ Helpers ─ */
+  _fmtSize(b){ if(b<1024)return b+' B'; if(b<1048576)return(b/1024).toFixed(1)+' KB'; if(b<1073741824)return(b/1048576).toFixed(1)+' MB'; return(b/1073741824).toFixed(2)+' GB'; },
+  _esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); },
+  _eid(s){ return encodeURIComponent(s).replace(/[^A-Za-z0-9_]/g,'_'); }
+};
+
+document.addEventListener('DOMContentLoaded',()=>G.init());
+document.addEventListener('keydown',e=>G.onKey(e));
+
+/* Touch swipe in lightbox */
+let _tx=null;
+document.getElementById('lightbox').addEventListener('touchstart',e=>{_tx=e.touches[0].clientX;},{passive:true});
+document.getElementById('lightbox').addEventListener('touchend',e=>{
+  if(_tx===null)return;
+  const dx=e.changedTouches[0].clientX-_tx;
+  if(Math.abs(dx)>50)G.lbStep(dx<0?1:-1);
+  _tx=null;
+},{passive:true});
+</script>
+</body>
+</html>
