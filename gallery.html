@@ -35,9 +35,16 @@
       display:flex; align-items:center; padding:0 1.5rem; gap:1rem;
     }
     .topbar-brand {
+      display:flex; align-items:center; gap:0.625rem;
       font-family:'Source Serif 4',Georgia,serif;
-      font-size:1.125rem; font-weight:600; color:var(--text);
-      letter-spacing:-0.02em; text-decoration:none; margin-right:0.5rem;
+      font-size:1.0625rem; font-weight:600; color:var(--text);
+      letter-spacing:-0.01em; text-decoration:none; margin-right:0.5rem;
+    }
+    .brand-mark {
+      width:28px; height:28px; border-radius:7px; background:var(--accent);
+      display:flex; align-items:center; justify-content:center;
+      color:white; font-weight:700; font-size:0.875rem; letter-spacing:-0.02em;
+      font-family:'Inter',sans-serif;
     }
     .nav-tabs { display:flex; gap:0.25rem; }
     .nav-tab {
@@ -311,12 +318,14 @@
 
 <!-- Topbar -->
 <header class="topbar">
-  <a href="dashboard.html" class="topbar-brand">Mishra Family</a>
+  <a href="dashboard.html" class="topbar-brand"><span class="brand-mark">M</span>Mishra Family Portfolio</a>
   <nav class="nav-tabs">
     <a href="dashboard.html" class="nav-tab" style="text-decoration:none">Overview</a>
+    <a href="dashboard.html#funds" class="nav-tab" style="text-decoration:none">Mutual funds</a>
     <a href="documents.html" class="nav-tab" style="text-decoration:none">Documents</a>
-    <button class="nav-tab active">📷 Gallery</button>
-    <a href="vault.html" class="nav-tab" style="text-decoration:none">🔒 Vault</a>
+    <button class="nav-tab active">Gallery</button>
+    <a href="vault.html" class="nav-tab" style="text-decoration:none">Vault</a>
+    <a href="travel.html" class="nav-tab" style="text-decoration:none">Travel</a>
   </nav>
   <div class="topbar-right">
     <div class="topbar-search">
