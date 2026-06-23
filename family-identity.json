@@ -719,6 +719,21 @@
       }
     },
     "aadya": {
+      "birthCertificate": {
+        "name": "AADYA MISHRA",
+        "sex": "F",
+        "dob": "2022-08-09",
+        "placeOfBirth": "Vatsalya Medical Centre, Lucknow, Uttar Pradesh",
+        "mother": "ARCHANA",
+        "father": "SIDDHARTH MISHRA",
+        "registrationNo": "B-2022: 9-91812-004611",
+        "dateOfRegistration": "2022-09-12",
+        "dateOfIssue": "2023-11-30",
+        "issuingAuthority": "Registrar (Birth & Death), Nagar Nigam Lucknow Zone 7",
+        "addressAtBirth": "342 Eldeco Greens, Gomti Nagar, Lucknow, Uttar Pradesh",
+        "form": "Form-5",
+        "pdf": "birth-certificates/aadya-birth-certificate.pdf"
+      },
       "pan": {
         "number": "JBJPM4043J",
         "name": "AADYA MISHRA",
