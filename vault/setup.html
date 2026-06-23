@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Vault Setup — Mishra Family</title>
+  <script src="crypto.js"></script>
+  <style>
+    :root {
+      --bg: #F8F4EE; --surface: #FFFFFF; --ink: #2A1F18; --ink-2: #7A6E5C;
+      --line: #E5DACA; --line-2: #D6CFC4; --brand: #C66B2F;
+      --warn-bg: #FBF1D9; --warn-line: #C8941F;
+      --err-bg: #FCE3E3; --err-line: #C84F4F;
+      --ok-bg: #E5F1E0; --ok-line: #5C9A4A;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1.5rem; line-height: 1.55; color: var(--ink); background: var(--bg); }
+    h1 { font-size: 1.75rem; font-weight: 600; margin: 0 0 0.5rem; }
+    h2 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.75rem; }
+    p { margin: 0.5rem 0; }
+    .sub { color: var(--ink-2); margin: 0 0 1.5rem; }
+    .card { background: var(--surface); padding: 1.75rem; border-radius: 0.75rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin: 1.25rem 0; }
+    .card[disabled] { opacity: 0.4; pointer-events: none; }
+    input[type=password], input[type=text] { font-size: 1rem; padding: 0.625rem 0.875rem; border-radius: 0.5rem; border: 1px solid var(--line-2); background: white; width: 100%; outline: none; }
+    input:focus { border-color: var(--brand); }
+    button { font-size: 0.9375rem; padding: 0.625rem 1.25rem; border-radius: 0.5rem; border: none; background: var(--brand); color: white; cursor: pointer; font-weight: 600; }
+    button[disabled] { opacity: 0.5; cursor: not-allowed; }
+    button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line-2); }
+    .warn { background: var(--warn-bg); border-left: 4px solid var(--warn-line); padding: 1rem 1.25rem; border-radius: 0.5rem; margin: 1rem 0; font-size: 0.9375rem; }
+    .err { background: var(--err-bg); border-left: 4px solid var(--err-line); padding: 0.875rem 1.25rem; border-radius: 0.5rem; margin: 0.75rem 0; font-size: 0.875rem; }
+    .ok  { background: var(--ok-bg);  border-left: 4px solid var(--ok-line);  padding: 0.875rem 1.25rem; border-radius: 0.5rem; margin: 0.75rem 0; font-size: 0.9375rem; }
+    pre { background: #F0E9DD; padding: 0.75rem 1rem; border-radius: 0.5rem; overflow: auto; font-size: 0.8125rem; max-height: 240px; margin: 0.5rem 0; }
+    code { background: #F0E9DD; padding: 0.0625rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    ul, ol { padding-left: 1.25rem; }
+    .progress { background: var(--line); border-radius: 999px; overflow: hidden; height: 8px; margin: 0.75rem 0; }
+    .progress > div { background: var(--brand); height: 100%; width: 0; transition: width 0.15s ease; }
+    .row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .meter-bar { height: 4px; border-radius: 999px; background: var(--line); margin-top: 0.375rem; overflow: hidden; }
+    .meter-bar > div { height: 100%; transition: width 0.2s, background 0.2s; }
+    .small { font-size: 0.8125rem; color: var(--ink-2); }
+  </style>
+</head>
+<body>
+  <h1>Vault setup</h1>
+  <p class="sub">Encrypt <code>family-identity.json</code> and every sensitive PDF/JPG in this repo with a master passphrase. After this, the host can be public — the files are unintelligible without your passphrase.</p>
+
+  <div class="warn">
+    <strong>Read before proceeding:</strong>
+    <ul style="margin:0.5rem 0 0 0;">
+      <li>If you forget this passphrase, <strong>all encrypted data is permanently lost</strong>. There is no recovery, by design.</li>
+      <li>Use 4+ random words or 16+ random characters. Save a copy in your password manager <em>before</em> running this.</li>
+      <li>This page only works in Chrome, Edge, or Brave (it needs the File System Access API to write encrypted files back to your repo folder).</li>
+      <li>Original plaintext files are <strong>not</strong> deleted — that's a separate manual step after you've verified everything still works.</li>
+    </ul>
+  </div>
+
+  <div id="step1" class="card">
+    <h2>1. Pick the <code>aadyadvait</code> folder</h2>
+    <p class="small">This page needs read+write access to your local copy of the repo so it can save encrypted files in place.</p>
+    <div class="row" style="margin-top:0.75rem;">
+      <button id="pickFolder">Pick folder…</button>
+      <span id="folderStatus" class="small"></span>
+    </div>
+  </div>
+
+  <div id="step2" class="card" disabled>
+    <h2>2. Set master passphrase</h2>
+    <div style="display:grid;gap:0.625rem;">
+      <input id="pw1" type="password" placeholder="Master passphrase" autocomplete="new-password">
+      <input id="pw2" type="password" placeholder="Re-enter passphrase" autocomplete="new-password">
+    </div>
+    <div class="meter-bar"><div id="pwMeter" style="width:0;background:var(--err-line);"></div></div>
+    <p id="pwHint" class="small" style="margin-top:0.5rem;">Aim for 16+ characters or 4+ unrelated words.</p>
+    <div id="pwErr" class="err" style="display:none;"></div>
+    <div class="row" style="margin-top:0.75rem;">
+      <button id="setPw">Continue →</button>
+    </div>
+  </div>
+
+  <div id="step3" class="card" disabled>
+    <h2>3. Confirm scope</h2>
+    <p class="small">Files that will be scanned and encrypted:</p>
+    <pre id="scopeList"></pre>
+    <p class="small"><strong>What will happen:</strong></p>
+    <ol class="small">
+      <li>Each binary asset is encrypted to a sibling <code>&lt;name&gt;.enc</code> file (originals untouched).</li>
+      <li><code>family-identity.json</code> is encrypted to <code>vault/identity.enc</code>.</li>
+      <li><code>vault/meta.json</code> is written — contains the random salt and an encrypted canary so the unlock screen can verify your passphrase. No secrets.</li>
+    </ol>
+    <div class="row" style="margin-top:0.75rem;">
+      <button id="encrypt">Encrypt now</button>
+      <button id="cancel" class="ghost">Cancel</button>
+    </div>
+  </div>
+
+  <div id="step4" class="card" disabled>
+    <h2>4. Encrypting…</h2>
+    <div class="progress"><div id="bar"></div></div>
+    <div id="progressText" class="small"></div>
+    <pre id="log"></pre>
+  </div>
+
+  <div id="step5" class="card" disabled>
+    <h2>5. Done</h2>
+    <div id="doneMsg" class="ok"></div>
+    <p><strong>Next steps:</strong></p>
+    <ol>
+      <li>Commit and push <code>vault/meta.json</code>, <code>vault/identity.enc</code>, and every new <code>*.enc</code> file. <strong>Leave the originals in place for now.</strong></li>
+      <li>Open <code>documents.html</code> (or whichever page I've wired up). You should see an unlock screen — enter your passphrase, confirm everything renders.</li>
+      <li>Once confident, delete the plaintext originals with the snippet shown below and push again.</li>
+    </ol>
+    <pre id="deleteSnippet"></pre>
+  </div>
+
+  <script>
+    // -------- folders to scan (recursive) --------
+    const SENSITIVE_DIRS = [
+      'aadhaar', 'pan', 'passports', 'birth-certificates',
+      'voter', 'cheques', 'medical', 'school',
+      'property', 'utilities', 'travel-docs',
+    ];
+    const SENSITIVE_EXTS = ['pdf', 'jpg', 'jpeg', 'png', 'webp'];
+    const TOP_LEVEL_PLAINTEXT_JSON = 'family-identity.json';
+
+    let rootHandle = null;
+    let passphrase = null;
+    let scopedFiles = [];   // [{ relPath, parentHandle, name }]
+
+    const $ = id => document.getElementById(id);
+
+    function setStepEnabled(stepId, enabled) {
+      const el = $(stepId);
+      if (enabled) el.removeAttribute('disabled');
+      else el.setAttribute('disabled', '');
+    }
+
+    // ---------- step 1: folder picker ----------
+    $('pickFolder').addEventListener('click', async () => {
+      if (!('showDirectoryPicker' in window)) {
+        alert('This browser does not support the File System Access API. Use Chrome, Edge, or Brave.');
+        return;
+      }
+      try {
+        rootHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        const perm = await rootHandle.requestPermission({ mode: 'readwrite' });
+        if (perm !== 'granted') throw new Error('Read/write permission denied');
+        // Sanity: must contain family-identity.json
+        try { await rootHandle.getFileHandle(TOP_LEVEL_PLAINTEXT_JSON); }
+        catch { throw new Error('That folder does not contain family-identity.json — pick the aadyadvait repo root.'); }
+        $('folderStatus').textContent = 'Folder: ' + rootHandle.name + '/  (read+write granted)';
+        $('folderStatus').style.color = 'var(--ok-line)';
+        setStepEnabled('step2', true);
+      } catch (e) {
+        $('folderStatus').textContent = e.message || String(e);
+        $('folderStatus').style.color = 'var(--err-line)';
+      }
+    });
+
+    // ---------- step 2: passphrase ----------
+    function strengthScore(pw) {
+      let score = 0;
+      if (pw.length >= 8) score += 1;
+      if (pw.length >= 12) score += 1;
+      if (pw.length >= 16) score += 1;
+      if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score += 1;
+      if (/[0-9]/.test(pw)) score += 1;
+      if (/[^A-Za-z0-9]/.test(pw)) score += 1;
+      if (pw.split(/\s+/).length >= 4) score += 1;
+      return Math.min(score, 5);
+    }
+    function updateMeter() {
+      const pw = $('pw1').value;
+      const s = strengthScore(pw);
+      const colors = ['var(--err-line)', '#D9883B', '#D9883B', '#B0A53E', 'var(--ok-line)', 'var(--ok-line)'];
+      $('pwMeter').style.width = (s * 20) + '%';
+      $('pwMeter').style.background = colors[s];
+      const labels = ['Too weak', 'Weak', 'Fair', 'OK', 'Strong', 'Strong'];
+      $('pwHint').textContent = pw ? (labels[s] + ' — aim for "Strong"') : 'Aim for 16+ characters or 4+ unrelated words.';
+    }
+    $('pw1').addEventListener('input', updateMeter);
+
+    $('setPw').addEventListener('click', () => {
+      const pw1 = $('pw1').value;
+      const pw2 = $('pw2').value;
+      const err = $('pwErr');
+      err.style.display = 'none';
+      if (pw1.length < 12) { err.textContent = 'Use at least 12 characters.'; err.style.display = 'block'; return; }
+      if (pw1 !== pw2)     { err.textContent = 'Passphrases do not match.';   err.style.display = 'block'; return; }
+      if (strengthScore(pw1) < 3) { err.textContent = 'Passphrase is too weak. Use more length or randomness.'; err.style.display = 'block'; return; }
+      passphrase = pw1;
+      scanScope().then(() => setStepEnabled('step3', true));
+    });
+
+    // ---------- step 3: scope preview ----------
+    async function* walkDir(dirHandle, prefix = '') {
+      for await (const entry of dirHandle.values()) {
+        const path = prefix ? prefix + '/' + entry.name : entry.name;
+        if (entry.kind === 'file') yield { kind: 'file', path, handle: entry, parent: dirHandle };
+        else if (entry.kind === 'directory') yield* walkDir(entry, path);
+      }
+    }
+    async function scanScope() {
+      scopedFiles = [];
+      for (const dir of SENSITIVE_DIRS) {
+        let dh;
+        try { dh = await rootHandle.getDirectoryHandle(dir); }
+        catch { continue; }
+        for await (const f of walkDir(dh, dir)) {
+          const ext = f.path.split('.').pop().toLowerCase();
+          if (!SENSITIVE_EXTS.includes(ext)) continue;
+          if (f.path.endsWith('.enc')) continue;
+          scopedFiles.push(f);
+        }
+      }
+      const lines = [
+        `${TOP_LEVEL_PLAINTEXT_JSON}  →  vault/identity.enc`,
+        ...scopedFiles.map(f => `${f.path}  →  ${f.path}.enc`),
+      ];
+      $('scopeList').textContent = lines.join('\n');
+    }
+
+    $('cancel').addEventListener('click', () => { location.reload(); });
+
+    // ---------- step 4: encrypt ----------
+    async function ensureDir(rootHandle, parts) {
+      let cur = rootHandle;
+      for (const p of parts) cur = await cur.getDirectoryHandle(p, { create: true });
+      return cur;
+    }
+    async function writeBytes(parentHandle, name, bytes) {
+      const fh = await parentHandle.getFileHandle(name, { create: true });
+      const w = await fh.createWritable();
+      await w.write(bytes);
+      await w.close();
+    }
+    async function readBytes(fileHandle) {
+      const f = await fileHandle.getFile();
+      return new Uint8Array(await f.arrayBuffer());
+    }
+    function appendLog(msg) {
+      const el = $('log');
+      el.textContent += msg + '\n';
+      el.scrollTop = el.scrollHeight;
+    }
+
+    $('encrypt').addEventListener('click', async () => {
+      setStepEnabled('step4', true);
+      $('cancel').disabled = true; $('encrypt').disabled = true;
+
+      const salt = Vault.randomSalt();
+      appendLog('Deriving key (PBKDF2 ' + Vault.PBKDF2_ITERS.toLocaleString() + ' iters)…');
+      const key = await Vault.deriveKey(passphrase, salt);
+
+      // canary
+      const canaryPlain = new TextEncoder().encode('vault-ok-' + new Date().toISOString());
+      const canary = await Vault.encryptBytes(key, canaryPlain, 'vault.canary');
+
+      // vault/meta.json
+      const vaultDir = await ensureDir(rootHandle, ['vault']);
+      const meta = {
+        version: 1,
+        kdf: 'PBKDF2-SHA256',
+        iterations: Vault.PBKDF2_ITERS,
+        cipher: 'AES-GCM-256',
+        salt: Vault.b64encode(salt),
+        canary: Vault.b64encode(canary),
+        createdAt: new Date().toISOString(),
+      };
+      await writeBytes(vaultDir, 'meta.json',
+        new TextEncoder().encode(JSON.stringify(meta, null, 2)));
+      appendLog('Wrote vault/meta.json');
+
+      // family-identity.json -> vault/identity.enc
+      const idHandle = await rootHandle.getFileHandle(TOP_LEVEL_PLAINTEXT_JSON);
+      const idBytes = await readBytes(idHandle);
+      const idEnc = await Vault.encryptBytes(key, idBytes, 'family-identity.json');
+      await writeBytes(vaultDir, 'identity.enc', idEnc);
+      appendLog('Encrypted family-identity.json → vault/identity.enc (' + idBytes.length + ' → ' + idEnc.length + ' bytes)');
+
+      const total = scopedFiles.length + 2;
+      let done = 2;
+      $('bar').style.width = (done / total * 100) + '%';
+      $('progressText').textContent = done + ' / ' + total + ' files';
+
+      for (const f of scopedFiles) {
+        try {
+          const bytes = await readBytes(f.handle);
+          const ct = await Vault.encryptBytes(key, bytes, f.path);
+          await writeBytes(f.parent, f.handle.name + '.enc', ct);
+          appendLog('Encrypted ' + f.path + ' (' + bytes.length + ' → ' + ct.length + ' bytes)');
+        } catch (e) {
+          appendLog('FAILED ' + f.path + ': ' + (e.message || e));
+        }
+        done++;
+        $('bar').style.width = (done / total * 100) + '%';
+        $('progressText').textContent = done + ' / ' + total + ' files';
+      }
+      appendLog('All done.');
+
+      // Delete snippet for later
+      const delLines = [
+        '# After you confirm decryption works, delete the plaintext originals:',
+        'cd ' + rootHandle.name,
+        'rm ' + TOP_LEVEL_PLAINTEXT_JSON,
+        ...scopedFiles.map(f => 'rm "' + f.path + '"'),
+      ];
+      $('deleteSnippet').textContent = delLines.join('\n');
+
+      $('doneMsg').innerHTML =
+        '<strong>Encrypted ' + scopedFiles.length + ' assets + identity.json.</strong> ' +
+        'Salt and canary stored in <code>vault/meta.json</code>. Originals are still on disk.';
+      setStepEnabled('step5', true);
+    });
+  </script>
+</body>
+</html>
