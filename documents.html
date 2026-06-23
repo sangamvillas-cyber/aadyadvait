@@ -659,6 +659,7 @@
       { id: 'archana', name: 'Archana', avatar: 'A' },
       { id: 'aadya', name: 'Aadya', avatar: 'A' },
       { id: 'advait', name: 'Advait', avatar: 'A' },
+      { id: 'sheoshyam', name: 'Sheo Shyam', avatar: 'S' },
     ];
 
     const INDIVIDUAL_MEMBERS = MEMBERS.filter(m => !m.isFamily);
@@ -796,6 +797,8 @@
       const imageActions = `<div class="doc-actions" style="border-top:1px solid var(--border-subtle);padding:0.625rem 1rem;flex-wrap:wrap;gap:0.375rem;">
             ${a.imageFront ? `<button class="doc-action" onclick="viewPassportScan('${a.imageFront}','${memberName(memberId)} Aadhaar — Front','${memberId}-aadhaar-front.jpg')">View front</button>` : ''}
             ${a.imageBack  ? `<button class="doc-action" onclick="viewPassportScan('${a.imageBack}','${memberName(memberId)} Aadhaar — Back','${memberId}-aadhaar-back.jpg')">View back</button>` : ''}
+            ${a.pdf ? `<a class="doc-action" href="${a.pdf}" target="_blank" rel="noopener">View PDF</a>` : ''}
+            ${a.pdf ? `<a class="doc-action" href="${a.pdf}" download="${memberId}-aadhaar.pdf">Download PDF</a>` : ''}
             <button class="doc-action" onclick="copyText(\`${copyData}\`, this)">Copy details</button>
            </div>`;
       return `<div class="passport-card">
