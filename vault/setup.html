@@ -43,15 +43,15 @@
 </head>
 <body>
   <h1>Vault setup</h1>
-  <p class="sub">Encrypt <code>family-identity.json</code> and every sensitive PDF/JPG in this repo with a master passphrase. After this, the host can be public — the files are unintelligible without your passphrase.</p>
+  <p class="sub">Encrypt <code>family-identity.json</code> and every sensitive PDF/JPG in this repo with a random data key. The data key is wrapped under your backup passphrase today; you'll add Touch ID and a YubiKey on the live site after Cloudflare Access is up.</p>
 
   <div class="warn">
-    <strong>Read before proceeding:</strong>
+    <strong>About the passphrase you're about to set:</strong>
     <ul style="margin:0.5rem 0 0 0;">
-      <li>If you forget this passphrase, <strong>all encrypted data is permanently lost</strong>. There is no recovery, by design.</li>
-      <li>Use 4+ random words or 16+ random characters. Save a copy in your password manager <em>before</em> running this.</li>
-      <li>This page only works in Chrome, Edge, or Brave (it needs the File System Access API to write encrypted files back to your repo folder).</li>
-      <li>Original plaintext files are <strong>not</strong> deleted — that's a separate manual step after you've verified everything still works.</li>
+      <li>It's a <strong>backup-only</strong> recovery key. Daily unlock will use Touch ID / YubiKey once enrolled.</li>
+      <li>Print it, put it in a safe deposit box. Don't keep it on your laptop or in a notes app.</li>
+      <li>If you lose every authenticator <em>and</em> the passphrase, <strong>all encrypted data is permanently lost</strong>. That's the cost of zero-knowledge.</li>
+      <li>This page needs Chrome / Edge / Brave (File System Access API).</li>
     </ul>
   </div>
 
@@ -65,9 +65,9 @@
   </div>
 
   <div id="step2" class="card" disabled>
-    <h2>2. Set master passphrase</h2>
+    <h2>2. Set backup passphrase</h2>
     <div style="display:grid;gap:0.625rem;">
-      <input id="pw1" type="password" placeholder="Master passphrase" autocomplete="new-password">
+      <input id="pw1" type="password" placeholder="Backup passphrase" autocomplete="new-password">
       <input id="pw2" type="password" placeholder="Re-enter passphrase" autocomplete="new-password">
     </div>
     <div class="meter-bar"><div id="pwMeter" style="width:0;background:var(--err-line);"></div></div>
@@ -84,9 +84,11 @@
     <pre id="scopeList"></pre>
     <p class="small"><strong>What will happen:</strong></p>
     <ol class="small">
-      <li>Each binary asset is encrypted to a sibling <code>&lt;name&gt;.enc</code> file (originals untouched).</li>
-      <li><code>family-identity.json</code> is encrypted to <code>vault/identity.enc</code>.</li>
-      <li><code>vault/meta.json</code> is written — contains the random salt and an encrypted canary so the unlock screen can verify your passphrase. No secrets.</li>
+      <li>A random 256-bit data key (DEK) is generated.</li>
+      <li>The DEK is wrapped (AES-GCM) under a key derived from your passphrase (PBKDF2-SHA256, 600k iters).</li>
+      <li>Every sensitive file is encrypted with the DEK to a sibling <code>&lt;name&gt;.enc</code>.</li>
+      <li><code>family-identity.json</code> → <code>vault/identity.enc</code>.</li>
+      <li><code>vault/meta.json</code> is written with the passphrase wrapper, salt, and a canary. No secrets.</li>
     </ol>
     <div class="row" style="margin-top:0.75rem;">
       <button id="encrypt">Encrypt now</button>
@@ -107,14 +109,14 @@
     <p><strong>Next steps:</strong></p>
     <ol>
       <li>Commit and push <code>vault/meta.json</code>, <code>vault/identity.enc</code>, and every new <code>*.enc</code> file. <strong>Leave the originals in place for now.</strong></li>
-      <li>Open <code>documents.html</code> (or whichever page I've wired up). You should see an unlock screen — enter your passphrase, confirm everything renders.</li>
-      <li>Once confident, delete the plaintext originals with the snippet shown below and push again.</li>
+      <li>I rewire the pages (Phase 4b) so they prompt for the passphrase and decrypt on the fly.</li>
+      <li>After Cloudflare Access is up, you'll enroll Touch ID and YubiKey via <code>vault/enroll.html</code> on the live site. Their PRF outputs each wrap the SAME DEK — no re-encryption needed.</li>
+      <li>Once everything's verified end-to-end, delete the plaintext originals with the snippet below and push again.</li>
     </ol>
     <pre id="deleteSnippet"></pre>
   </div>
 
   <script>
-    // -------- folders to scan (recursive) --------
     const SENSITIVE_DIRS = [
       'aadhaar', 'pan', 'passports', 'birth-certificates',
       'voter', 'cheques', 'medical', 'school',
@@ -125,17 +127,16 @@
 
     let rootHandle = null;
     let passphrase = null;
-    let scopedFiles = [];   // [{ relPath, parentHandle, name }]
+    let scopedFiles = [];
 
     const $ = id => document.getElementById(id);
-
-    function setStepEnabled(stepId, enabled) {
-      const el = $(stepId);
+    function setStepEnabled(id, enabled) {
+      const el = $(id);
       if (enabled) el.removeAttribute('disabled');
       else el.setAttribute('disabled', '');
     }
 
-    // ---------- step 1: folder picker ----------
+    // ---------- step 1 ----------
     $('pickFolder').addEventListener('click', async () => {
       if (!('showDirectoryPicker' in window)) {
         alert('This browser does not support the File System Access API. Use Chrome, Edge, or Brave.');
@@ -145,7 +146,6 @@
         rootHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
         const perm = await rootHandle.requestPermission({ mode: 'readwrite' });
         if (perm !== 'granted') throw new Error('Read/write permission denied');
-        // Sanity: must contain family-identity.json
         try { await rootHandle.getFileHandle(TOP_LEVEL_PLAINTEXT_JSON); }
         catch { throw new Error('That folder does not contain family-identity.json — pick the aadyadvait repo root.'); }
         $('folderStatus').textContent = 'Folder: ' + rootHandle.name + '/  (read+write granted)';
@@ -157,7 +157,7 @@
       }
     });
 
-    // ---------- step 2: passphrase ----------
+    // ---------- step 2 ----------
     function strengthScore(pw) {
       let score = 0;
       if (pw.length >= 8) score += 1;
@@ -192,7 +192,7 @@
       scanScope().then(() => setStepEnabled('step3', true));
     });
 
-    // ---------- step 3: scope preview ----------
+    // ---------- step 3 ----------
     async function* walkDir(dirHandle, prefix = '') {
       for await (const entry of dirHandle.values()) {
         const path = prefix ? prefix + '/' + entry.name : entry.name;
@@ -219,10 +219,9 @@
       ];
       $('scopeList').textContent = lines.join('\n');
     }
-
     $('cancel').addEventListener('click', () => { location.reload(); });
 
-    // ---------- step 4: encrypt ----------
+    // ---------- step 4 ----------
     async function ensureDir(rootHandle, parts) {
       let cur = rootHandle;
       for (const p of parts) cur = await cur.getDirectoryHandle(p, { create: true });
@@ -248,22 +247,39 @@
       setStepEnabled('step4', true);
       $('cancel').disabled = true; $('encrypt').disabled = true;
 
+      // ---- generate DEK ----
+      const dekBytes = Vault.generateDEKBytes();
+      const dek = await Vault.importDEK(dekBytes);
+      appendLog('Generated 256-bit data key.');
+
+      // ---- wrap DEK under passphrase ----
       const salt = Vault.randomSalt();
-      appendLog('Deriving key (PBKDF2 ' + Vault.PBKDF2_ITERS.toLocaleString() + ' iters)…');
-      const key = await Vault.deriveKey(passphrase, salt);
+      appendLog('Deriving passphrase KEK (PBKDF2 ' + Vault.PBKDF2_ITERS.toLocaleString() + ' iters)…');
+      const passKEK = await Vault.deriveKEKFromPassphrase(passphrase, salt);
+      const wrappedDEK = await Vault.wrapDEK(passKEK, dekBytes);
+      appendLog('Wrapped DEK under passphrase.');
 
-      // canary
-      const canaryPlain = new TextEncoder().encode('vault-ok-' + new Date().toISOString());
-      const canary = await Vault.encryptBytes(key, canaryPlain, 'vault.canary');
+      // ---- canary ----
+      const canary = await Vault.makeCanary(dek);
 
-      // vault/meta.json
+      // ---- write meta.json ----
       const vaultDir = await ensureDir(rootHandle, ['vault']);
       const meta = {
-        version: 1,
-        kdf: 'PBKDF2-SHA256',
-        iterations: Vault.PBKDF2_ITERS,
+        version: 2,
         cipher: 'AES-GCM-256',
-        salt: Vault.b64encode(salt),
+        rpId: location.hostname,  // updated by enroll.html when adding hardware on live site
+        prfInput: 'aadyadvait-vault-master-v1',
+        wrappers: [
+          {
+            id: 'passphrase-1',
+            kind: 'passphrase',
+            kdf: 'PBKDF2-SHA256',
+            iterations: Vault.PBKDF2_ITERS,
+            salt: Vault.b64encode(salt),
+            wrappedDEK: Vault.b64encode(wrappedDEK),
+            createdAt: new Date().toISOString(),
+          },
+        ],
         canary: Vault.b64encode(canary),
         createdAt: new Date().toISOString(),
       };
@@ -271,13 +287,14 @@
         new TextEncoder().encode(JSON.stringify(meta, null, 2)));
       appendLog('Wrote vault/meta.json');
 
-      // family-identity.json -> vault/identity.enc
+      // ---- encrypt identity ----
       const idHandle = await rootHandle.getFileHandle(TOP_LEVEL_PLAINTEXT_JSON);
       const idBytes = await readBytes(idHandle);
-      const idEnc = await Vault.encryptBytes(key, idBytes, 'family-identity.json');
+      const idEnc = await Vault.encryptBytes(dek, idBytes, 'family-identity.json');
       await writeBytes(vaultDir, 'identity.enc', idEnc);
       appendLog('Encrypted family-identity.json → vault/identity.enc (' + idBytes.length + ' → ' + idEnc.length + ' bytes)');
 
+      // ---- encrypt assets ----
       const total = scopedFiles.length + 2;
       let done = 2;
       $('bar').style.width = (done / total * 100) + '%';
@@ -286,7 +303,7 @@
       for (const f of scopedFiles) {
         try {
           const bytes = await readBytes(f.handle);
-          const ct = await Vault.encryptBytes(key, bytes, f.path);
+          const ct = await Vault.encryptBytes(dek, bytes, f.path);
           await writeBytes(f.parent, f.handle.name + '.enc', ct);
           appendLog('Encrypted ' + f.path + ' (' + bytes.length + ' → ' + ct.length + ' bytes)');
         } catch (e) {
@@ -298,9 +315,9 @@
       }
       appendLog('All done.');
 
-      // Delete snippet for later
+      // ---- snippets ----
       const delLines = [
-        '# After you confirm decryption works, delete the plaintext originals:',
+        '# After Phase 4b lands and you confirm decryption works end-to-end:',
         'cd ' + rootHandle.name,
         'rm ' + TOP_LEVEL_PLAINTEXT_JSON,
         ...scopedFiles.map(f => 'rm "' + f.path + '"'),
@@ -309,7 +326,7 @@
 
       $('doneMsg').innerHTML =
         '<strong>Encrypted ' + scopedFiles.length + ' assets + identity.json.</strong> ' +
-        'Salt and canary stored in <code>vault/meta.json</code>. Originals are still on disk.';
+        'DEK wrapped under passphrase (1 of 3 future wrappers). Originals still on disk.';
       setStepEnabled('step5', true);
     });
   </script>
