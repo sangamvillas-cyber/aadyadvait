@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <meta name="referrer" content="no-referrer">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Documents · Mishra Family Portfolio</title>
@@ -664,6 +667,34 @@
 
     const INDIVIDUAL_MEMBERS = MEMBERS.filter(m => !m.isFamily);
 
+    function maskSecret(s, lastN = 4) {
+      if (!s) return s;
+      const tail = s.slice(-lastN);
+      const head = s.slice(0, -lastN).replace(/[A-Za-z0-9]/g, '•');
+      return head + tail;
+    }
+    function toggleReveal(btn) {
+      const span = btn.previousElementSibling;
+      if (!span || !span.classList.contains('secret-value')) return;
+      const revealed = span.dataset.revealed === '1';
+      if (revealed) {
+        span.textContent = span.dataset.masked;
+        span.dataset.revealed = '0';
+        btn.textContent = 'Reveal';
+      } else {
+        span.textContent = span.dataset.secret;
+        span.dataset.revealed = '1';
+        btn.textContent = 'Hide';
+        setTimeout(() => {
+          if (span.dataset.revealed === '1') {
+            span.textContent = span.dataset.masked;
+            span.dataset.revealed = '0';
+            btn.textContent = 'Reveal';
+          }
+        }, 30000);
+      }
+    }
+
     const CATEGORIES = [
       { id: 'all', label: 'All' },
       { id: 'aadhaar', label: 'Aadhaar' },
@@ -789,7 +820,7 @@
     }
 
     function renderAadhaarCard(memberId, a, memberData) {
-      const masked = a.number;
+      const maskedNum = maskSecret(a.number);
       const fullName = memberData?.passport
         ? [memberData.passport.givenName, memberData.passport.surname].filter(Boolean).join(' ')
         : memberName(memberId);
@@ -809,7 +840,10 @@
         <div class="passport-card-number">
           <div>
             <div class="passport-number-label">Aadhaar no.</div>
-            <div class="passport-number-value" style="font-size:1rem;letter-spacing:0.08em;">${masked}</div>
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+              <span class="passport-number-value secret-value" style="font-size:1rem;letter-spacing:0.08em;" data-secret="${a.number}" data-masked="${maskedNum}">${maskedNum}</span>
+              <button type="button" class="reveal-toggle" onclick="toggleReveal(this)" style="font-size:0.6875rem;padding:0.125rem 0.5rem;border-radius:999px;border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-secondary);cursor:pointer;font-weight:500;">Reveal</button>
+            </div>
           </div>
           <span class="passport-status valid">Active</span>
         </div>
@@ -865,7 +899,10 @@
         <div class="passport-card-number">
           <div>
             <div class="passport-number-label">PAN</div>
-            <div class="passport-number-value" style="font-size:1.1rem;letter-spacing:0.12em;">${p.number}</div>
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+              <span class="passport-number-value secret-value" style="font-size:1.1rem;letter-spacing:0.12em;" data-secret="${p.number}" data-masked="${maskSecret(p.number)}">${maskSecret(p.number)}</span>
+              <button type="button" class="reveal-toggle" onclick="toggleReveal(this)" style="font-size:0.6875rem;padding:0.125rem 0.5rem;border-radius:999px;border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-secondary);cursor:pointer;font-weight:500;">Reveal</button>
+            </div>
           </div>
           ${minorBadge}
         </div>
