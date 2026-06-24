@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document Management with OCR — Mishra Family</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+  <script src="vendor/tesseract/tesseract.min.js" integrity="sha384-Ptw8HCYAWF6vIop6WuGxfSCiDCIzUWqjrHYfx8Vd0S4CMBaicAdBh2y+Ufle664A"></script>
   <style>
     * {
       margin: 0;
@@ -654,8 +654,10 @@
               e.target.result,
               'eng',
               {
+                workerPath: location.origin + '/vendor/tesseract/worker.min.js',
+                corePath:   location.origin + '/vendor/tesseract/core',
+                langPath:   location.origin + '/vendor/tesseract/lang',
                 logger: m => {
-                  // Update progress
                   const progress = Math.round(m.progress * 100);
                   progressFillEl.style.width = progress + '%';
                   progressTextEl.textContent = progress + '%';
