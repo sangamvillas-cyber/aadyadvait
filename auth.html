@@ -1,7 +1,213 @@
 <!DOCTYPE html>
-<html><head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="refresh" content="0;url=auth-webauthn.html"></head>
-<body><script>location.replace('auth-webauthn.html');</script></body>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mishra Family — Enter PIN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1A1410; --surface: #2A1F18; --ink: #F5F0E8; --ink-2: #A89F95;
+      --line: #4A3E33; --brand: #C66B2F; --brand-2: #B45920;
+      --err: #E27D7D;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: var(--bg); color: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh;
+    }
+    .lock-card {
+      background: var(--surface); padding: 2.5rem 2rem 2rem;
+      border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      max-width: 360px; width: 90%; text-align: center;
+    }
+    .logo {
+      width: 56px; height: 56px; margin: 0 auto 1rem;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 1.5rem;
+      box-shadow: 0 8px 20px rgba(198,107,47,0.3);
+    }
+    h1 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.25rem; }
+    .sub { color: var(--ink-2); font-size: 0.875rem; margin: 0 0 1.75rem; }
+    .dots {
+      display: flex; justify-content: center; gap: 0.75rem;
+      margin-bottom: 1.75rem; min-height: 16px;
+    }
+    .dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: transparent; border: 1.5px solid var(--line);
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .dot.filled { background: var(--brand); border-color: var(--brand); transform: scale(1.1); }
+    .dot.err { background: var(--err); border-color: var(--err); }
+    .pad {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0.625rem;
+    }
+    .key {
+      background: transparent; border: 1px solid var(--line); color: var(--ink);
+      border-radius: 0.75rem; padding: 0.875rem 0;
+      font-family: inherit; font-size: 1.5rem; font-weight: 500;
+      cursor: pointer; user-select: none;
+      transition: background 0.12s, transform 0.08s;
+    }
+    .key:hover { background: rgba(255,255,255,0.04); }
+    .key:active { background: rgba(255,255,255,0.08); transform: scale(0.97); }
+    .key.zero { grid-column: 2; }
+    .key.back { font-size: 1.125rem; }
+    .key[disabled] { opacity: 0.4; pointer-events: none; }
+    .err-msg {
+      color: var(--err); font-size: 0.8125rem; margin-top: 1rem;
+      min-height: 1rem;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .shake { animation: shake 0.4s ease; }
+    .footer { color: var(--ink-2); font-size: 0.75rem; margin-top: 1.75rem; }
+  </style>
+</head>
+<body>
+  <div class="lock-card" id="card">
+    <div class="logo">M</div>
+    <h1>Mishra Family</h1>
+    <p class="sub">Enter PIN to unlock</p>
+    <div class="dots" id="dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="pad" id="pad">
+      <button class="key" data-d="1">1</button>
+      <button class="key" data-d="2">2</button>
+      <button class="key" data-d="3">3</button>
+      <button class="key" data-d="4">4</button>
+      <button class="key" data-d="5">5</button>
+      <button class="key" data-d="6">6</button>
+      <button class="key" data-d="7">7</button>
+      <button class="key" data-d="8">8</button>
+      <button class="key" data-d="9">9</button>
+      <button class="key zero" data-d="0">0</button>
+      <button class="key back" data-back="1">⌫</button>
+    </div>
+    <div class="err-msg" id="err"></div>
+    <div class="footer">Local — this device only</div>
+  </div>
+
+  <script>
+    const PIN_HASH = '5134dda66a3f126997e66e2e88275dc5cf23cee42658319366ee3c46525849c9';
+    const PIN_LEN = 6;
+    const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+    const SESSION_KEY = 'mishraFamilySession';
+    const FAIL_KEY = 'mishraFamilyPinFails';
+
+    let buffer = '';
+    const dotsEl = document.getElementById('dots');
+    const padEl  = document.getElementById('pad');
+    const cardEl = document.getElementById('card');
+    const errEl  = document.getElementById('err');
+
+    async function sha256Hex(s) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    function paint(error = false) {
+      dotsEl.querySelectorAll('.dot').forEach((d, i) => {
+        d.classList.toggle('filled', i < buffer.length && !error);
+        d.classList.toggle('err', error && i < PIN_LEN);
+      });
+    }
+    function getFails() {
+      try { return JSON.parse(localStorage.getItem(FAIL_KEY)) || { n: 0, lockedUntil: 0 }; }
+      catch { return { n: 0, lockedUntil: 0 }; }
+    }
+    function setFails(v) { localStorage.setItem(FAIL_KEY, JSON.stringify(v)); }
+    function lockoutFor(failCount) {
+      if (failCount < 3)  return 0;
+      if (failCount < 6)  return 5 * 1000;
+      if (failCount < 10) return 30 * 1000;
+      return 60 * 60 * 1000;
+    }
+    function updateLockoutUI() {
+      const f = getFails();
+      const now = Date.now();
+      if (f.lockedUntil > now) {
+        const secs = Math.ceil((f.lockedUntil - now) / 1000);
+        errEl.textContent = `Too many attempts. Try again in ${secs}s.`;
+        padEl.querySelectorAll('button').forEach(b => b.setAttribute('disabled', ''));
+        setTimeout(updateLockoutUI, 1000);
+      } else {
+        padEl.querySelectorAll('button').forEach(b => b.removeAttribute('disabled'));
+        if (errEl.textContent.startsWith('Too many')) errEl.textContent = '';
+      }
+    }
+    async function tryUnlock() {
+      const f = getFails();
+      if (f.lockedUntil > Date.now()) { updateLockoutUI(); return; }
+      const hash = await sha256Hex(buffer);
+      if (hash === PIN_HASH) {
+        setFails({ n: 0, lockedUntil: 0 });
+        const sess = {
+          authMethod: 'pin',
+          loginTime: new Date().toISOString(),
+          expiresAt: new Date(Date.now() + SESSION_TTL_MS).toISOString(),
+        };
+        localStorage.setItem(SESSION_KEY, JSON.stringify(sess));
+        errEl.textContent = '';
+        location.href = 'dashboard.html';
+      } else {
+        const n = f.n + 1;
+        const lock = lockoutFor(n);
+        setFails({ n, lockedUntil: lock ? Date.now() + lock : 0 });
+        cardEl.classList.remove('shake'); void cardEl.offsetWidth; cardEl.classList.add('shake');
+        paint(true);
+        errEl.textContent = lock ? 'Wrong PIN.' : 'Wrong PIN. Try again.';
+        setTimeout(() => { buffer = ''; paint(false); errEl.textContent = ''; updateLockoutUI(); }, 600);
+      }
+    }
+    function pushDigit(d) {
+      if (buffer.length >= PIN_LEN) return;
+      buffer += d;
+      paint(false);
+      errEl.textContent = '';
+      if (buffer.length === PIN_LEN) setTimeout(tryUnlock, 120);
+    }
+    function popDigit() {
+      if (!buffer) return;
+      buffer = buffer.slice(0, -1);
+      paint(false);
+    }
+    padEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn || btn.hasAttribute('disabled')) return;
+      if (btn.dataset.back) popDigit();
+      else if (btn.dataset.d) pushDigit(btn.dataset.d);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (padEl.querySelector('button[disabled]')) return;
+      if (/^[0-9]$/.test(e.key)) pushDigit(e.key);
+      else if (e.key === 'Backspace') popDigit();
+      else if (e.key === 'Enter' && buffer.length === PIN_LEN) tryUnlock();
+    });
+    (() => {
+      try {
+        const s = JSON.parse(localStorage.getItem(SESSION_KEY));
+        if (s && s.expiresAt && new Date(s.expiresAt) > new Date()) {
+          location.replace('dashboard.html');
+        }
+      } catch {}
+    })();
+    updateLockoutUI();
+  </script>
+</body>
 </html>
