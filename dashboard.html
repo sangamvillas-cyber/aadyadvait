@@ -602,6 +602,8 @@
       text-transform: uppercase; transition: all 0.15s;
     }
     .pf-refresh-btn:hover { background: rgba(245,240,232,0.14); border-color: rgba(245,240,232,0.4); }
+    .pf-export-btn { margin-left: 0.375rem; }
+    .pf-live-meta { color: #A98B73; font-weight: 600; letter-spacing: 0.04em; }
     .pf-hero-value {
       font-family: 'Source Serif 4', Georgia, serif;
       font-size: clamp(2.75rem, 6vw, 4.25rem); font-weight: 600;
@@ -801,6 +803,9 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Keep cards whole across PDF/print page breaks */
+    .pf-hero, .pf-holding, .pf-member-header { page-break-inside: avoid; break-inside: avoid; }
+
     @media (max-width: 768px) {
       .pf-hero { grid-template-columns: 1fr; padding: 1.75rem 1.5rem; gap: 1.75rem; }
       .pf-hero-right { order: -1; }
@@ -974,8 +979,10 @@
           <div class="pf-hero-left">
             <div class="pf-hero-eyebrow">
               <span class="pf-live-dot" id="navDot"></span>
-              <span id="navLabel">Family net worth</span>
+              <span id="pfScopeLabel">Family net worth</span>
+              <span id="navLabel" class="pf-live-meta"></span>
               <button id="navRefresh" onclick="refreshNavs()" class="pf-refresh-btn" style="display:none;">Refresh</button>
+              <button onclick="exportPortfolioPDF()" class="pf-refresh-btn pf-export-btn">⬇ PDF</button>
             </div>
             <div class="pf-hero-value sensitive" id="pfHeroValue">—</div>
             <div class="pf-hero-gain" id="pfHeroGain"></div>
@@ -994,6 +1001,7 @@
     </main>
   </div>
 
+  <script src="vendor/html2pdf.bundle.min.js"></script>
   <script>
     const MEMBERS = [
       { id: 'siddharth', name: 'Siddharth Mishra',  role: 'Father',                short: 'Siddharth', avatar: 'S',  color: 'terracotta', enabled: true },
@@ -1074,7 +1082,7 @@
       const btn   = document.getElementById('navRefresh');
 
       dot.classList.remove('live');
-      label.textContent = 'Family net worth · syncing…';
+      label.textContent = '· syncing…';
 
       // Collect unique scheme codes → list of transactions
       const schemes = new Map();
@@ -1120,7 +1128,7 @@
 
       const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
       dot.classList.toggle('live', updated > 0);
-      label.textContent      = updated > 0 ? `Family net worth · Live · ${now}` : 'Family net worth · prices offline';
+      label.textContent      = updated > 0 ? `· Live · ${now}` : '· prices offline';
       btn.style.display      = 'inline-block';
 
       renderOverview();
@@ -1588,58 +1596,90 @@
     function renderPortfolio() {
       const data = APP_STATE.data;
       if (!data) return;
-
-      // Family-wide totals
-      let famInvested = 0, famCurrent = 0, famHoldings = 0, memberCount = 0;
       const activeMembers = MEMBERS.filter(m => m.enabled && data[m.id]?.transactions?.length);
-      for (const m of activeMembers) {
-        const d = data[m.id];
-        famInvested += d.totalInvested || 0;
-        famCurrent += d.totalCurrentValue || 0;
-        famHoldings += d.transactions.length;
-        memberCount++;
-      }
-      const famGain = famCurrent - famInvested;
-      const famGainPct = famInvested ? (famGain / famInvested * 100) : 0;
-      const famGainCls = famGain >= 0 ? 'positive' : 'negative';
+      if (!APP_STATE.pfMember) APP_STATE.pfMember = 'all';
 
-      // Weighted XIRR
-      let wXirr = 0;
-      for (const m of activeMembers) {
+      // Member pills
+      const famCurrent = activeMembers.reduce((s, m) => s + (data[m.id].totalCurrentValue || 0), 0);
+      const pillsEl = document.getElementById('pfPills');
+      pillsEl.innerHTML = `
+        <button class="pf-pill${APP_STATE.pfMember === 'all' ? ' active' : ''}" data-member="all">
+          <span class="pf-pill-avatar">All</span>
+          <span>Everyone</span>
+          <span class="pf-pill-val sensitive">${fmtCompact(famCurrent)}</span>
+        </button>` +
+        activeMembers.map(m => `<button class="pf-pill${APP_STATE.pfMember === m.id ? ' active' : ''}" data-member="${m.id}">
+            <span class="pf-pill-avatar">${m.avatar}</span>
+            <span>${m.short || m.name}</span>
+            <span class="pf-pill-val sensitive">${fmtCompact(data[m.id].totalCurrentValue)}</span>
+          </button>`).join('');
+      pillsEl.querySelectorAll('.pf-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          APP_STATE.pfMember = btn.dataset.member;
+          renderPortfolioHero(APP_STATE.pfMember);
+          renderPortfolioHoldings();
+          pillsEl.querySelectorAll('.pf-pill').forEach(p => p.classList.toggle('active', p.dataset.member === APP_STATE.pfMember));
+        });
+      });
+
+      renderPortfolioHero(APP_STATE.pfMember);
+      renderPortfolioHoldings();
+    }
+
+    // Hero reflects the current scope: whole family ('all') or one member.
+    function renderPortfolioHero(scopeId) {
+      const data = APP_STATE.data;
+      const members = scopeId === 'all'
+        ? MEMBERS.filter(m => m.enabled && data[m.id]?.transactions?.length)
+        : MEMBERS.filter(m => m.id === scopeId && data[m.id]?.transactions?.length);
+
+      let invested = 0, current = 0, holdings = 0;
+      for (const m of members) {
         const d = data[m.id];
-        const w = (d.totalCurrentValue || 0) / (famCurrent || 1);
-        wXirr += (d.overallXIRR || 0) * w;
+        invested += d.totalInvested || 0;
+        current  += d.totalCurrentValue || 0;
+        holdings += d.transactions.length;
+      }
+      const gain = current - invested;
+      const gainPct = invested ? (gain / invested * 100) : 0;
+      const gainCls = gain >= 0 ? 'positive' : 'negative';
+      let xirr = 0;
+      for (const m of members) {
+        const d = data[m.id];
+        xirr += (d.overallXIRR || 0) * ((d.totalCurrentValue || 0) / (current || 1));
       }
 
-      // ── Hero: net worth, gain, ledger lines ──
-      document.getElementById('pfHeroValue').textContent = fmtCompact(famCurrent);
+      // Eyebrow label
+      document.getElementById('pfScopeLabel').textContent =
+        scopeId === 'all' ? 'Family net worth' : `${members[0]?.name || ''} · portfolio`;
+
+      // Big value + gain
+      document.getElementById('pfHeroValue').textContent = fmtCompact(current);
       const gainEl = document.getElementById('pfHeroGain');
-      gainEl.className = 'pf-hero-gain sensitive ' + famGainCls;
+      gainEl.className = 'pf-hero-gain sensitive ' + gainCls;
       gainEl.innerHTML = `
-        <span class="pf-gain-amt">${famGain >= 0 ? '+' : '−'}${fmtCompact(Math.abs(famGain))}</span>
-        <span class="pf-gain-chip">${famGain >= 0 ? '▲' : '▼'} ${Math.abs(famGainPct).toFixed(1)}%</span>
+        <span class="pf-gain-amt">${gain >= 0 ? '+' : '−'}${fmtCompact(Math.abs(gain))}</span>
+        <span class="pf-gain-chip">${gain >= 0 ? '▲' : '▼'} ${Math.abs(gainPct).toFixed(1)}%</span>
         <span style="color:#A98B73;font-weight:500;">all-time</span>`;
-      document.getElementById('pfHeroLedger').innerHTML = `
-        <div class="pf-ledger-item">
-          <span class="pf-ledger-label">Invested</span>
-          <span class="pf-ledger-val sensitive">${fmtCompact(famInvested)}</span>
-        </div>
-        <div class="pf-ledger-item">
-          <span class="pf-ledger-label">Family XIRR</span>
-          <span class="pf-ledger-val">${wXirr.toFixed(1)}%</span>
-        </div>
-        <div class="pf-ledger-item">
-          <span class="pf-ledger-label">Holdings</span>
-          <span class="pf-ledger-val">${famHoldings}</span>
-        </div>
-        <div class="pf-ledger-item">
-          <span class="pf-ledger-label">Investors</span>
-          <span class="pf-ledger-val">${memberCount}</span>
-        </div>`;
 
-      // ── Allocation by market cap → donut ──
+      // Ledger: invested · current · XIRR · gain (+ investors for the family view)
+      const ledger = [
+        { label: 'Invested', val: fmtCompact(invested), sens: true },
+        { label: 'Current value', val: fmtCompact(current), sens: true },
+        { label: scopeId === 'all' ? 'Family XIRR' : 'XIRR', val: xirr.toFixed(1) + '%' },
+        { label: 'Gain', val: `${gain >= 0 ? '+' : '−'}${fmtCompact(Math.abs(gain))}`, sens: true, cls: gainCls },
+      ];
+      if (scopeId === 'all') ledger.push({ label: 'Investors', val: members.length });
+      else ledger.push({ label: 'Holdings', val: holdings });
+      document.getElementById('pfHeroLedger').innerHTML = ledger.map(l =>
+        `<div class="pf-ledger-item">
+          <span class="pf-ledger-label">${l.label}</span>
+          <span class="pf-ledger-val${l.sens ? ' sensitive' : ''}"${l.cls ? ` style="color:${l.cls === 'positive' ? '#8FE0B6' : '#F0A5A5'};"` : ''}>${l.val}</span>
+        </div>`).join('');
+
+      // Allocation donut for this scope
       const t = { large: 0, flexi: 0, mid: 0, small: 0, large_mid: 0 };
-      for (const m of activeMembers) {
+      for (const m of members) {
         for (const tx of data[m.id].transactions) {
           const cat = CAT_MAP[tx.fund];
           if (cat && cat !== 'liquid') t[cat] = (t[cat] || 0) + tx.units * tx.currentNav;
@@ -1656,14 +1696,15 @@
       ].map(c => ({ ...c, val: t[c.key], pct: equity ? t[c.key] / equity * 100 : 0 }))
        .sort((a, b) => b.pct - a.pct);
 
-      // Donut SVG
       const R = 78, CIRC = 2 * Math.PI * R;
       let off = 0;
       const segs = allocCats.map(c => {
         const L = c.pct / 100 * CIRC;
+        if (L < 1) { off += L; return ''; }            // skip slivers (and don't break the dash math)
+        const visible = Math.max(L - 2, 0.5);          // gap for the rounded cap; never negative
         const seg = `<circle class="pf-donut-seg" cx="92" cy="92" r="${R}" fill="none"
           stroke="${c.color}" stroke-width="17" stroke-linecap="round"
-          stroke-dasharray="${(L - 2).toFixed(2)} ${(CIRC - L + 2).toFixed(2)}"
+          stroke-dasharray="${visible.toFixed(2)} ${(CIRC - visible).toFixed(2)}"
           stroke-dashoffset="${(-off).toFixed(2)}" />`;
         off += L;
         return seg;
@@ -1686,33 +1727,123 @@
           <span class="pf-alloc-pct">${c.pct.toFixed(0)}%</span>
         </div>`
       ).join('');
+    }
 
-      // Member pills
-      if (!APP_STATE.pfMember) APP_STATE.pfMember = 'all';
-      const pillsEl = document.getElementById('pfPills');
-      pillsEl.innerHTML = `
-        <button class="pf-pill${APP_STATE.pfMember === 'all' ? ' active' : ''}" data-member="all">
-          <span class="pf-pill-avatar">All</span>
-          <span>Everyone</span>
-          <span class="pf-pill-val sensitive">${fmtCompact(famCurrent)}</span>
-        </button>` +
-        activeMembers.map(m => {
-          const d = data[m.id];
-          return `<button class="pf-pill${APP_STATE.pfMember === m.id ? ' active' : ''}" data-member="${m.id}">
-            <span class="pf-pill-avatar">${m.avatar}</span>
-            <span>${m.short || m.name}</span>
-            <span class="pf-pill-val sensitive">${fmtCompact(d.totalCurrentValue)}</span>
-          </button>`;
-        }).join('');
-      pillsEl.querySelectorAll('.pf-pill').forEach(btn => {
-        btn.addEventListener('click', () => {
-          APP_STATE.pfMember = btn.dataset.member;
-          renderPortfolioHoldings();
-          pillsEl.querySelectorAll('.pf-pill').forEach(p => p.classList.toggle('active', p.dataset.member === APP_STATE.pfMember));
-        });
-      });
+    // Build a clean, print-friendly statement for the current scope, then save as PDF.
+    function exportPortfolioPDF() {
+      if (typeof html2pdf === 'undefined') { alert('PDF library not loaded.'); return; }
+      const data = APP_STATE.data;
+      const scope = APP_STATE.pfMember || 'all';
+      const who = scope === 'all' ? 'Family' : (MEMBERS.find(m => m.id === scope)?.short || scope);
+      const date = new Date().toISOString().slice(0, 10);
+      const report = buildPortfolioReport(scope);
+      document.body.appendChild(report);
+      html2pdf().set({
+        margin: [10, 10, 12, 10],
+        filename: `Mishra-Portfolio-${who}-${date}.pdf`,
+        image: { type: 'jpeg', quality: 0.97 },
+        html2canvas: { scale: 2, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'], avoid: 'tr' },
+      }).from(report).save()
+        .then(() => report.remove())
+        .catch(e => { console.error(e); report.remove(); alert('PDF export failed: ' + e.message); });
+    }
+    window.exportPortfolioPDF = exportPortfolioPDF;
 
-      renderPortfolioHoldings();
+    function buildPortfolioReport(scopeId) {
+      const data = APP_STATE.data, refDate = new Date();
+      const members = scopeId === 'all'
+        ? MEMBERS.filter(m => m.enabled && data[m.id]?.transactions?.length)
+        : MEMBERS.filter(m => m.id === scopeId && data[m.id]?.transactions?.length);
+
+      let invested = 0, current = 0, holdings = 0, xirr = 0;
+      for (const m of members) {
+        const d = data[m.id];
+        invested += d.totalInvested || 0; current += d.totalCurrentValue || 0; holdings += d.transactions.length;
+      }
+      for (const m of members) xirr += (data[m.id].overallXIRR || 0) * ((data[m.id].totalCurrentValue || 0) / (current || 1));
+      const gain = current - invested, gainPct = invested ? gain / invested * 100 : 0;
+
+      // allocation
+      const t = { large: 0, flexi: 0, mid: 0, small: 0, large_mid: 0 };
+      for (const m of members) for (const tx of data[m.id].transactions) {
+        const c = CAT_MAP[tx.fund]; if (c && c !== 'liquid') t[c] = (t[c] || 0) + tx.units * tx.currentNav;
+      }
+      t.large += t.large_mid / 2; t.mid += t.large_mid / 2;
+      const eq = t.large + t.flexi + t.mid + t.small || 1;
+      const alloc = [['Large cap', t.large], ['Flexi cap', t.flexi], ['Mid cap', t.mid], ['Small cap', t.small]]
+        .map(([l, v]) => `${l} ${(v / eq * 100).toFixed(0)}%`).join('  ·  ');
+
+      const money = n => '₹' + Math.round(n).toLocaleString('en-IN');
+      const rowFor = (m, tx) => {
+        const pv = tx.units * tx.purchaseNav, cv = tx.units * tx.currentNav, g = cv - pv;
+        const gp = pv ? g / pv * 100 : 0;
+        const yrs = (refDate - new Date(tx.purchaseDate)) / (365.25 * 864e5);
+        const tx_xirr = yrs > 0 && pv > 0 ? (Math.pow(cv / pv, 1 / yrs) - 1) * 100 : 0;
+        const cap = (CAP_META[CAT_MAP[tx.fund]] || {}).label || '—';
+        const gc = g >= 0 ? '#2E7D4F' : '#C53030';
+        return `<tr>
+          <td>${ovEscape(tx.fund)}<div style="color:#999;font-size:9px;">${ovEscape(tx.fundHouse || '')} · Folio ${ovEscape(tx.folio)} · ${cap}</div></td>
+          <td style="text-align:right;">${tx.units.toFixed(2)}</td>
+          <td style="text-align:right;">${money(pv)}</td>
+          <td style="text-align:right;">${money(cv)}</td>
+          <td style="text-align:right;color:${gc};">${g >= 0 ? '+' : '−'}${money(Math.abs(g))}<div style="font-size:9px;">${g >= 0 ? '+' : ''}${gp.toFixed(1)}%</div></td>
+          <td style="text-align:right;">${tx_xirr.toFixed(1)}%</td>
+        </tr>`;
+      };
+
+      let body = '';
+      for (const m of members) {
+        const d = data[m.id];
+        if (scopeId === 'all') {
+          const mg = m.minor ? ` · Minor (${memberGuardians(m.id).join(' & ') || 'guardian'})` : '';
+          body += `<tr><td colspan="6" style="background:#F5F4ED;font-weight:700;padding:8px 6px;font-family:'Source Serif 4',serif;">
+            ${ovEscape(m.name)}${mg} — ${money(d.totalCurrentValue)} (${d.totalGainPercent >= 0 ? '+' : ''}${(d.totalGainPercent || 0).toFixed(1)}%)</td></tr>`;
+        }
+        body += d.transactions.map(tx => rowFor(m, tx)).join('');
+      }
+
+      const stat = (label, val, color) =>
+        `<div style="flex:1;border:1px solid #E8E5DE;border-radius:8px;padding:10px 12px;">
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#8A8780;font-weight:700;">${label}</div>
+          <div style="font-size:17px;font-weight:700;font-family:'Source Serif 4',serif;${color ? 'color:' + color : ''}">${val}</div>
+        </div>`;
+
+      const el = document.createElement('div');
+      el.style.cssText = 'position:fixed;left:-9999px;top:0;width:760px;background:#fff;color:#1A1817;padding:28px 30px;font-family:Inter,system-ui,sans-serif;';
+      el.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #1A1817;padding-bottom:10px;">
+          <div>
+            <div style="font-size:21px;font-weight:700;font-family:'Source Serif 4',serif;letter-spacing:-.01em;">Mishra Family${scopeId === 'all' ? '' : ' — ' + ovEscape(members[0]?.name || '')}</div>
+            <div style="color:#5C5A55;font-size:11px;margin-top:2px;">Mutual fund statement · as of ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          </div>
+          <div style="text-align:right;font-size:10px;color:#B0ADA5;">Private &amp; confidential</div>
+        </div>
+        <div style="display:flex;gap:10px;margin:16px 0 14px;">
+          ${stat('Invested', money(invested))}
+          ${stat('Current value', money(current))}
+          ${stat('Total gain', `${gain >= 0 ? '+' : '−'}${money(Math.abs(gain))} (${gain >= 0 ? '+' : ''}${gainPct.toFixed(1)}%)`, gain >= 0 ? '#2E7D4F' : '#C53030')}
+          ${stat('XIRR', xirr.toFixed(1) + '%')}
+        </div>
+        <div style="font-size:10px;color:#5C5A55;margin-bottom:14px;"><b>Allocation</b>&nbsp;&nbsp;${alloc}&nbsp;&nbsp;·&nbsp;&nbsp;${holdings} holdings</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead><tr style="border-bottom:1.5px solid #1A1817;">
+            <th style="text-align:left;padding:6px;font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:#5C5A55;">Fund</th>
+            <th style="text-align:right;padding:6px;font-size:9px;text-transform:uppercase;color:#5C5A55;">Units</th>
+            <th style="text-align:right;padding:6px;font-size:9px;text-transform:uppercase;color:#5C5A55;">Invested</th>
+            <th style="text-align:right;padding:6px;font-size:9px;text-transform:uppercase;color:#5C5A55;">Current</th>
+            <th style="text-align:right;padding:6px;font-size:9px;text-transform:uppercase;color:#5C5A55;">Gain</th>
+            <th style="text-align:right;padding:6px;font-size:9px;text-transform:uppercase;color:#5C5A55;">XIRR</th>
+          </tr></thead>
+          <tbody style="font-size:10.5px;">${body}</tbody>
+        </table>
+        <div style="margin-top:14px;font-size:9px;color:#B0ADA5;border-top:1px solid #E8E5DE;padding-top:8px;">
+          Generated ${new Date().toLocaleString('en-IN')} · aadyadvait.com — local vault. Figures from latest available NAVs; for reference only.
+        </div>`;
+      // table row borders
+      el.querySelectorAll('tbody td').forEach(td => { td.style.borderBottom = '1px solid #ECEAE3'; td.style.padding = '6px'; td.style.verticalAlign = 'top'; });
+      return el;
     }
 
     function renderPortfolioHoldings() {
