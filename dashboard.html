@@ -622,10 +622,23 @@
     .ov-header-text p { margin: 0.25rem 0 0; color: var(--text-secondary); font-size: 0.875rem; }
     .ov-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
     .ov-card { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 12px;
-               padding: 1.125rem 1.25rem; box-shadow: 0 1px 2px rgba(26, 24, 23, 0.04); }
+               box-shadow: 0 1px 2px rgba(26, 24, 23, 0.04); overflow: hidden; }
     .ov-card.wide { grid-column: 1 / -1; }
-    .ov-card-title { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.06em;
-                     color: var(--text-tertiary); font-weight: 700; margin-bottom: 0.875rem; }
+    .ov-card-band { padding: 0.75rem 1.125rem; color: #fff; display: flex;
+                    align-items: center; justify-content: space-between; gap: 1rem;
+                    background: linear-gradient(135deg, #2a1f18 0%, #5c5a55 100%); }
+    .ov-card-band-title { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.08em;
+                          font-weight: 700; }
+    .ov-card-band-tag   { font-size: 0.6875rem; opacity: 0.85; letter-spacing: 0.04em; }
+    .ov-card-body { padding: 1.125rem 1.25rem; }
+    .ov-card.aadhaar      .ov-card-band { background: linear-gradient(135deg, #7B1F1F 0%, #B33A3A 100%); }
+    .ov-card.pan          .ov-card-band { background: linear-gradient(135deg, #1A3A5C 0%, #2E6DA4 100%); }
+    .ov-card.voter        .ov-card-band { background: linear-gradient(135deg, #1A4731 0%, #2D7A50 100%); }
+    .ov-card.passport     .ov-card-band { background: linear-gradient(135deg, #002147 0%, #1E5AA8 100%); }
+    .ov-card.birth        .ov-card-band { background: linear-gradient(135deg, #4A1A2F 0%, #8B3A5A 100%); }
+    .ov-card.bank         .ov-card-band { background: linear-gradient(135deg, #1A4731 0%, #2E7D4F 100%); }
+    .ov-card.cards        .ov-card-band { background: linear-gradient(135deg, #3B2A1A 0%, #6B4226 100%); }
+    .ov-card.mf           .ov-card-band { background: linear-gradient(135deg, #2C1A3B 0%, #6B3F9C 100%); }
     .ov-row { display: grid; grid-template-columns: 110px 1fr; gap: 0.625rem; margin-bottom: 0.5rem;
               font-size: 0.875rem; align-items: baseline; }
     .ov-row:last-of-type { margin-bottom: 0; }
@@ -1073,8 +1086,9 @@
 
     // ---------- doc cards ----------
     function ovAadhaarCard(a, memberId) {
-      return `<div class="ov-card">
-        <div class="ov-card-title">Aadhaar · UIDAI</div>
+      return `<div class="ov-card aadhaar">
+        <div class="ov-card-band"><div class="ov-card-band-title">Aadhaar</div><div class="ov-card-band-tag">UIDAI</div></div>
+        <div class="ov-card-body">
         ${ovSecret('Number', a.number)}
         ${a.vid ? ovSecret('VID', a.vid) : ''}
         ${ovField('Name', a.name)}
@@ -1089,11 +1103,13 @@
           ${a.pdf ? `<a class="ov-action" href="${a.pdf}" target="_blank" rel="noopener">View PDF</a>
                     <a class="ov-action" href="${a.pdf}" download="${memberId}-aadhaar.pdf">Download</a>` : ''}
         </div>` : ''}
+        </div>
       </div>`;
     }
     function ovPanCard(p, memberId) {
-      return `<div class="ov-card">
-        <div class="ov-card-title">PAN · Income Tax</div>
+      return `<div class="ov-card pan">
+        <div class="ov-card-band"><div class="ov-card-band-title">PAN</div><div class="ov-card-band-tag">Income Tax Dept</div></div>
+        <div class="ov-card-body">
         ${ovSecret('Number', p.number)}
         ${ovField('Name', p.name)}
         ${ovField('Father', p.fatherName)}
@@ -1103,11 +1119,13 @@
           <a class="ov-action" href="${p.image}" target="_blank" rel="noopener">View scan</a>
           <a class="ov-action" href="${p.image}" download="${memberId}-pan.jpg">Download</a>
         </div>` : ''}
+        </div>
       </div>`;
     }
     function ovVoterCard(v, memberId) {
-      return `<div class="ov-card">
-        <div class="ov-card-title">Voter ID · ECI</div>
+      return `<div class="ov-card voter">
+        <div class="ov-card-band"><div class="ov-card-band-title">Voter ID</div><div class="ov-card-band-tag">ECI</div></div>
+        <div class="ov-card-body">
         ${ovField('EPIC No.', v.epicNo)}
         ${ovField('Name', v.name)}
         ${ovField('Father', v.fatherName)}
@@ -1116,12 +1134,14 @@
           <a class="ov-action" href="${v.image}" target="_blank" rel="noopener">View scan</a>
           <a class="ov-action" href="${v.image}" download="${memberId}-voter.jpg">Download</a>
         </div>` : ''}
+        </div>
       </div>`;
     }
     function ovPassportCard(p, memberId) {
       const fullName = [p.givenName, p.surname].filter(Boolean).join(' ');
-      return `<div class="ov-card">
-        <div class="ov-card-title">Passport · ${ovEscape(p.country || 'IND')}</div>
+      return `<div class="ov-card passport">
+        <div class="ov-card-band"><div class="ov-card-band-title">Passport</div><div class="ov-card-band-tag">${ovEscape(p.country || 'IND')} · REPUBLIC OF INDIA</div></div>
+        <div class="ov-card-body">
         ${ovSecret('Number', p.number)}
         ${ovField('Name', fullName)}
         ${ovField('Sex · DOB', [p.sex, p.dob ? ovDate(p.dob) : ''].filter(Boolean).join(' · '))}
@@ -1132,11 +1152,13 @@
           ${p.image     ? `<a class="ov-action" href="${p.image}"     target="_blank" rel="noopener">View front</a>` : ''}
           ${p.imageBack ? `<a class="ov-action" href="${p.imageBack}" target="_blank" rel="noopener">View back</a>`  : ''}
         </div>` : ''}
+        </div>
       </div>`;
     }
     function ovBirthCertCard(b, memberId) {
-      return `<div class="ov-card">
-        <div class="ov-card-title">Birth Certificate</div>
+      return `<div class="ov-card birth">
+        <div class="ov-card-band"><div class="ov-card-band-title">Birth Certificate</div><div class="ov-card-band-tag">Registrar</div></div>
+        <div class="ov-card-body">
         ${ovField('Name', b.name)}
         ${ovField('Sex · DOB', [b.sex, b.dob ? ovDate(b.dob) : ''].filter(Boolean).join(' · '))}
         ${ovField('Place of birth', b.placeOfBirth)}
@@ -1149,6 +1171,7 @@
           <a class="ov-action" href="${b.pdf}" target="_blank" rel="noopener">View PDF</a>
           <a class="ov-action" href="${b.pdf}" download="${memberId}-birth-certificate.pdf">Download</a>
         </div>` : ''}
+        </div>
       </div>`;
     }
     function ovBankAccountsCard(accounts) {
@@ -1165,13 +1188,15 @@
           <td>${a.chequeImage ? `<a class="ov-action" href="${a.chequeImage}" target="_blank" rel="noopener" style="padding:0.125rem 0.5rem;font-size:0.75rem;">Cheque</a>` : ''}</td>
         </tr>
       `).join('');
-      return `<div class="ov-card wide">
-        <div class="ov-card-title">Bank accounts (${accounts.length})</div>
+      return `<div class="ov-card wide bank">
+        <div class="ov-card-band"><div class="ov-card-band-title">Bank accounts</div><div class="ov-card-band-tag">${accounts.length} ${accounts.length === 1 ? 'account' : 'accounts'}</div></div>
+        <div class="ov-card-body">
         <div style="overflow-x:auto;">
           <table class="ov-table">
             <thead><tr><th>Bank</th><th>Type</th><th>Account no.</th><th>IFSC</th><th>Holding</th><th></th></tr></thead>
             <tbody>${rows}</tbody>
           </table>
+        </div>
         </div>
       </div>`;
     }
@@ -1201,8 +1226,9 @@
           </tr>`;
       }).join('');
 
-      return `<div class="ov-card wide">
-        <div class="ov-card-title">Mutual funds (${mf.transactions.length} holdings)</div>
+      return `<div class="ov-card wide mf">
+        <div class="ov-card-band"><div class="ov-card-band-title">Mutual funds</div><div class="ov-card-band-tag">${mf.transactions.length} holdings</div></div>
+        <div class="ov-card-body">
         <div class="ov-mf-stats">
           <div class="ov-mf-stat">
             <div class="ov-mf-stat-label">Invested</div>
@@ -1228,6 +1254,7 @@
             <tbody>${rows}</tbody>
           </table>
         </div>
+        </div>
       </div>`;
     }
 
@@ -1243,13 +1270,15 @@
           <td>${ovEscape(c.expiry || '')}</td>
         </tr>
       `).join('');
-      return `<div class="ov-card wide">
-        <div class="ov-card-title">Cards (${cards.length})</div>
+      return `<div class="ov-card wide cards">
+        <div class="ov-card-band"><div class="ov-card-band-title">Cards</div><div class="ov-card-band-tag">${cards.length} ${cards.length === 1 ? 'card' : 'cards'}</div></div>
+        <div class="ov-card-body">
         <div style="overflow-x:auto;">
           <table class="ov-table">
             <thead><tr><th>Type</th><th>Member name</th><th>Number</th><th>Expiry</th></tr></thead>
             <tbody>${rows}</tbody>
           </table>
+        </div>
         </div>
       </div>`;
     }
