@@ -39,6 +39,15 @@ def main():
 
     people = reg["people"]
     owner_of = reg["folios"]
+    guardian_of = reg.get("folioGuardians", {})
+
+    def guardian_for(folio):
+        """Operating guardian for a minor folio: per-folio override, else the
+        owner's default guardian. Empty for adult folios."""
+        if folio in guardian_of:
+            return guardian_of[folio]
+        owner = owner_of.get(folio)
+        return people.get(owner, {}).get("guardian", "")
 
     # Build folio -> owner as it appears in the live data.
     data_folios = {}      # folio -> set(member ids it appears under)
@@ -79,6 +88,19 @@ def main():
 
     missing = sorted(set(owner_of) - set(data_folios))
 
+    # Guardian sanity: every minor folio must name a guardian who is a known adult.
+    guardian_problems = []
+    for folio, owner in owner_of.items():
+        if people.get(owner, {}).get("type") != "minor":
+            continue
+        g = guardian_for(folio)
+        if not g:
+            guardian_problems.append(f"folio {folio} ({owner}) has no guardian set")
+        elif people.get(g, {}).get("type") != "adult":
+            guardian_problems.append(
+                f"folio {folio} ({owner}) names guardian '{g}', who is not a known adult"
+            )
+
     # ---- report ----
     print("Folio guard — minor / guardian separation check")
     print("=" * 60)
@@ -98,18 +120,27 @@ def main():
         for f in missing:
             print(f'     • folio {f} (owner "{owner_of[f]}")')
 
+    if guardian_problems:
+        print(f"\n  ❌ {len(guardian_problems)} guardian problem(s):")
+        for g in guardian_problems:
+            print(f"     • {g}")
+
     # Minor / guardian separation summary — the reassuring part.
-    print("\n  Minor accounts (must stay separate from guardians):")
+    print("\n  Minor accounts (held in the child's own name, operated by a guardian):")
     for mid, p in people.items():
         if p.get("type") != "minor":
             continue
-        owned = sorted(f for f, o in owner_of.items() if o == mid)
-        live = [f for f in owned if f in data_folios]
-        g = people.get(p.get("guardian", ""), {}).get("name", p.get("guardian", "—"))
-        print(f"     • {p['name']:16} guardian: {g:18} "
-              f"{len(live)} folio(s) held in the minor's own name")
+        owned = sorted(f for f, o in owner_of.items() if o == mid and f in data_folios)
+        # group this minor's folios by their operating guardian
+        by_g = {}
+        for f in owned:
+            by_g.setdefault(guardian_for(f), []).append(f)
+        print(f"     • {p['name']} — {len(owned)} folio(s):")
+        for g, fs in sorted(by_g.items()):
+            gname = people.get(g, {}).get("name", g or "—")
+            print(f"         guardian {gname:18} {len(fs)} folio(s): {', '.join(fs)}")
 
-    ok = not mismatches and not unknowns
+    ok = not mismatches and not unknowns and not guardian_problems
     print("\n" + "=" * 60)
     print("  ✅ All folios correctly separated by name." if ok
           else "  ❌ Action needed — see above.")

@@ -998,8 +998,8 @@
     const MEMBERS = [
       { id: 'siddharth', name: 'Siddharth Mishra',  role: 'Father',                short: 'Siddharth', avatar: 'S',  color: 'terracotta', enabled: true },
       { id: 'archana',   name: 'Archana Mishra',    role: 'Mother',                short: 'Archana',   avatar: 'A',  color: 'rose',       enabled: true },
-      { id: 'aadya',     name: 'Aadya Mishra',      role: 'Daughter',              short: 'Aadya',     avatar: 'Ay', color: 'indigo',     enabled: true, minor: true, guardian: 'Siddharth' },
-      { id: 'advait',    name: 'Advait Mishra',     role: 'Son',                   short: 'Advait',    avatar: 'Av', color: 'forest',     enabled: true, minor: true, guardian: 'Siddharth' },
+      { id: 'aadya',     name: 'Aadya Mishra',      role: 'Daughter',              short: 'Aadya',     avatar: 'Ay', color: 'indigo',     enabled: true, minor: true },
+      { id: 'advait',    name: 'Advait Mishra',     role: 'Son',                   short: 'Advait',    avatar: 'Av', color: 'forest',     enabled: true, minor: true },
       { id: 'sheoshyam', name: 'Sheo Shyam Mishra', role: 'Paternal grandfather',  short: 'Sheo Shyam', avatar: 'Sh', color: 'amber',     enabled: true },
     ];
 
@@ -1050,12 +1050,14 @@
 
     async function loadData() {
       try {
-        const [trackingRes, identityRes] = await Promise.all([
+        const [trackingRes, identityRes, registryRes] = await Promise.all([
           fetch('tracking-data.json?t=' + Date.now(), { cache: 'no-store' }),
           fetch('family-identity.json?t=' + Date.now(), { cache: 'no-store' }),
+          fetch('folio-registry.json?t=' + Date.now(), { cache: 'no-store' }).catch(() => null),
         ]);
         APP_STATE.data = await trackingRes.json();
         APP_STATE.identity = (await identityRes.json()).members || {};
+        APP_STATE.registry = registryRes ? await registryRes.json().catch(() => null) : null;
         renderOverview();
         renderFamily();
         renderPortfolio();
@@ -1558,6 +1560,30 @@
       liquid:    { label: 'Liquid',   color: '#64748B' },
     };
 
+    // ── Guardian lookup from folio-registry.json (source of truth) ──
+    function guardianName(id) {
+      const p = APP_STATE.registry?.people?.[id];
+      if (p?.name) return p.name;
+      return id ? id.charAt(0).toUpperCase() + id.slice(1) : '';
+    }
+    function folioGuardian(folio) {
+      const r = APP_STATE.registry; if (!r) return '';
+      const key = String(folio);
+      if (r.folioGuardians?.[key]) return r.folioGuardians[key];
+      const owner = r.folios?.[key];
+      return r.people?.[owner]?.guardian || '';
+    }
+    function memberGuardians(memberId) {
+      const r = APP_STATE.registry; if (!r?.folios) return [];
+      const names = [];
+      for (const f in r.folios) {
+        if (r.folios[f] !== memberId) continue;
+        const n = guardianName(folioGuardian(f));
+        if (n && !names.includes(n)) names.push(n);
+      }
+      return names;
+    }
+
     function renderPortfolio() {
       const data = APP_STATE.data;
       if (!data) return;
@@ -1705,9 +1731,14 @@
         const gainCls = gain >= 0 ? 'positive' : 'negative';
 
         if (memberId === 'all') {
-          const minorTag = m.minor
-            ? `<span class="pf-minor-tag" title="Minor account — held in the child's own name, operated by guardian">Minor · Guardian ${ovEscape(m.guardian || '')}</span>`
-            : '';
+          let minorTag = '';
+          if (m.minor) {
+            const gNames = memberGuardians(m.id);
+            const gLabel = gNames.length
+              ? `${gNames.length > 1 ? 'Guardians' : 'Guardian'} ${gNames.join(' & ')}`
+              : 'minor account';
+            minorTag = `<span class="pf-minor-tag" title="Held in the child's own name, operated by guardian">Minor · ${ovEscape(gLabel)}</span>`;
+          }
           html += `<div class="pf-member-header">
             <div class="pf-member-avatar" data-color="${m.color}">${m.avatar}</div>
             <div class="pf-member-name">${m.short || m.name}</div>
@@ -1732,6 +1763,12 @@
           const weight = memberTotal ? (cv / memberTotal * 100) : 0;
           const cap = CAP_META[CAT_MAP[t.fund]] || null;
           const capTag = cap ? `<span class="pf-cap-tag" style="background:${cap.color}1A;color:${cap.color};">${cap.label}</span>` : '';
+          const guardian = m.minor ? guardianName(folioGuardian(t.folio)) : '';
+          const guardianItem = guardian ? `
+                <div class="pf-detail-item">
+                  <div class="pf-detail-label">Guardian</div>
+                  <div class="pf-detail-val">${ovEscape(guardian)}</div>
+                </div>` : '';
           const uid = (m.id + '_' + t.id).replace(/[^a-zA-Z0-9_]/g, '');
 
           html += `<div class="pf-holding" id="h_${uid}">
@@ -1778,7 +1815,7 @@
                 <div class="pf-detail-item">
                   <div class="pf-detail-label">NAV date</div>
                   <div class="pf-detail-val">${t.lastNavUpdate || '—'}</div>
-                </div>
+                </div>${guardianItem}
               </div>
             </div>
           </div>`;
