@@ -221,13 +221,26 @@
         "purchaseNav": 2882.0444,
         "currentNav": 2957.1633,
         "lastNavUpdate": "2026-06-24"
+      },
+      {
+        "id": "adv_icici_nifty_1",
+        "fund": "ICICI Prudential Nifty 50 Index Fund - Direct Plan Growth",
+        "fundHouse": "ICICI Prudential",
+        "folio": "14453239",
+        "type": "holding",
+        "units": 9375.511,
+        "purchaseDate": "2022-05-25",
+        "purchaseNav": 164.84,
+        "currentNav": 253.5602,
+        "lastNavUpdate": "2026-06-24",
+        "schemeCode": 120620
       }
     ],
-    "totalInvested": 8624608.46,
-    "totalCurrentValue": 10044374.94,
-    "totalGain": 1419766.49,
-    "totalGainPercent": 16.46,
-    "overallXIRR": 5.2
+    "totalInvested": 10170067.69,
+    "totalCurrentValue": 12421631.39,
+    "totalGain": 2251563.7,
+    "totalGainPercent": 22.14,
+    "overallXIRR": 6.17
   },
   "aadya": {
     "transactions": [
