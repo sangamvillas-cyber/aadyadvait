@@ -1,6 +1,6 @@
 {
   "trackingMetadata": {
-    "lastUpdated": "2026-05-11T00:00:00Z",
+    "lastUpdated": "2026-06-25T00:00:00Z",
     "navSourcesActive": false,
     "manualUpdateMode": true
   },
@@ -14,9 +14,9 @@
         "type": "holding",
         "units": 25318.969,
         "purchaseDate": "2023-06-20",
-        "purchaseNav": 75.5,
-        "currentNav": 91.5245,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 84.4588,
+        "currentNav": 89.933,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 122639
       },
       {
@@ -27,9 +27,9 @@
         "type": "holding",
         "units": 716.184,
         "purchaseDate": "2023-02-20",
-        "purchaseNav": 1980.0,
-        "currentNav": 2163.717,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 2239.2426,
+        "currentNav": 2211.112,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 118955
       },
       {
@@ -41,8 +41,8 @@
         "units": 11566.153,
         "purchaseDate": "2022-03-10",
         "purchaseNav": 185.5,
-        "currentNav": 235.0262,
-        "lastNavUpdate": "2026-05-08",
+        "currentNav": 234.5013,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 119063
       },
       {
@@ -53,9 +53,9 @@
         "type": "holding",
         "units": 587.732,
         "purchaseDate": "2023-11-05",
-        "purchaseNav": 1350.0,
-        "currentNav": 1613.3581,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 1289.3373,
+        "currentNav": 1618.4926,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 119581
       },
       {
@@ -66,9 +66,9 @@
         "type": "holding",
         "units": 44079.09,
         "purchaseDate": "2022-01-15",
-        "purchaseNav": 62.5,
-        "currentNav": 173.389,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 63.1628,
+        "currentNav": 175.958,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 118834
       },
       {
@@ -80,8 +80,8 @@
         "units": 95666.831,
         "purchaseDate": "2021-09-20",
         "purchaseNav": 95.0,
-        "currentNav": 124.695,
-        "lastNavUpdate": "2026-05-08",
+        "currentNav": 126.401,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 118825
       },
       {
@@ -93,8 +93,8 @@
         "units": 28312.615,
         "purchaseDate": "2023-06-01",
         "purchaseNav": 85.0,
-        "currentNav": 125.78,
-        "lastNavUpdate": "2026-05-08",
+        "currentNav": 125.2,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 103490
       },
       {
@@ -106,8 +106,8 @@
         "units": 146.897,
         "purchaseDate": "2025-01-20",
         "purchaseNav": 78.5,
-        "currentNav": 107.15,
-        "lastNavUpdate": "2026-05-08",
+        "currentNav": 108.2944,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 120503
       },
       {
@@ -118,9 +118,9 @@
         "type": "holding",
         "units": 354.689,
         "purchaseDate": "2025-11-01",
-        "purchaseNav": 3050.0,
-        "currentNav": 3090.4174,
-        "lastNavUpdate": "2026-05-10",
+        "purchaseNav": 2819.2304,
+        "currentNav": 3116.763,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 120389
       },
       {
@@ -132,16 +132,16 @@
         "units": 12627.311,
         "purchaseDate": "2022-08-15",
         "purchaseNav": 162.0,
-        "currentNav": 254.0992,
-        "lastNavUpdate": "2026-05-08",
+        "currentNav": 253.5602,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 120620
       }
     ],
-    "totalInvested": 23657407.65,
-    "totalCurrentValue": 34987128.88,
-    "totalGain": 11329721.23,
-    "totalGainPercent": 47.89,
-    "overallXIRR": 11.82
+    "totalInvested": 23981611.41,
+    "totalCurrentValue": 35240455.88,
+    "totalGain": 11258844.47,
+    "totalGainPercent": 46.95,
+    "overallXIRR": 12.13
   },
   "advait": {
     "transactions": [
@@ -153,9 +153,9 @@
         "type": "holding",
         "units": 495.085,
         "purchaseDate": "2024-01-15",
-        "purchaseNav": 28.5,
-        "currentNav": 32.0407,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 30.2963,
+        "currentNav": 31.8442,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 147481
       },
       {
@@ -164,11 +164,11 @@
         "fundHouse": "PPFAS",
         "folio": "10354395",
         "type": "holding",
-        "units": 38100.935,
+        "units": 38128.811,
         "purchaseDate": "2023-04-15",
-        "purchaseNav": 68.5,
-        "currentNav": 91.5245,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 74.9681,
+        "currentNav": 89.933,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 122639
       },
       {
@@ -179,9 +179,9 @@
         "type": "holding",
         "units": 888.431,
         "purchaseDate": "2023-08-10",
-        "purchaseNav": 1950.0,
-        "currentNav": 2163.717,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 2265.7239,
+        "currentNav": 2211.112,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 118955
       },
       {
@@ -190,11 +190,11 @@
         "fundHouse": "Mirae Asset",
         "folio": "79929508416",
         "type": "holding",
-        "units": 97159.811,
+        "units": 101024.763,
         "purchaseDate": "2023-03-05",
-        "purchaseNav": 28.5,
-        "currentNav": 41.835,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 33.7442,
+        "currentNav": 42.533,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 147445
       },
       {
@@ -205,17 +205,29 @@
         "type": "holding",
         "units": 16.535,
         "purchaseDate": "2024-02-10",
-        "purchaseNav": 185.0,
-        "currentNav": 292.1925,
-        "lastNavUpdate": "2026-05-08",
+        "purchaseNav": 271.7912,
+        "currentNav": 306.5552,
+        "lastNavUpdate": "2026-06-24",
         "schemeCode": 120828
+      },
+      {
+        "id": "advait_liquid_new",
+        "fund": "Mirae Asset Liquid Fund - Direct Plan",
+        "fundHouse": "Mirae Asset",
+        "folio": "79929508416",
+        "type": "holding",
+        "units": 112.674,
+        "purchaseDate": "2024-12-05",
+        "purchaseNav": 2882.0444,
+        "currentNav": 2957.1633,
+        "lastNavUpdate": "2026-06-24"
       }
     ],
-    "totalInvested": 7128578.01,
-    "totalCurrentValue": 9494857.25,
-    "totalGain": 2366279.24,
-    "totalGainPercent": 33.19,
-    "overallXIRR": 9.91
+    "totalInvested": 8624608.46,
+    "totalCurrentValue": 10044374.94,
+    "totalGain": 1419766.49,
+    "totalGainPercent": 16.46,
+    "overallXIRR": 5.2
   },
   "aadya": {
     "transactions": [
