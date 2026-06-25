@@ -100,6 +100,7 @@
       <button class="key zero" data-d="0">0</button>
       <button class="key back" data-back="1">⌫</button>
     </div>
+    <button id="unlockBtn" type="button" style="width:100%;margin-top:1rem;padding:0.75rem;border-radius:0.5rem;border:none;background:var(--brand);color:white;font-family:inherit;font-size:0.9375rem;font-weight:600;cursor:pointer;">Unlock</button>
     <div class="err-msg" id="err"></div>
     <div class="footer">Local — this device only</div>
   </div>
@@ -152,8 +153,10 @@
       }
     }
     async function tryUnlock() {
+      try {
       const f = getFails();
       if (f.lockedUntil > Date.now()) { updateLockoutUI(); return; }
+      if (buffer.length === 0) { errEl.textContent = 'Enter your PIN first.'; return; }
       const hash = await sha256Hex(buffer);
       if (hash === PIN_HASH) {
         setFails({ n: 0, lockedUntil: 0 });
@@ -174,7 +177,12 @@
         errEl.textContent = lock ? 'Wrong PIN.' : 'Wrong PIN. Try again.';
         setTimeout(() => { buffer = ''; paint(false); errEl.textContent = ''; updateLockoutUI(); }, 600);
       }
+      } catch (e) {
+        console.error('tryUnlock failed:', e);
+        errEl.textContent = 'Unlock failed: ' + (e.message || e);
+      }
     }
+    document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
     function pushDigit(d) {
       if (buffer.length >= PIN_LEN) return;
       buffer += d;
