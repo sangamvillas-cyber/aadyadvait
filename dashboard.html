@@ -554,50 +554,254 @@
       font-size: 0.875rem;
     }
 
-    .fund-group {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
+    /* ════ Portfolio — private wealth ledger ════ */
+
+    /* Net-worth hero band */
+    .pf-hero {
+      position: relative;
+      display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem;
+      background:
+        radial-gradient(120% 140% at 12% 18%, rgba(201,100,66,0.32) 0%, rgba(201,100,66,0) 52%),
+        radial-gradient(90% 120% at 100% 100%, rgba(212,164,90,0.20) 0%, rgba(212,164,90,0) 55%),
+        linear-gradient(140deg, #2A1C14 0%, #1C130D 55%, #241812 100%);
+      border-radius: 20px;
+      padding: 2.25rem 2.5rem;
       overflow: hidden;
-      margin-bottom: 1.25rem;
+      box-shadow: 0 18px 50px rgba(36,24,18,0.32), inset 0 1px 0 rgba(255,255,255,0.05);
+      margin-bottom: 1.75rem;
+      animation: pfRise 0.6s cubic-bezier(0.2,0.7,0.2,1) both;
     }
-
-    .fund-group-header {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--border-subtle);
-      background: var(--bg-elevated);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* Fine grain texture over the hero */
+    .pf-hero-grain {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.5; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
     }
-
-    .fund-group-title {
+    .pf-hero-left, .pf-hero-right { position: relative; z-index: 1; }
+    .pf-hero-eyebrow {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: #D6B79E; margin-bottom: 1rem;
+    }
+    .pf-live-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #6B7280;
+      box-shadow: 0 0 0 0 rgba(125,211,168,0.6);
+    }
+    .pf-live-dot.live {
+      background: #7DD3A8; animation: pfPulse 2.4s ease-out infinite;
+    }
+    @keyframes pfPulse {
+      0% { box-shadow: 0 0 0 0 rgba(125,211,168,0.5); }
+      70% { box-shadow: 0 0 0 7px rgba(125,211,168,0); }
+      100% { box-shadow: 0 0 0 0 rgba(125,211,168,0); }
+    }
+    .pf-refresh-btn {
+      margin-left: auto; font-size: 0.625rem; letter-spacing: 0.08em;
+      padding: 0.25rem 0.6875rem; border-radius: 999px;
+      border: 1px solid rgba(245,240,232,0.22); background: rgba(245,240,232,0.06);
+      color: #E8D9CC; cursor: pointer; font-family: inherit; font-weight: 600;
+      text-transform: uppercase; transition: all 0.15s;
+    }
+    .pf-refresh-btn:hover { background: rgba(245,240,232,0.14); border-color: rgba(245,240,232,0.4); }
+    .pf-hero-value {
       font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
+      font-size: clamp(2.75rem, 6vw, 4.25rem); font-weight: 600;
+      letter-spacing: -0.03em; line-height: 0.95; color: #FBF6EE;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.3);
+    }
+    .pf-hero-gain {
+      display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem;
+      font-size: 0.9375rem; font-weight: 600; color: #E8D9CC;
+    }
+    .pf-hero-gain .pf-gain-chip {
+      display: inline-flex; align-items: center; gap: 0.3125rem;
+      padding: 0.25rem 0.6875rem; border-radius: 999px;
+      font-weight: 700; font-size: 0.875rem;
+    }
+    .pf-hero-gain.positive .pf-gain-chip { background: rgba(125,211,168,0.16); color: #8FE0B6; }
+    .pf-hero-gain.negative .pf-gain-chip { background: rgba(232,125,125,0.16); color: #F0A5A5; }
+    .pf-hero-gain .pf-gain-amt { color: #FBF6EE; font-weight: 700; }
+    .pf-hero-ledger {
+      display: flex; flex-wrap: wrap; gap: 1.5rem 2rem; margin-top: 1.75rem;
+      padding-top: 1.5rem; border-top: 1px solid rgba(245,240,232,0.12);
+    }
+    .pf-ledger-item { display: flex; flex-direction: column; gap: 0.25rem; }
+    .pf-ledger-label {
+      font-size: 0.625rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #B89A82;
+    }
+    .pf-ledger-val {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.375rem; font-weight: 600; color: #F5EDE3; line-height: 1;
     }
 
-    .fund-group-total {
+    /* Donut */
+    .pf-hero-right { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; }
+    .pf-donut-wrap { position: relative; width: 184px; height: 184px; }
+    .pf-donut-wrap svg { transform: rotate(-90deg); display: block; }
+    .pf-donut-seg { transition: stroke-dashoffset 0.9s cubic-bezier(0.3,0.8,0.3,1); }
+    .pf-donut-center {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+    }
+    .pf-donut-center-top {
+      font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #B89A82;
+    }
+    .pf-donut-center-big {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.625rem; font-weight: 600; color: #FBF6EE; line-height: 1; margin-top: 0.25rem;
+    }
+    .pf-donut-center-sub { font-size: 0.625rem; color: #B89A82; margin-top: 0.1875rem; }
+    .pf-alloc-legend {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.25rem;
+      width: 100%; max-width: 300px;
+    }
+    .pf-alloc-item {
+      display: flex; align-items: center; gap: 0.4375rem;
+      font-size: 0.75rem; color: #C9B2A0;
+    }
+    .pf-alloc-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+    .pf-alloc-pct { font-weight: 700; color: #F5EDE3; margin-left: auto; }
+
+    /* Member selector pills */
+    .pf-pills {
+      display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+    }
+    .pf-pill {
+      display: flex; align-items: center; gap: 0.4375rem;
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 999px; padding: 0.4375rem 0.9375rem 0.4375rem 0.5rem;
+      font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary);
+      cursor: pointer; font-family: inherit; transition: all 0.18s cubic-bezier(0.2,0.7,0.2,1);
+    }
+    .pf-pill:hover { border-color: var(--border-default); color: var(--text-primary); transform: translateY(-1px); }
+    .pf-pill.active {
+      background: linear-gradient(135deg, #2A1C14, #4A2E1F); border-color: transparent;
+      color: #FBF6EE; box-shadow: 0 4px 14px rgba(42,28,20,0.3);
+    }
+    .pf-pill-avatar {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.625rem; font-weight: 700;
+      background: var(--accent-soft); color: var(--accent);
+    }
+    .pf-pill.active .pf-pill-avatar { background: rgba(255,255,255,0.22); color: #FBF6EE; }
+    .pf-pill-val { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; opacity: 0.85; }
+
+    /* Member section header */
+    .pf-member-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.5rem 0 0.75rem; margin: 1.75rem 0 0.875rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .pf-member-header:first-child { margin-top: 0; }
+    .pf-member-avatar {
+      width: 34px; height: 34px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8125rem;
+    }
+    .pf-member-avatar[data-color="terracotta"] { background: #F4E4DC; color: #C96442; }
+    .pf-member-avatar[data-color="rose"]       { background: #F7E2E2; color: #B5475D; }
+    .pf-member-avatar[data-color="indigo"]     { background: #E1E3F4; color: #4F5BA8; }
+    .pf-member-avatar[data-color="forest"]     { background: #DDEAE0; color: #2E7D4F; }
+    .pf-member-avatar[data-color="amber"]      { background: #F4E8CE; color: #8A6A1F; }
+    .pf-member-name {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.1875rem; font-weight: 600; letter-spacing: -0.01em;
+    }
+    .pf-member-total {
+      margin-left: auto; display: flex; align-items: center; gap: 0.75rem;
       font-size: 0.875rem;
-      color: var(--text-secondary);
+    }
+    .pf-member-total strong {
+      font-family: 'Source Serif 4', Georgia, serif;
+      color: var(--text-primary); font-size: 1.0625rem; font-weight: 600;
     }
 
-    .fund-group-total strong {
-      color: var(--text-primary);
-      font-weight: 600;
+    /* Holdings — each row carries a weight bar */
+    .pf-holding {
+      position: relative;
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md); margin-bottom: 0.625rem;
+      overflow: hidden;
+      transition: box-shadow 0.18s, border-color 0.18s, transform 0.18s;
+    }
+    .pf-holding:hover { box-shadow: var(--shadow-md); border-color: var(--border-default); }
+    /* weight bar painted along the bottom edge */
+    .pf-weight {
+      position: absolute; left: 0; bottom: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), #D4A45A);
+      opacity: 0.85; border-radius: 0 3px 0 0;
+      transition: width 0.8s cubic-bezier(0.3,0.8,0.3,1);
+    }
+    .pf-holding-head {
+      display: grid; grid-template-columns: 1fr auto auto auto;
+      gap: 1.75rem; align-items: center;
+      padding: 1.0625rem 1.375rem; cursor: pointer; user-select: none;
+    }
+    .pf-holding-name {
+      font-weight: 600; font-size: 0.9375rem; color: var(--text-primary);
+      line-height: 1.3; letter-spacing: -0.01em;
+    }
+    .pf-holding-house {
+      font-size: 0.6875rem; color: var(--text-tertiary);
+      font-weight: 500; margin-top: 3px; display: flex; align-items: center; gap: 0.4375rem;
+    }
+    .pf-cap-tag {
+      font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 0.0625rem 0.4375rem; border-radius: 4px;
+    }
+    .pf-holding-metric { text-align: right; }
+    .pf-holding-metric-label {
+      font-size: 0.5625rem; font-weight: 700; color: var(--text-tertiary);
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.1875rem;
+    }
+    .pf-holding-metric-val {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.0625rem; font-weight: 600; color: var(--text-primary);
+    }
+    .pf-gain-badge {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.3125rem 0.6875rem; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 700; min-width: 72px; justify-content: center;
+    }
+    .pf-gain-badge.positive { background: var(--success-soft); color: var(--success); }
+    .pf-gain-badge.negative { background: var(--danger-soft); color: var(--danger); }
+    .pf-holding-detail {
+      display: none; padding: 0 1.375rem 1.125rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .pf-holding.open .pf-holding-detail { display: block; padding-top: 1rem; }
+    .pf-holding.open { box-shadow: var(--shadow-md); border-color: var(--border-default); }
+    .pf-detail-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.625rem;
+    }
+    .pf-detail-item {
+      background: var(--bg-elevated); border-radius: var(--radius-sm);
+      padding: 0.625rem 0.75rem;
+    }
+    .pf-detail-label {
+      font-size: 0.5625rem; font-weight: 700; color: var(--text-tertiary);
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.25rem;
+    }
+    .pf-detail-val {
+      font-size: 0.875rem; font-weight: 600; color: var(--text-primary);
     }
 
-    /* Category weightage summary */
-    .cat-summary { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.125rem 1.375rem; margin-bottom: 1.5rem; }
-    .cat-summary-title { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
-    .cat-row { display: grid; grid-template-columns: 90px 1fr 44px 76px; gap: 0.75rem; align-items: center; margin-bottom: 0.625rem; }
-    .cat-row:last-child { margin-bottom: 0; }
-    .cat-label { font-size: 0.8125rem; color: var(--text-secondary); font-weight: 500; }
-    .cat-bar-wrap { height: 5px; background: var(--bg-elevated, #f0efe8); border-radius: 999px; overflow: hidden; }
-    .cat-bar { height: 100%; border-radius: 999px; }
-    .cat-pct { font-size: 0.8125rem; font-weight: 700; color: var(--text-primary); text-align: right; }
-    .cat-val { font-size: 0.75rem; color: var(--text-secondary); text-align: right; }
+    @keyframes pfRise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .pf-hero { grid-template-columns: 1fr; padding: 1.75rem 1.5rem; gap: 1.75rem; }
+      .pf-hero-right { order: -1; }
+      .pf-hero-value { font-size: clamp(2.5rem, 12vw, 3.25rem); }
+      .pf-holding-head { grid-template-columns: 1fr auto; gap: 0.75rem 1rem; }
+      .pf-holding-name { grid-column: 1 / -1; }
+      .pf-detail-grid { grid-template-columns: repeat(2, 1fr); }
+    }
 
     /* Overview — member tabs + per-member detail */
     .ov-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
@@ -693,7 +897,7 @@
       .travel-card { padding: 1rem 1.125rem; }
       .travel-card-actions { width: 100%; }
       .travel-card-actions .pill-link { flex: 1; text-align: center; }
-      .cat-row { grid-template-columns: 80px 1fr 40px 60px; gap: 0.5rem; }
+      .pf-summary { grid-template-columns: repeat(2, 1fr); gap: 0.625rem; }
     }
   </style>
 </head>
@@ -727,7 +931,7 @@
     <!-- Navigation -->
     <nav class="nav-bar">
       <button class="nav-tab active" data-tab="overview">Overview</button>
-      <button class="nav-tab" data-tab="funds">Mutual funds</button>
+      <button class="nav-tab" data-tab="portfolio">Portfolio</button>
       <a href="documents.html" class="nav-tab">Documents</a>
       <a href="gallery.html" class="nav-tab">Gallery</a>
       <a href="vault.html" class="nav-tab">Vault</a>
@@ -755,60 +959,30 @@
         <div class="members-grid" id="familyMembers"></div>
       </section>
 
-      <!-- Mutual Funds -->
-      <section class="section" id="funds">
-        <div class="page-header" style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
-          <div>
-            <h1 class="page-title">Mutual funds</h1>
-            <p class="page-subtitle">Every fund holding, grouped by family member.</p>
+      <!-- Portfolio -->
+      <section class="section" id="portfolio">
+        <!-- Net-worth hero -->
+        <div class="pf-hero">
+          <div class="pf-hero-grain"></div>
+          <div class="pf-hero-left">
+            <div class="pf-hero-eyebrow">
+              <span class="pf-live-dot" id="navDot"></span>
+              <span id="navLabel">Family net worth</span>
+              <button id="navRefresh" onclick="refreshNavs()" class="pf-refresh-btn" style="display:none;">Refresh</button>
+            </div>
+            <div class="pf-hero-value sensitive" id="pfHeroValue">—</div>
+            <div class="pf-hero-gain" id="pfHeroGain"></div>
+            <div class="pf-hero-ledger" id="pfHeroLedger"></div>
           </div>
-          <div id="navStatus" style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:var(--text-secondary);">
-            <span id="navDot" style="width:8px;height:8px;border-radius:50%;background:#ccc;display:inline-block;"></span>
-            <span id="navLabel">Loading prices…</span>
-            <button id="navRefresh" onclick="refreshNavs()" style="display:none;font-size:0.75rem;padding:0.2rem 0.6rem;border:1px solid var(--border);border-radius:6px;background:var(--bg-elevated);cursor:pointer;color:var(--text-secondary);">Refresh</button>
-          </div>
-        </div>
-        <div class="cat-summary">
-          <div class="cat-summary-title">Allocation by market cap</div>
-          <div id="catSummary"></div>
-        </div>
-        <div id="fundsContainer"></div>
-      </section>
-
-      <!-- Tracker -->
-      <section class="section" id="tracker">
-        <div class="page-header">
-          <h1 class="page-title">Tracker</h1>
-          <p class="page-subtitle">Live NAV-driven valuation and XIRR per holding.</p>
-        </div>
-
-        <div class="filter-pills" id="trackerPills"></div>
-
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-label">Total invested</div><div class="stat-value sensitive" id="tInvested">—</div></div>
-          <div class="stat-card"><div class="stat-label">Current value</div><div class="stat-value sensitive" id="tCurrent">—</div></div>
-          <div class="stat-card"><div class="stat-label">Total gain</div><div class="stat-value sensitive" id="tGain">—</div><div class="stat-delta sensitive" id="tGainPct">—</div></div>
-          <div class="stat-card"><div class="stat-label">Overall XIRR</div><div class="stat-value sensitive" id="tXirr">—</div></div>
-        </div>
-
-        <div class="table-card">
-          <div class="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>Fund</th>
-                  <th class="text-center">Folio</th>
-                  <th class="text-right">Units</th>
-                  <th class="text-right">Purchase value</th>
-                  <th class="text-right">Current value</th>
-                  <th class="text-right">Gain/loss</th>
-                  <th class="text-right">XIRR</th>
-                </tr>
-              </thead>
-              <tbody id="trackerBody"></tbody>
-            </table>
+          <div class="pf-hero-right">
+            <div class="pf-donut-wrap" id="pfDonut"></div>
+            <div class="pf-alloc-legend" id="pfAllocLegend"></div>
           </div>
         </div>
+
+        <div class="pf-pills" id="pfPills"></div>
+
+        <div id="pfHoldings"></div>
       </section>
     </main>
   </div>
@@ -877,8 +1051,7 @@
         APP_STATE.identity = (await identityRes.json()).members || {};
         renderOverview();
         renderFamily();
-        renderFunds();
-        setupTracker();
+        renderPortfolio();
         fetchLiveNavs();
       } catch (err) {
         console.error(err);
@@ -891,8 +1064,8 @@
       const label = document.getElementById('navLabel');
       const btn   = document.getElementById('navRefresh');
 
-      dot.style.background = '#F59E0B';
-      label.textContent = 'Fetching live prices…';
+      dot.classList.remove('live');
+      label.textContent = 'Family net worth · syncing…';
 
       // Collect unique scheme codes → list of transactions
       const schemes = new Map();
@@ -937,14 +1110,13 @@
       }
 
       const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-      dot.style.background   = updated > 0 ? '#22C55E' : '#EF4444';
-      label.textContent      = updated > 0 ? `Live · ${updated} funds · ${now}` : 'Live prices unavailable';
+      dot.classList.toggle('live', updated > 0);
+      label.textContent      = updated > 0 ? `Family net worth · Live · ${now}` : 'Family net worth · prices offline';
       btn.style.display      = 'inline-block';
 
       renderOverview();
       renderFamily();
-      renderFunds();
-      renderTracker(document.querySelector('#trackerPills .filter-pill.active')?.dataset?.member || 'siddharth');
+      renderPortfolio();
     }
 
     function refreshNavs() {
@@ -1370,117 +1542,238 @@
       'HSBC Small Cap Fund - Direct Growth': 'small',
     };
 
-    function renderCatSummary() {
+    const CAP_META = {
+      large:     { label: 'Large cap', color: '#2563EB' },
+      flexi:     { label: 'Flexi cap', color: '#7C3AED' },
+      mid:       { label: 'Mid cap',   color: '#B45309' },
+      small:     { label: 'Small cap', color: '#DC2626' },
+      large_mid: { label: 'Large & mid', color: '#0891B2' },
+      liquid:    { label: 'Liquid',   color: '#64748B' },
+    };
+
+    function renderPortfolio() {
       const data = APP_STATE.data;
+      if (!data) return;
+
+      // Family-wide totals
+      let famInvested = 0, famCurrent = 0, famHoldings = 0, memberCount = 0;
+      const activeMembers = MEMBERS.filter(m => m.enabled && data[m.id]?.transactions?.length);
+      for (const m of activeMembers) {
+        const d = data[m.id];
+        famInvested += d.totalInvested || 0;
+        famCurrent += d.totalCurrentValue || 0;
+        famHoldings += d.transactions.length;
+        memberCount++;
+      }
+      const famGain = famCurrent - famInvested;
+      const famGainPct = famInvested ? (famGain / famInvested * 100) : 0;
+      const famGainCls = famGain >= 0 ? 'positive' : 'negative';
+
+      // Weighted XIRR
+      let wXirr = 0;
+      for (const m of activeMembers) {
+        const d = data[m.id];
+        const w = (d.totalCurrentValue || 0) / (famCurrent || 1);
+        wXirr += (d.overallXIRR || 0) * w;
+      }
+
+      // ── Hero: net worth, gain, ledger lines ──
+      document.getElementById('pfHeroValue').textContent = fmtCompact(famCurrent);
+      const gainEl = document.getElementById('pfHeroGain');
+      gainEl.className = 'pf-hero-gain sensitive ' + famGainCls;
+      gainEl.innerHTML = `
+        <span class="pf-gain-amt">${famGain >= 0 ? '+' : '−'}${fmtCompact(Math.abs(famGain))}</span>
+        <span class="pf-gain-chip">${famGain >= 0 ? '▲' : '▼'} ${Math.abs(famGainPct).toFixed(1)}%</span>
+        <span style="color:#A98B73;font-weight:500;">all-time</span>`;
+      document.getElementById('pfHeroLedger').innerHTML = `
+        <div class="pf-ledger-item">
+          <span class="pf-ledger-label">Invested</span>
+          <span class="pf-ledger-val sensitive">${fmtCompact(famInvested)}</span>
+        </div>
+        <div class="pf-ledger-item">
+          <span class="pf-ledger-label">Family XIRR</span>
+          <span class="pf-ledger-val">${wXirr.toFixed(1)}%</span>
+        </div>
+        <div class="pf-ledger-item">
+          <span class="pf-ledger-label">Holdings</span>
+          <span class="pf-ledger-val">${famHoldings}</span>
+        </div>
+        <div class="pf-ledger-item">
+          <span class="pf-ledger-label">Investors</span>
+          <span class="pf-ledger-val">${memberCount}</span>
+        </div>`;
+
+      // ── Allocation by market cap → donut ──
       const t = { large: 0, flexi: 0, mid: 0, small: 0, large_mid: 0 };
-      for (const [key, mem] of Object.entries(data)) {
-        if (!mem.transactions) continue;
-        for (const tx of mem.transactions) {
+      for (const m of activeMembers) {
+        for (const tx of data[m.id].transactions) {
           const cat = CAT_MAP[tx.fund];
           if (cat && cat !== 'liquid') t[cat] = (t[cat] || 0) + tx.units * tx.currentNav;
         }
       }
       t.large += t.large_mid / 2;
-      t.mid   += t.large_mid / 2;
+      t.mid += t.large_mid / 2;
       const equity = t.large + t.flexi + t.mid + t.small;
-      const cats = [
-        { key: 'large', label: 'Large cap', color: '#1E40AF' },
-        { key: 'flexi', label: 'Flexi cap', color: '#6D28D9' },
-        { key: 'mid',   label: 'Mid cap',   color: '#B45309' },
-        { key: 'small', label: 'Small cap', color: '#B91C1C' },
-      ];
-      document.getElementById('catSummary').innerHTML = cats.map(c => {
-        const pct = (t[c.key] / equity * 100).toFixed(1);
-        return `<div class="cat-row">
-          <div class="cat-label">${c.label}</div>
-          <div class="cat-bar-wrap"><div class="cat-bar" style="width:${pct}%;background:${c.color}"></div></div>
-          <div class="cat-pct">${pct}%</div>
-          <div class="cat-val">${fmtCompact(t[c.key])}</div>
-        </div>`;
-      }).join('');
-    }
+      const allocCats = [
+        { key: 'large', label: 'Large cap', color: '#5B9BFF' },
+        { key: 'flexi', label: 'Flexi cap', color: '#A78BFA' },
+        { key: 'mid',   label: 'Mid cap',   color: '#F2B45C' },
+        { key: 'small', label: 'Small cap', color: '#F08A8A' },
+      ].map(c => ({ ...c, val: t[c.key], pct: equity ? t[c.key] / equity * 100 : 0 }))
+       .sort((a, b) => b.pct - a.pct);
 
-    function renderFunds() {
-      const data = APP_STATE.data;
-      const container = document.getElementById('fundsContainer');
-      renderCatSummary();
-      container.innerHTML = MEMBERS.filter(m => m.enabled && data[m.id]).map(m => {
-        const d = data[m.id];
-        const rows = d.transactions.map(t => {
-          const cv = t.units * t.currentNav;
-          return `<tr class="fund-row">
-            <td class="fund-name">${t.fund}</td>
-            <td class="text-center mono">${t.folio}</td>
-            <td class="text-right sensitive">${t.units.toFixed(2)}</td>
-            <td class="text-right mono sensitive">₹${t.currentNav.toFixed(2)}<br><span style="font-size:0.7rem;color:var(--text-secondary);font-weight:400;">${t.lastNavUpdate || ''}</span></td>
-            <td class="text-right sensitive">${fmt(cv)}</td>
-          </tr>`;
-        }).join('');
-        return `<div class="fund-group">
-          <div class="fund-group-header">
-            <div class="fund-group-title">${m.name}</div>
-            <div class="fund-group-total sensitive">Total: <strong>${fmt(d.totalCurrentValue)}</strong></div>
-          </div>
-          <div class="table-wrapper">
-            <table>
-              <thead><tr>
-                <th>Fund</th>
-                <th class="text-center">Folio</th>
-                <th class="text-right">Units</th>
-                <th class="text-right">NAV</th>
-                <th class="text-right">Current value</th>
-              </tr></thead>
-              <tbody>${rows}</tbody>
-            </table>
-          </div>
-        </div>`;
+      // Donut SVG
+      const R = 78, CIRC = 2 * Math.PI * R;
+      let off = 0;
+      const segs = allocCats.map(c => {
+        const L = c.pct / 100 * CIRC;
+        const seg = `<circle class="pf-donut-seg" cx="92" cy="92" r="${R}" fill="none"
+          stroke="${c.color}" stroke-width="17" stroke-linecap="round"
+          stroke-dasharray="${(L - 2).toFixed(2)} ${(CIRC - L + 2).toFixed(2)}"
+          stroke-dashoffset="${(-off).toFixed(2)}" />`;
+        off += L;
+        return seg;
       }).join('');
-    }
-
-    function setupTracker() {
-      const pills = document.getElementById('trackerPills');
-      pills.innerHTML = MEMBERS.filter(m => m.enabled && APP_STATE.data[m.id]).map((m, i) =>
-        `<button class="filter-pill${i === 0 ? ' active' : ''}" data-member="${m.id}">${m.name.split(' ')[0]}</button>`
+      const top = allocCats[0] || { pct: 0, label: '—' };
+      document.getElementById('pfDonut').innerHTML = `
+        <svg viewBox="0 0 184 184" width="184" height="184">
+          <circle cx="92" cy="92" r="${R}" fill="none" stroke="rgba(245,240,232,0.07)" stroke-width="17"/>
+          ${segs}
+        </svg>
+        <div class="pf-donut-center">
+          <div class="pf-donut-center-top">Largest</div>
+          <div class="pf-donut-center-big">${top.pct.toFixed(0)}%</div>
+          <div class="pf-donut-center-sub">${top.label}</div>
+        </div>`;
+      document.getElementById('pfAllocLegend').innerHTML = allocCats.map(c =>
+        `<div class="pf-alloc-item">
+          <span class="pf-alloc-dot" style="background:${c.color};"></span>
+          <span>${c.label}</span>
+          <span class="pf-alloc-pct">${c.pct.toFixed(0)}%</span>
+        </div>`
       ).join('');
-      pills.addEventListener('click', e => {
-        if (!e.target.matches('.filter-pill')) return;
-        pills.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-        e.target.classList.add('active');
-        renderTracker(e.target.getAttribute('data-member'));
+
+      // Member pills
+      if (!APP_STATE.pfMember) APP_STATE.pfMember = 'all';
+      const pillsEl = document.getElementById('pfPills');
+      pillsEl.innerHTML = `
+        <button class="pf-pill${APP_STATE.pfMember === 'all' ? ' active' : ''}" data-member="all">
+          <span class="pf-pill-avatar">All</span>
+          <span>Everyone</span>
+          <span class="pf-pill-val sensitive">${fmtCompact(famCurrent)}</span>
+        </button>` +
+        activeMembers.map(m => {
+          const d = data[m.id];
+          return `<button class="pf-pill${APP_STATE.pfMember === m.id ? ' active' : ''}" data-member="${m.id}">
+            <span class="pf-pill-avatar">${m.avatar}</span>
+            <span>${m.short || m.name}</span>
+            <span class="pf-pill-val sensitive">${fmtCompact(d.totalCurrentValue)}</span>
+          </button>`;
+        }).join('');
+      pillsEl.querySelectorAll('.pf-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          APP_STATE.pfMember = btn.dataset.member;
+          renderPortfolioHoldings();
+          pillsEl.querySelectorAll('.pf-pill').forEach(p => p.classList.toggle('active', p.dataset.member === APP_STATE.pfMember));
+        });
       });
-      renderTracker('siddharth');
+
+      renderPortfolioHoldings();
     }
 
-    function renderTracker(memberId) {
-      const d = APP_STATE.data[memberId];
-      document.getElementById('tInvested').textContent = fmtCompact(d.totalInvested);
-      document.getElementById('tCurrent').textContent = fmtCompact(d.totalCurrentValue);
-      const gainEl = document.getElementById('tGain');
-      gainEl.textContent = (d.totalGain >= 0 ? '' : '−') + fmtCompact(Math.abs(d.totalGain));
-      const pctEl = document.getElementById('tGainPct');
-      pctEl.textContent = (d.totalGain >= 0 ? '+' : '') + d.totalGainPercent.toFixed(2) + '%';
-      pctEl.className = 'stat-delta sensitive ' + (d.totalGain >= 0 ? 'positive' : 'negative');
-      document.getElementById('tXirr').textContent = d.overallXIRR.toFixed(2) + '%';
+    function renderPortfolioHoldings() {
+      const data = APP_STATE.data;
+      const memberId = APP_STATE.pfMember || 'all';
+      const container = document.getElementById('pfHoldings');
+      const refDate = new Date();
+      const showMembers = memberId === 'all'
+        ? MEMBERS.filter(m => m.enabled && data[m.id]?.transactions?.length)
+        : MEMBERS.filter(m => m.id === memberId && data[m.id]?.transactions?.length);
 
-      const refDate = new Date('2026-05-12');
-      const rows = d.transactions.map(t => {
-        const pv = t.units * t.purchaseNav;
-        const cv = t.units * t.currentNav;
-        const gain = cv - pv;
-        const yrs = (refDate - new Date(t.purchaseDate)) / (365.25 * 24 * 60 * 60 * 1000);
-        const xirr = yrs > 0 ? (Math.pow(cv / pv, 1 / yrs) - 1) * 100 : 0;
-        const gainCls = gain >= 0 ? 'pos' : 'neg';
-        return `<tr>
-          <td class="fund-name">${t.fund}</td>
-          <td class="text-center mono">${t.folio}</td>
-          <td class="text-right sensitive">${t.units.toFixed(2)}</td>
-          <td class="text-right sensitive">${fmt(pv)}</td>
-          <td class="text-right sensitive">${fmt(cv)}</td>
-          <td class="text-right ${gainCls} sensitive">${gain >= 0 ? '+' : ''}${fmt(gain)}</td>
-          <td class="text-right ${gainCls} sensitive">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</td>
-        </tr>`;
-      }).join('');
-      document.getElementById('trackerBody').innerHTML = rows;
+      let html = '';
+      for (const m of showMembers) {
+        const d = data[m.id];
+        const gain = d.totalGain || 0;
+        const gainPct = d.totalGainPercent || 0;
+        const gainCls = gain >= 0 ? 'positive' : 'negative';
+
+        if (memberId === 'all') {
+          html += `<div class="pf-member-header">
+            <div class="pf-member-avatar" data-color="${m.color}">${m.avatar}</div>
+            <div class="pf-member-name">${m.short || m.name}</div>
+            <div class="pf-member-total sensitive">
+              <strong>${fmtCompact(d.totalCurrentValue)}</strong>
+              <span class="pf-gain-badge ${gainCls}">${gain >= 0 ? '▲' : '▼'} ${Math.abs(gainPct).toFixed(1)}%</span>
+            </div>
+          </div>`;
+        }
+
+        const memberTotal = d.totalCurrentValue || d.transactions.reduce((s, x) => s + x.units * x.currentNav, 0);
+
+        for (const t of d.transactions) {
+          const pv = t.units * t.purchaseNav;
+          const cv = t.units * t.currentNav;
+          const hGain = cv - pv;
+          const hPct = pv ? (hGain / pv * 100) : 0;
+          const hCls = hGain >= 0 ? 'positive' : 'negative';
+          const yrs = (refDate - new Date(t.purchaseDate)) / (365.25 * 24 * 60 * 60 * 1000);
+          const xirr = yrs > 0 ? (Math.pow(cv / pv, 1 / yrs) - 1) * 100 : 0;
+          const weight = memberTotal ? (cv / memberTotal * 100) : 0;
+          const cap = CAP_META[CAT_MAP[t.fund]] || null;
+          const capTag = cap ? `<span class="pf-cap-tag" style="background:${cap.color}1A;color:${cap.color};">${cap.label}</span>` : '';
+          const uid = (m.id + '_' + t.id).replace(/[^a-zA-Z0-9_]/g, '');
+
+          html += `<div class="pf-holding" id="h_${uid}">
+            <div class="pf-holding-head" onclick="document.getElementById('h_${uid}').classList.toggle('open')">
+              <div>
+                <div class="pf-holding-name">${ovEscape(t.fund)}</div>
+                <div class="pf-holding-house">${capTag}${ovEscape(t.fundHouse || '')} · ${weight.toFixed(1)}% of holdings</div>
+              </div>
+              <div class="pf-holding-metric">
+                <div class="pf-holding-metric-label">Current</div>
+                <div class="pf-holding-metric-val sensitive">${fmtCompact(cv)}</div>
+              </div>
+              <div class="pf-holding-metric">
+                <div class="pf-holding-metric-label">Gain</div>
+                <div class="pf-holding-metric-val sensitive" style="color:var(--${hGain >= 0 ? 'success' : 'danger'});">${hGain >= 0 ? '+' : '−'}${fmtCompact(Math.abs(hGain))}</div>
+              </div>
+              <div>
+                <span class="pf-gain-badge ${hCls}">${hGain >= 0 ? '▲' : '▼'} ${Math.abs(hPct).toFixed(1)}%</span>
+              </div>
+            </div>
+            <div class="pf-weight" style="width:${weight.toFixed(1)}%;"></div>
+            <div class="pf-holding-detail">
+              <div class="pf-detail-grid">
+                <div class="pf-detail-item">
+                  <div class="pf-detail-label">Invested</div>
+                  <div class="pf-detail-val sensitive">${fmtCompact(pv)}</div>
+                </div>
+                <div class="pf-detail-item">
+                  <div class="pf-detail-label">Units</div>
+                  <div class="pf-detail-val sensitive">${t.units.toFixed(3)}</div>
+                </div>
+                <div class="pf-detail-item">
+                  <div class="pf-detail-label">Buy NAV</div>
+                  <div class="pf-detail-val sensitive">₹${t.purchaseNav.toFixed(2)}</div>
+                </div>
+                <div class="pf-detail-item">
+                  <div class="pf-detail-label">Current NAV</div>
+                  <div class="pf-detail-val sensitive">₹${t.currentNav.toFixed(4)}</div>
+                </div>
+                <div class="pf-detail-item">
+                  <div class="pf-detail-label">XIRR</div>
+                  <div class="pf-detail-val" style="color:var(--${xirr >= 0 ? 'success' : 'danger'});">${xirr >= 0 ? '+' : ''}${xirr.toFixed(2)}%</div>
+                </div>
+                <div class="pf-detail-item">
+                  <div class="pf-detail-label">NAV date</div>
+                  <div class="pf-detail-val">${t.lastNavUpdate || '—'}</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }
+      }
+      container.innerHTML = html;
     }
 
     /* ── Privacy toggle ── */
