@@ -1,0 +1,47 @@
+{
+  "_comment": "Authoritative folio -> owner map. SOURCE OF TRUTH for who owns each mutual-fund folio. After ANY edit/upload to tracking-data.json, run: python3 verify-folios.py . Minor folios (aadya, advait) are operated by a guardian but MUST stay mapped to the minor, never merged into the guardian. To reassign a folio, edit it here first.",
+  "people": {
+    "siddharth": {
+      "name": "Siddharth Mishra",
+      "type": "adult"
+    },
+    "archana": {
+      "name": "Archana Mishra",
+      "type": "adult"
+    },
+    "sheoshyam": {
+      "name": "Sheo Shyam Mishra",
+      "type": "adult"
+    },
+    "aadya": {
+      "name": "Aadya Mishra",
+      "type": "minor",
+      "guardian": "siddharth"
+    },
+    "advait": {
+      "name": "Advait Mishra",
+      "type": "minor",
+      "guardian": "siddharth"
+    }
+  },
+  "folios": {
+    "10503312": "siddharth",
+    "18017755": "siddharth",
+    "501763676523": "siddharth",
+    "71343368923": "siddharth",
+    "9021161431": "siddharth",
+    "91046198861": "siddharth",
+    "9238588": "siddharth",
+    "4829346/76": "archana",
+    "10515541": "archana",
+    "79912894991": "archana",
+    "913162762831": "aadya",
+    "20253109/18": "aadya",
+    "12990772": "aadya",
+    "31398632": "aadya",
+    "10354395": "advait",
+    "37851865": "advait",
+    "79929508416": "advait",
+    "51059517961": "advait"
+  }
+}
